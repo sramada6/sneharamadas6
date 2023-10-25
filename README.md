@@ -10,4 +10,3 @@ Sprint 1 in progress.
 Project group Members for sample commit:
 avashis9
 mnakawe
->>>>>>> c03c1371c50189b86de5e2ac6b4414e052cbe2f7
