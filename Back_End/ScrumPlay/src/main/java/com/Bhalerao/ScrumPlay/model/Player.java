@@ -1,7 +1,6 @@
 package com.Bhalerao.ScrumPlay.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +15,8 @@ import javax.lang.model.element.Name;
 @Entity
 @Table(name = "player_details")
 public class Player {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int playerid;
     private String playerName;
     private String playerRole;
