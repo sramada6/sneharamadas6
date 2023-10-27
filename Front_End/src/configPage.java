@@ -133,6 +133,11 @@ public class configPage extends JFrame {
 
 			yOffset += 40;
 		}
+		
+		JButton btnSatrtSprint = new JButton("Start Sprint");
+		btnSatrtSprint.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnSatrtSprint.setBounds(300, yOffset+30, 150, 25);
+		contentPane.add(btnSatrtSprint);
 
 	}
 }
