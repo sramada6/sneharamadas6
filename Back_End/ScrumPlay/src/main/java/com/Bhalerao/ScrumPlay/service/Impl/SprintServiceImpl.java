@@ -23,6 +23,15 @@ public class SprintServiceImpl implements SprintService {
         return sprints.stream().map((sprint) -> mapToSprintDto(sprint)).collect(Collectors.toList());
     }
 
+    @Override
+    public void saveSprint(SprintDto sprintDto) {
+        Sprint sprint = new Sprint();
+        sprint.setTeamSize(sprintDto.getTeamSize());
+        sprint.setScrumCallLength(sprintDto.getScrumCallLength());
+        sprint.setSprintLength(sprintDto.getSprintLength());
+        sprintRepository.save(sprint);
+    }
+
     private SprintDto mapToSprintDto(Sprint sprint) {
         SprintDto sdto = SprintDto.builder()
                 .sprintid(sprint.getSprintid())

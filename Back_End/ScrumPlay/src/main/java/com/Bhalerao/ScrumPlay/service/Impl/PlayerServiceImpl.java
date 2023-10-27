@@ -29,4 +29,12 @@ public class PlayerServiceImpl implements PlayerService {
                                         .playerRole(player.getPlayerRole()).build();
         return pdto;
     }
+
+    @Override
+    public void savePlayer(PlayerDto playerDTO) {
+        Player player = new Player();
+        player.setPlayerName(playerDTO.getPlayerName());
+        player.setPlayerRole(playerDTO.getPlayerRole());
+        playerRepository.save(player);
+    }
 }
