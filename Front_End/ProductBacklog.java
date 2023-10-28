@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +12,8 @@ public class ProductBacklog extends JFrame {
     private Map<String, String> userStoryDescriptions;
     private JTextField userStoryPointsField;
     private JComboBox<String> playerDropdown;
+    private JComboBox<String> statusDropdown;
+    private JTextArea commentsTextArea;
 
     public ProductBacklog() {
         setTitle("Product Backlog");
@@ -44,43 +48,87 @@ public class ProductBacklog extends JFrame {
         });
 
         userStoryDescriptions = new HashMap<>();
-        userStoryDescriptions.put("US#001/Create Landing Page", "This is the description for Create Landing Page.");
-        userStoryDescriptions.put("US#002/Follow up for Scrum Intro", "This is the description for Follow up for Scrum Intro.");
-        userStoryDescriptions.put("US#003/Create Database", "This is the description for Create Database.");
-        userStoryDescriptions.put("US#004/Design game configuration page", "This is the description for Design game configuration page.");
-        userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "This is the description for Display previous game scores and sprint history.");
+        userStoryDescriptions.put("US#001/Create Landing Page", "As a developer, I want to design an informative page for the trainees which contains the basic details of scrum and the vocabulary used, such as sprint, sprint backlog, burndown charts and sprint velocity. The page displays a one-line definition of each term followed by a link to the full description.");
+        userStoryDescriptions.put("US#002/Follow up for Scrum Intro", "As a developer, I want to design a webpage which is a follow up for the landing page when the \"see more..\" button is clicked. This page would provide detailed information including a tutorial for the concepts such as sprint, sprint backlog, etc.");
+        userStoryDescriptions.put("US#003/Create Database", "As a developer, I want to design a database which can store all the information regarding ScrumPlay which includes the game configuration, problem statement, user stories, etc. This can be used to fetch details when required so that it can be displayed in the front-end of ScrumPlay.");
+        userStoryDescriptions.put("US#004/Design game configuration page", "As a developer, I want to create a set game configuration page where the user can set parameters such as team size, length of sprint and length of scrum call. The user can also decide the roles of the players, such as Product Owner, Scrum Master and developers.");
+        userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "As a developer, I want to display previous game scores and sprint charts so that the user can have an idea what all values are expected and also to know about the history of the previos games.");
     }
 
     private void showUserStoryDetails(String userStory) {
         detailPanel.removeAll();
 
-        JPanel userStoryInfoPanel = new JPanel(new GridLayout(1, 2));
-        JPanel pointsDescriptionPanel = new JPanel(new BorderLayout());
-
-        JPanel assignmentPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        playerDropdown = new JComboBox<>(new String[]{"Player 1", "Player 2", "Player 3", "Player 4", "Player 5"});
-        assignmentPanel.add(new JLabel("Assign to:"));
-        assignmentPanel.add(playerDropdown);
-
-        userStoryPointsField = new JTextField(10);
-        JPanel pointsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pointsPanel.add(new JLabel("User Story Points: "));
-        pointsPanel.add(userStoryPointsField);
+        JPanel userStoryInfoPanel = new JPanel();
+        userStoryInfoPanel.setLayout(new BoxLayout(userStoryInfoPanel, BoxLayout.PAGE_AXIS));
 
         JLabel userStoryLabel = new JLabel("User Story: " + userStory);
+        userStoryLabel.setToolTipText(userStoryDescriptions.get(userStory));
+        Font boldFont = new Font(userStoryLabel.getFont().getName(), Font.BOLD, userStoryLabel.getFont().getSize());
+        userStoryLabel.setFont(boldFont);
 
-        String description = userStoryDescriptions.get(userStory);
-        JLabel userStoryDescription = new JLabel("User Story Description:" + description);
+        //panel for status and assign to
+        JPanel statusAssignPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        statusDropdown = new JComboBox<>(new String[]{"New", "Ready", "In Progress", "Ready for Test", "Closed"});
+        playerDropdown = new JComboBox<>(new String[]{"Player 1", "Player 2", "Player 3", "Player 4", "Player 5"});
+        userStoryPointsField = new JTextField(5);
+        statusAssignPanel.add(new JLabel("Status:"));
+        statusAssignPanel.add(statusDropdown);
+        statusAssignPanel.add(new JLabel("Assign to:"));
+        statusAssignPanel.add(playerDropdown);
+        statusAssignPanel.add(new JLabel("User Story Points: "));
+        statusAssignPanel.add(userStoryPointsField);
+
+        //panel for user story description
+        JPanel descriptionPanel = new JPanel(new BorderLayout());
+        JTextArea descriptionTextArea = new JTextArea(5, 20);
+        descriptionTextArea.setLineWrap(true);
+        descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.setEditable(false);
+        descriptionTextArea.setText(userStoryDescriptions.get(userStory));
+        JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+        descriptionPanel.add(new JLabel("User Story Description:"), BorderLayout.NORTH);
+        descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
+
+        //panel for comments
+        JPanel commentsPanel = new JPanel(new BorderLayout());
+        commentsTextArea = new JTextArea(5, 20);
+        commentsTextArea.setLineWrap(true);
+        commentsTextArea.setWrapStyleWord(true);
+        commentsTextArea.setEditable(false);
+        JScrollPane commentsScrollPane = new JScrollPane(commentsTextArea);
+        commentsPanel.add(new JLabel("Comments:"), BorderLayout.NORTH);
+        commentsPanel.add(commentsScrollPane, BorderLayout.CENTER);
 
         userStoryInfoPanel.add(userStoryLabel);
-        userStoryInfoPanel.add(assignmentPanel);
+        userStoryInfoPanel.add(statusAssignPanel);
+        userStoryInfoPanel.add(descriptionPanel);
+        userStoryInfoPanel.add(commentsPanel);
 
-        pointsDescriptionPanel.add(pointsPanel, BorderLayout.WEST);
-        pointsDescriptionPanel.add(userStoryDescription, BorderLayout.CENTER);
+        //panel for the "End Sprint Planning" button
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton endSprintButton = new JButton("End Sprint Planning");
+        endSprintButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+        });
+        buttonPanel.add(endSprintButton);
 
-        detailPanel.add(userStoryInfoPanel, BorderLayout.NORTH);
-        detailPanel.add(pointsDescriptionPanel, BorderLayout.CENTER);
+        detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
+        detailPanel.add(buttonPanel, BorderLayout.SOUTH);
         detailPanel.revalidate();
         detailPanel.repaint();
     }
+    /*
+     public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                ProductBacklog frame = new ProductBacklog();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    } 
+    */
 }
