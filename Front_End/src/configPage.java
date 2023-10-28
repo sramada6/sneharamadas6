@@ -4,14 +4,23 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JSpinner;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class configPage extends JFrame {
 
@@ -27,6 +36,8 @@ public class configPage extends JFrame {
 	private JTextField txtTeamSize;
 	private JTextField[] txtplayerNames;
 	private JComboBox<String>[] ddplayerRoles;
+	private JButton btnStartSprint;
+	private int yOffset;
 
 	/**
 	 * Launch the application.
@@ -106,13 +117,26 @@ public class configPage extends JFrame {
 				initializePlayerDetails(teamSize);
 			}
 		});
+		
+		JButton btnStartSprint = new JButton("Start Sprint");
+		btnStartSprint.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnStartSprint.setBounds(300, 600, 150, 25);
+		contentPane.add(btnStartSprint);
+		btnStartSprint.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				 sendDataToBackend();
+			}			
+		});	
 	}
 
 	private void initializePlayerDetails(int teamSize) {
 		txtplayerNames = new JTextField[teamSize];
 		ddplayerRoles = new JComboBox[teamSize];
 
-		int yOffset = 250;
+		yOffset = 250;
 
 		for (int i = 0; i < teamSize; i++) {
 			JLabel lblPlayer = new JLabel("Player " + (i + 1) + ":");
@@ -134,10 +158,57 @@ public class configPage extends JFrame {
 			yOffset += 40;
 		}
 		
-		JButton btnSatrtSprint = new JButton("Start Sprint");
-		btnSatrtSprint.setFont(new Font("Tahoma", Font.BOLD, 18));
-		btnSatrtSprint.setBounds(300, yOffset+30, 150, 25);
-		contentPane.add(btnSatrtSprint);
 
 	}
+	
+	   private JSONObject prepareJsonData() {
+	        JSONObject jsonData = new JSONObject();
+	        jsonData.put("gameId", txtGameID.getText());
+	        jsonData.put("sprintLength", txtSprintLength.getText());
+	        jsonData.put("scrumCallLength", txtScrumCallLength.getText());
+	        jsonData.put("teamSize", txtTeamSize.getText());
+
+	        JSONArray playersArray = new JSONArray();
+	        for (int i = 0; i < txtplayerNames.length; i++) {
+	            JSONObject playerJson = new JSONObject();
+	            playerJson.put("name", txtplayerNames[i].getText());
+	            playerJson.put("role", ddplayerRoles[i].getSelectedItem().toString());
+	            playersArray.put(playerJson);
+	        }
+	        jsonData.put("players", playersArray);
+
+	        return jsonData;
+	    }
+	
+
+	private void sendDataToBackend() {
+        try {
+            URL url = new URL("http://localhost:8080/api/config"); // Your Spring Boot backend URL
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+
+            JSONObject jsonData = prepareJsonData();
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonData.toString().getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                JOptionPane.showMessageDialog(this, "Data sent successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to send data to the backend. Please try again later.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An error occurred. Please check your network connection.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+ 
+		
 }
