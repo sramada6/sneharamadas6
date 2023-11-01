@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,19 +35,26 @@ public class PlayerController {
     @PostMapping("/add-gameConfig")
     public ResponseEntity<String> addPlayer(@RequestBody Map<String, Object> requestData) {
         try {
-            String playerName = (String) requestData.get("playerName");
-            String playerRole = (String) requestData.get("playerRole");
+            List<Map<String, String>> playerDataList = (List<Map<String, String>>) requestData.get("players");
 
-            PlayerDto playerDto = PlayerDto.builder()
-                    .playerName(playerName)
-                    .playerRole(playerRole)
-                    .build();
+            List<PlayerDto> playerDtos = new ArrayList<>();
 
-            playerService.savePlayer(playerDto);
+            // Iterate over the player data and create PlayerDto objects
+            PlayerDto playerDto = null;
+            for (Map<String, String> playerData : playerDataList) {
+                String playerName = playerData.get("playerName");
+                String playerRole = playerData.get("playerRole");
+                playerDto = PlayerDto.builder()
+                        .playerName(playerName)
+                        .playerRole(playerRole)
+                        .build();
+                playerDtos.add(playerDto);
+            }
+            playerService.savePlayers(playerDtos);
 
             int teamSize = (int) requestData.get("teamSize");
             int sprintLength = (int) requestData.get("sprintLength");
-            Float scrumCallLength = ((Integer) requestData.get("scrumCallLength")).floatValue();
+            float scrumCallLength = ((Double) requestData.get("scrumCallLength")).floatValue();
 
             SprintDto sprintDto = SprintDto.builder()
                     .teamSize(teamSize)

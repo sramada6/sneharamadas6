@@ -39,4 +39,21 @@ public class PlayerServiceImpl implements PlayerService {
         player.setPlayerRole(playerDTO.getPlayerRole());
         playerRepository.save(player);
     }
+
+    @Override
+    public void savePlayers(List<PlayerDto> playerDtos) {
+        // Convert PlayerDto objects to Player entities (if needed) and save them
+        List<Player> players = playerDtos.stream()
+                .map(this::convertToEntity)
+                .collect(Collectors.toList());
+        playerRepository.saveAll(players);
+    }
+
+    // You may need a method to convert PlayerDto to Player entity
+    private Player convertToEntity(PlayerDto playerDto) {
+        Player player = new Player();
+        player.setPlayerName(playerDto.getPlayerName());
+        player.setPlayerRole(playerDto.getPlayerRole());
+        return player;
+    }
 }
