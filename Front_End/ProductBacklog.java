@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProductBacklog extends JFrame {
-    private JList<String> userList;
+    private static final long serialVersionUID = 1L;
+	private JList<String> userList;
     private DefaultListModel<String> listModel;
     private JPanel detailPanel;
     private Map<String, String> userStoryDescriptions;
@@ -94,7 +95,7 @@ public class ProductBacklog extends JFrame {
         commentsTextArea = new JTextArea(5, 20);
         commentsTextArea.setLineWrap(true);
         commentsTextArea.setWrapStyleWord(true);
-        commentsTextArea.setEditable(false);
+        commentsTextArea.setEditable(true);
         JScrollPane commentsScrollPane = new JScrollPane(commentsTextArea);
         commentsPanel.add(new JLabel("Comments:"), BorderLayout.NORTH);
         commentsPanel.add(commentsScrollPane, BorderLayout.CENTER);
