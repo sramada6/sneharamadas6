@@ -39,9 +39,7 @@ public class configPage extends JFrame {
 	private JButton btnStartSprint;
 	private int yOffset;
 
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -55,9 +53,7 @@ public class configPage extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	
 	public configPage() {
 		setTitle("Game Config Setup");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -126,7 +122,6 @@ public class configPage extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				 sendDataToBackend();
 			}			
 		});	
@@ -183,7 +178,7 @@ public class configPage extends JFrame {
 
 	private void sendDataToBackend() {
         try {
-            URL url = new URL("http://localhost:8080/api/config"); // Your Spring Boot backend URL
+            URL url = new URL("http://localhost:8080/add-player"); 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
