@@ -13,7 +13,7 @@ import javax.lang.model.element.Name;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "player_details")
+@Table(name = "Player")
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

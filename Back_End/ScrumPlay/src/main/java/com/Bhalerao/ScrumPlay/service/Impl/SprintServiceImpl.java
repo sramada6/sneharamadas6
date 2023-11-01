@@ -6,10 +6,12 @@ import com.Bhalerao.ScrumPlay.model.Sprint;
 import com.Bhalerao.ScrumPlay.repository.SprintRepository;
 import com.Bhalerao.ScrumPlay.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class SprintServiceImpl implements SprintService {
     private SprintRepository sprintRepository;
 

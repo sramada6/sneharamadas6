@@ -23,9 +23,10 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add-player")
     public ResponseEntity<String> addPlayer(@RequestBody PlayerDto playerDto) {
         try {
+            System.out.print(playerDto);
             playerService.savePlayer(playerDto);
             return ResponseEntity.ok("Player added successfully");
         } catch (Exception e) {

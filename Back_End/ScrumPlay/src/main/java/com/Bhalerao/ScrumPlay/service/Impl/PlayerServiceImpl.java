@@ -5,10 +5,12 @@ import com.Bhalerao.ScrumPlay.model.Player;
 import com.Bhalerao.ScrumPlay.repository.PlayerRepository;
 import com.Bhalerao.ScrumPlay.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class PlayerServiceImpl implements PlayerService {
     private PlayerRepository playerRepository;
 

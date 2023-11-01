@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "Sprint")
-public class Sprint {
+@Table(name = "ProblemStatement")
+public class ProblemStatement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sprintid;
-    private int teamSize;
-    private int sprintLength;
-    private float scrumCallLength;
+    private int statementid;
+    private String ProblemStatement;
+    private int NumOfUserStories;
 }
