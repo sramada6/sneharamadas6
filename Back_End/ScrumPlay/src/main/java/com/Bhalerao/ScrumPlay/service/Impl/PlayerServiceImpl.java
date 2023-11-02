@@ -37,6 +37,7 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = new Player();
         player.setPlayerName(playerDTO.getPlayerName());
         player.setPlayerRole(playerDTO.getPlayerRole());
+        player.setPlayerid(player.getPlayerid());
         playerRepository.save(player);
     }
 
