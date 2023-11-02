@@ -24,14 +24,5 @@ public class SprintController {
     {
         this.sprintService = sprintService;
     }
-
-    @PostMapping("/add-sprint")
-    public ResponseEntity<String> addSprint(@RequestBody SprintDto sprintDto) {
-        try {
-            sprintService.saveSprint(sprintDto);
-            return ResponseEntity.ok("Sprint added successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding sprint");
-        }
-    }
+    
 }

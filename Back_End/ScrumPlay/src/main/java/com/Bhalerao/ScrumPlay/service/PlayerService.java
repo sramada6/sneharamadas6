@@ -10,4 +10,6 @@ public interface PlayerService {
     List<PlayerDto> findAllPlayers();
 
     void savePlayer(PlayerDto playerDTO);
+
+    void savePlayers(List<PlayerDto> playerDtos);
 }
