@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,6 @@ public class ProblemStatement extends JFrame {
     private JPanel contentPane;
     private JLabel lblNewLabel_1;
     private JTextArea textArea;
-    private JTextArea commentsTextArea; // Added for comments
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -63,16 +64,16 @@ public class ProblemStatement extends JFrame {
         btnNewButton_1.setBounds(6, 237, 215, 29);
         contentPane.add(btnNewButton_1);
 
-        // Fetch and populate statement as soon as the page opens
         String apiUrl = "http://localhost:8080/statements/1";
         String DefaultProblemStatement = sendGetRequestToBackend(apiUrl);
-        System.out.println(DefaultProblemStatement);
-        lblNewLabel_1.setText("<html>" + DefaultProblemStatement + "</html");
+        Map<String, Object> defaultStatementMap = jsonToMap(DefaultProblemStatement);
 
-        // Added comments text area
-//        commentsTextArea = new JTextArea();
-//        commentsTextArea.setBounds(6, 180, 428, 51);
-//        contentPane.add(commentsTextArea);
+        Object statementValue = defaultStatementMap.get("statement");
+
+        if (statementValue == null) {
+            System.out.println("Key 'statement' not found in the map.");
+        }
+        lblNewLabel_1.setText("<html>" + statementValue.toString() + "</html");
 
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -91,17 +92,9 @@ public class ProblemStatement extends JFrame {
                         selectProblemStatement.setVisible(true);
                     }
                 });
-
-                // Extract statements and comments from JSON and print
-//                ArrayList<String> statementsAndComments = jsonStringToArray(problemStatements);
-//                textArea.setText(""); // Clear the text area
-//                for (String statement : statementsAndComments) {
-//                    textArea.append(statement + "\n");
-//                }
             }
         });
 
-        // Start Sprint Planning button functionality (restore from the previous code)
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ProductBacklog newFrame = new ProductBacklog();
@@ -127,6 +120,8 @@ public class ProblemStatement extends JFrame {
         }
 
         return statementsAndComments;
+    }public static Map<String, Object> jsonToMap(String jsonString) {
+        return new JSONObject(jsonString).toMap();
     }
 
     private String sendGetRequestToBackend(String apiUrl) {

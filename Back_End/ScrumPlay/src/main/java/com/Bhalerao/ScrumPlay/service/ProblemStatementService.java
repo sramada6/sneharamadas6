@@ -13,4 +13,5 @@ public interface ProblemStatementService {
 
     void saveProblemStatement(ProblemStatementDto problemStatementDto);
 
+    ProblemStatementDto findStatementById(int statementId);
 }

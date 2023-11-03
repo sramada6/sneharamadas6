@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -24,11 +25,20 @@ public class ProblemStatementController {
     }
 
     @GetMapping("/statements")
-    public ResponseEntity<List<ProblemStatementDto>> getStatements(Model model)
-    {
+    public ResponseEntity<List<ProblemStatementDto> > getStatements() {
         List<ProblemStatementDto> statements = problemStatementService.findAllStatements();
-        model.addAttribute("ProblemStatements", statements);
         return ResponseEntity.ok(statements);
+    }
+
+    @GetMapping("/statements/{statementId}")
+    public ResponseEntity<ProblemStatementDto> getStatementById(@PathVariable int statementId) {
+        ProblemStatementDto statement = problemStatementService.findStatementById(statementId);
+
+        if (statement != null) {
+            return ResponseEntity.ok(statement);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/add-statement")

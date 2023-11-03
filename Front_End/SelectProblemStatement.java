@@ -31,8 +31,6 @@ public class SelectProblemStatement extends JFrame {
         contentPane.add(lblNewLabel);
 
         DefaultListModel<String> listModel = new DefaultListModel<>();
-
-        // Convert the JSON string to an ArrayList of statements
         ArrayList<Map<String, Object>> mapStComments = jsonStringToList(problemStatements);
         ArrayList<String> statements = extractStatements(mapStComments);
 
@@ -65,16 +63,11 @@ public class SelectProblemStatement extends JFrame {
             }
         });
     }
-
-//    private Map<String, String> jsonStringToMap(String jsonString) {
-//        Map<String, String> statements = new Map<>();
-//    }
-
     public void addSelectionListener(SelectionListener listener) {
         this.selectionListener = listener;
     }
 
-    private ArrayList<String> extractStatements(ArrayList<Map<String, Object>> jsonArr) {
+    public static ArrayList<String> extractStatements(ArrayList<Map<String, Object>> jsonArr) {
         ArrayList<String> extractedStatements = new ArrayList<>();
 
         for (Map<String, Object> statement : jsonArr) {
@@ -87,7 +80,7 @@ public class SelectProblemStatement extends JFrame {
         return extractedStatements;
     }
 
-    private ArrayList<Map<String, Object>> jsonStringToList(String jsonString) {
+    public static ArrayList<Map<String, Object>> jsonStringToList(String jsonString) {
         ArrayList<Map<String, Object>> statements = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
@@ -110,9 +103,7 @@ public class SelectProblemStatement extends JFrame {
         return statements;
     }
 
-    // Implement a method to get comments for the selected problem statement
     private String getCommentsForStatement(String selectedStatement, ArrayList<Map<String, Object>> mapStComments) {
-        System.out.println(selectedStatement);
         for (Map<String, Object> comment : mapStComments) {
             String statement = comment.get("statement").toString();
             if (selectedStatement.equals(statement)) {

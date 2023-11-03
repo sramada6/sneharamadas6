@@ -72,9 +72,8 @@ public class ProductBacklog extends JFrame {
         statusDropdown = new JComboBox<>(new String[]{"New", "Ready", "In Progress", "Ready for Test", "Closed"});
         playerDropdown = new JComboBox<>(new String[]{"Player 1", "Player 2", "Player 3", "Player 4", "Player 5"});
 
-        // Updated to JComboBox for User Story Points
         userStoryPointsField = new JComboBox<>(new String[]{"1", "2", "3", "5"});
-        userStoryPointsField.setSelectedIndex(0); // Set the default selection
+        userStoryPointsField.setSelectedIndex(0);
 
         statusAssignPanel.add(new JLabel("Status:"));
         statusAssignPanel.add(statusDropdown);
