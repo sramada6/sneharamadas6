@@ -1,3 +1,6 @@
+
+package ScrumPlay_FrontEnd;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,24 +16,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+
 public class ProblemStatement extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JLabel lblNewLabel_1;
     private JTextArea textArea;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ProblemStatement frame = new ProblemStatement();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                try {
+//                    ProblemStatement frame = new ProblemStatement();
+//                    frame.setVisible(true);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//    }
 
     public ProblemStatement() {
         setTitle("Problem Statement");
@@ -81,8 +86,8 @@ public class ProblemStatement extends JFrame {
                 String problemStatements = sendGetRequestToBackend(apiUrl);
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        SelectProblemStatement selectProblemStatement = new SelectProblemStatement(problemStatements);
-                        selectProblemStatement.addSelectionListener(new SelectionListener() {
+                        ScrumPlay_FrontEnd.SelectProblemStatement selectProblemStatement = new ScrumPlay_FrontEnd.SelectProblemStatement(problemStatements);
+                        selectProblemStatement.addSelectionListener(new ScrumPlay_FrontEnd.SelectionListener() {
                             @Override
                             public void onSelection(String selectedProblemStatement, String comments) {
                                 lblNewLabel_1.setText("<html>" + selectedProblemStatement + "</html");
@@ -97,7 +102,7 @@ public class ProblemStatement extends JFrame {
 
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ProductBacklog newFrame = new ProductBacklog();
+                ScrumPlay_FrontEnd.ProductBacklog newFrame = new ScrumPlay_FrontEnd.ProductBacklog();
                 newFrame.setVisible(true);
             }
         });
@@ -148,6 +153,3 @@ public class ProblemStatement extends JFrame {
     }
 }
 
-interface SelectionListener {
-    void onSelection(String selectedProblemStatement, String comments);
-}

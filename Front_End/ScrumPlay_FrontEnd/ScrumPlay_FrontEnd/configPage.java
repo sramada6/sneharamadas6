@@ -1,3 +1,5 @@
+package ScrumPlay_FrontEnd;
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -39,19 +41,19 @@ public class configPage extends JFrame {
 	private JButton btnStartSprint;
 	private int yOffset;
 
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					configPage frame = new configPage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ScrumPlay_FrontEnd.configPage frame = new ScrumPlay_FrontEnd.configPage();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	
 	public configPage() {
@@ -124,6 +126,8 @@ public class configPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				sendDataToBackend();
+				ScrumPlay_FrontEnd.ProblemStatement problemStatementFrame = new ScrumPlay_FrontEnd.ProblemStatement();
+				problemStatementFrame.setVisible(true);
 			}			
 		});	
 	}
