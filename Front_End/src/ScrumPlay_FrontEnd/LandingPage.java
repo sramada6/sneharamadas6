@@ -1,3 +1,5 @@
+package ScrumPlay_FrontEnd;
+
 import java.awt.EventQueue;
 import java.awt.Image;
 
@@ -114,6 +116,12 @@ public class LandingPage extends JFrame{
 		frame.getContentPane().add(FooterLogo);
 		
 		NextPageButton = new JButton("Let's Go!");
+		NextPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				configPage newFrame = new configPage();
+				newFrame.setVisible(true);
+			}
+		});
 		NextPageButton.setBackground(new Color(139, 69, 19));
 		NextPageButton.setBounds(760, 526, 122, 43);
 		frame.getContentPane().add(NextPageButton);
