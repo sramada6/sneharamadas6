@@ -16,6 +16,7 @@ public class ProblemStatement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int statementid;
-    private String ProblemStatement;
+    private String Statement;
     private int NumOfUserStories;
+    private String comments;
 }
