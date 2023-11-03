@@ -7,11 +7,11 @@ import java.util.Map;
 
 public class ProductBacklog extends JFrame {
     private static final long serialVersionUID = 1L;
-	private JList<String> userList;
+    private JList<String> userList;
     private DefaultListModel<String> listModel;
     private JPanel detailPanel;
     private Map<String, String> userStoryDescriptions;
-    private JTextField userStoryPointsField;
+    private JComboBox<String> userStoryPointsField; // Updated to JComboBox
     private JComboBox<String> playerDropdown;
     private JComboBox<String> statusDropdown;
     private JTextArea commentsTextArea;
@@ -53,7 +53,7 @@ public class ProductBacklog extends JFrame {
         userStoryDescriptions.put("US#002/Follow up for Scrum Intro", "As a developer, I want to design a webpage which is a follow up for the landing page when the \"see more..\" button is clicked. This page would provide detailed information including a tutorial for the concepts such as sprint, sprint backlog, etc.");
         userStoryDescriptions.put("US#003/Create Database", "As a developer, I want to design a database which can store all the information regarding ScrumPlay which includes the game configuration, problem statement, user stories, etc. This can be used to fetch details when required so that it can be displayed in the front-end of ScrumPlay.");
         userStoryDescriptions.put("US#004/Design game configuration page", "As a developer, I want to create a set game configuration page where the user can set parameters such as team size, length of sprint and length of scrum call. The user can also decide the roles of the players, such as Product Owner, Scrum Master and developers.");
-        userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "As a developer, I want to display previous game scores and sprint charts so that the user can have an idea what all values are expected and also to know about the history of the previos games.");
+        userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "As a developer, I want to display previous game scores and sprint charts so that the user can have an idea what all values are expected and also to know about the history of the previous games.");
     }
 
     private void showUserStoryDetails(String userStory) {
@@ -67,11 +67,15 @@ public class ProductBacklog extends JFrame {
         Font boldFont = new Font(userStoryLabel.getFont().getName(), Font.BOLD, userStoryLabel.getFont().getSize());
         userStoryLabel.setFont(boldFont);
 
-        //panel for status and assign to
+        // Panel for status and assign to
         JPanel statusAssignPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         statusDropdown = new JComboBox<>(new String[]{"New", "Ready", "In Progress", "Ready for Test", "Closed"});
         playerDropdown = new JComboBox<>(new String[]{"Player 1", "Player 2", "Player 3", "Player 4", "Player 5"});
-        userStoryPointsField = new JTextField(5);
+
+        // Updated to JComboBox for User Story Points
+        userStoryPointsField = new JComboBox<>(new String[]{"1", "2", "3", "5"});
+        userStoryPointsField.setSelectedIndex(0); // Set the default selection
+
         statusAssignPanel.add(new JLabel("Status:"));
         statusAssignPanel.add(statusDropdown);
         statusAssignPanel.add(new JLabel("Assign to:"));
@@ -79,7 +83,7 @@ public class ProductBacklog extends JFrame {
         statusAssignPanel.add(new JLabel("User Story Points: "));
         statusAssignPanel.add(userStoryPointsField);
 
-        //panel for user story description
+        // Panel for user story description
         JPanel descriptionPanel = new JPanel(new BorderLayout());
         JTextArea descriptionTextArea = new JTextArea(5, 20);
         descriptionTextArea.setLineWrap(true);
@@ -90,7 +94,7 @@ public class ProductBacklog extends JFrame {
         descriptionPanel.add(new JLabel("User Story Description:"), BorderLayout.NORTH);
         descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
 
-        //panel for comments
+        // Panel for comments
         JPanel commentsPanel = new JPanel(new BorderLayout());
         commentsTextArea = new JTextArea(5, 20);
         commentsTextArea.setLineWrap(true);
@@ -105,12 +109,12 @@ public class ProductBacklog extends JFrame {
         userStoryInfoPanel.add(descriptionPanel);
         userStoryInfoPanel.add(commentsPanel);
 
-        //panel for the "End Sprint Planning" button
+        // Panel for the "End Sprint Planning" button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton endSprintButton = new JButton("End Sprint Planning");
         endSprintButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
+                // Handle button action here
             }
         });
         buttonPanel.add(endSprintButton);
@@ -120,8 +124,8 @@ public class ProductBacklog extends JFrame {
         detailPanel.revalidate();
         detailPanel.repaint();
     }
-    /*
-     public static void main(String[] args) {
+}
+ /*   public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
                 ProductBacklog frame = new ProductBacklog();
@@ -130,6 +134,6 @@ public class ProductBacklog extends JFrame {
                 e.printStackTrace();
             }
         });
-    } 
-    */
+    }
 }
+*/

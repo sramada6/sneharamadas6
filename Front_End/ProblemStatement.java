@@ -1,25 +1,22 @@
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ProblemStatement extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JLabel lblNewLabel_1;
     private JTextArea textArea;
-
-    private static final String DEFAULT_PROBLEM_STATEMENT = "Build a Scrum Simulator and Training Tool to help users understand the Agile methodology.";
+    private JTextArea commentsTextArea; // Added for comments
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -48,10 +45,9 @@ public class ProblemStatement extends JFrame {
 
         JLabel lblNewLabel = new JLabel("Your Problem Statement:");
         lblNewLabel.setBounds(6, 6, 200, 20);
-        contentPane.add(lblNewLabel); 
+        contentPane.add(lblNewLabel);
 
         lblNewLabel_1 = new JLabel();
-        lblNewLabel_1.setText("<html>" + DEFAULT_PROBLEM_STATEMENT + "</html>");
         lblNewLabel_1.setBounds(6, 29, 428, 46);
         contentPane.add(lblNewLabel_1);
 
@@ -67,38 +63,75 @@ public class ProblemStatement extends JFrame {
         btnNewButton_1.setBounds(6, 237, 215, 29);
         contentPane.add(btnNewButton_1);
 
+        // Fetch and populate statement as soon as the page opens
+        String apiUrl = "http://localhost:8080/statements/1";
+        String DefaultProblemStatement = sendGetRequestToBackend(apiUrl);
+        System.out.println(DefaultProblemStatement);
+        lblNewLabel_1.setText("<html>" + DefaultProblemStatement + "</html");
+
+        // Added comments text area
+//        commentsTextArea = new JTextArea();
+//        commentsTextArea.setBounds(6, 180, 428, 51);
+//        contentPane.add(commentsTextArea);
+
+        btnNewButton_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String apiUrl = "http://localhost:8080/statements";
+                String problemStatements = sendGetRequestToBackend(apiUrl);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        SelectProblemStatement selectProblemStatement = new SelectProblemStatement(problemStatements);
+                        selectProblemStatement.addSelectionListener(new SelectionListener() {
+                            @Override
+                            public void onSelection(String selectedProblemStatement, String comments) {
+                                lblNewLabel_1.setText("<html>" + selectedProblemStatement + "</html");
+                                textArea.setText(comments);
+                            }
+                        });
+                        selectProblemStatement.setVisible(true);
+                    }
+                });
+
+                // Extract statements and comments from JSON and print
+//                ArrayList<String> statementsAndComments = jsonStringToArray(problemStatements);
+//                textArea.setText(""); // Clear the text area
+//                for (String statement : statementsAndComments) {
+//                    textArea.append(statement + "\n");
+//                }
+            }
+        });
+
+        // Start Sprint Planning button functionality (restore from the previous code)
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ProductBacklog newFrame = new ProductBacklog();
                 newFrame.setVisible(true);
             }
         });
-        
-        btnNewButton_1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String apiUrl = "http";
-                String problemStatements = sendGetRequestToBackend(apiUrl);
-                
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        SelectProblemStatement selectProblemStatement = new SelectProblemStatement(problemStatements);
-                        selectProblemStatement.addSelectionListener(new SelectionListener() {
-                            @Override
-                            public void onSelection(String selectedProblemStatement) {
-                                lblNewLabel_1.setText("<html>" + selectedProblemStatement + "</html>");
-                            }
-                        });
-                        selectProblemStatement.setVisible(true);
-                    }
-                });
-            }
-        });
     }
-    
+
+    public static ArrayList<String> jsonStringToArray(String jsonString) throws JSONException {
+        ArrayList<String> statementsAndComments = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray(jsonString);
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            if (jsonObject.has("statement")) {
+                String statement = jsonObject.getString("statement");
+                if (jsonObject.has("comments")) {
+                    String comments = jsonObject.getString("comments");
+                    statement += " (Comments: " + comments + ")";
+                }
+                statementsAndComments.add(statement);
+            }
+        }
+
+        return statementsAndComments;
+    }
+
     private String sendGetRequestToBackend(String apiUrl) {
         try {
-            @SuppressWarnings("deprecation")
-			URL url = new URL(apiUrl);
+            URL url = new URL(apiUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
@@ -121,5 +154,5 @@ public class ProblemStatement extends JFrame {
 }
 
 interface SelectionListener {
-    void onSelection(String selectedProblemStatement);
+    void onSelection(String selectedProblemStatement, String comments);
 }
