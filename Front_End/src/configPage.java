@@ -122,7 +122,8 @@ public class configPage extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				 sendDataToBackend();
+
+				sendDataToBackend();
 			}			
 		});	
 	}
@@ -166,8 +167,8 @@ public class configPage extends JFrame {
 	        JSONArray playersArray = new JSONArray();
 	        for (int i = 0; i < txtplayerNames.length; i++) {
 	            JSONObject playerJson = new JSONObject();
-	            playerJson.put("name", txtplayerNames[i].getText());
-	            playerJson.put("role", ddplayerRoles[i].getSelectedItem().toString());
+	            playerJson.put("playerName", txtplayerNames[i].getText());
+	            playerJson.put("playerRole", ddplayerRoles[i].getSelectedItem().toString());
 	            playersArray.put(playerJson);
 	        }
 	        jsonData.put("players", playersArray);
@@ -178,13 +179,14 @@ public class configPage extends JFrame {
 
 	private void sendDataToBackend() {
         try {
-            URL url = new URL("http://localhost:8080/add-player"); 
+            URL url = new URL("http://localhost:8080/add-gameConfig");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
             JSONObject jsonData = prepareJsonData();
+			System.out.println(jsonData);
             try (OutputStream os = connection.getOutputStream()) {
                 byte[] input = jsonData.toString().getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
