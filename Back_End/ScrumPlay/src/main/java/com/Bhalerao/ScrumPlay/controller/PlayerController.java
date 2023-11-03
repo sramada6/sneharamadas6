@@ -1,6 +1,8 @@
 package com.Bhalerao.ScrumPlay.controller;
 
 import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
+import lombok.Builder;
+
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
 import com.Bhalerao.ScrumPlay.service.PlayerService;
 import com.Bhalerao.ScrumPlay.service.SprintService;
@@ -77,9 +79,11 @@ public class PlayerController {
             }
             playerService.savePlayers(playerDtos);
 
-            int teamSize = (int) requestData.get("teamSize");
-            int sprintLength = (int) requestData.get("sprintLength");
-            float scrumCallLength = ((Double) requestData.get("scrumCallLength")).floatValue();
+            int teamSize = Integer.parseInt(requestData.get("teamSize").toString()) ;
+            int sprintLength = Integer.parseInt(requestData.get("sprintLength").toString());
+
+            float scrumCallLength = Float.parseFloat(requestData.get("scrumCallLength").toString());
+
 
             SprintDto sprintDto = SprintDto.builder()
                     .teamSize(teamSize)
