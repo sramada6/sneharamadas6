@@ -17,8 +17,10 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class FollowUpPage_1 {
+public class FollowUpPage_1 extends JFrame{
 
 	private JFrame frame;
 	private JLabel logo;
@@ -60,6 +62,9 @@ public class FollowUpPage_1 {
 		frame.getContentPane().setForeground(new Color(128, 0, 0));
 		frame.getContentPane().setBackground(new Color(0, 206, 209));
 		frame.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 908, 720);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		
 		logo = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/ScrumPlay Logo.jpg")).getImage();
@@ -81,6 +86,12 @@ public class FollowUpPage_1 {
 		frame.getContentPane().add(FooterLogo);
 		
 		PreviousPageButton = new JButton("Back");
+		PreviousPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LandingPage newFrame = new LandingPage();
+				newFrame.setVisible(true);
+			}
+		});
 		PreviousPageButton.setBackground(new Color(139, 69, 19));
 		PreviousPageButton.setBounds(760, 526, 122, 43);
 		frame.getContentPane().add(PreviousPageButton);
@@ -101,8 +112,7 @@ public class FollowUpPage_1 {
 				+ "\"Professional Scrum\" delves beyond the surface of merely adhering to the structural elements of the Scrum framework. It acknowledges that effectiveness within Scrum demands a shift in mindset and approaches to working and thinking, fostering an environment conducive to this change, notably underpinned by trust. Going beyond the mechanical application, it necessitates embracing the Scrum Values within everyday work practices. This mindset shift, which embodies a deeper commitment to the principles of Scrum, is what constitutes \"Professional Scrum.\"");
 		scrollPane.setViewportView(information);
 	    
-		frame.setBounds(100, 100, 908, 720);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }
  

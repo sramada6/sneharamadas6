@@ -17,8 +17,10 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class FollowUpPage_3 {
+public class FollowUpPage_3 extends JFrame{
 
 	private JFrame frame;
 	private JLabel logo;
@@ -60,6 +62,8 @@ public class FollowUpPage_3 {
 		frame.getContentPane().setForeground(new Color(128, 0, 0));
 		frame.getContentPane().setBackground(new Color(0, 206, 209));
 		frame.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 908, 720);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		logo = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/ScrumPlay Logo.jpg")).getImage();
@@ -81,6 +85,12 @@ public class FollowUpPage_3 {
 		frame.getContentPane().add(FooterLogo);
 		
 		PreviousPageButton = new JButton("Back");
+		PreviousPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LandingPage newFrame = new LandingPage();
+				newFrame.setVisible(true);
+			}
+		});
 		PreviousPageButton.setBackground(new Color(139, 69, 19));
 		PreviousPageButton.setBounds(760, 526, 122, 43);
 		frame.getContentPane().add(PreviousPageButton);
@@ -98,9 +108,8 @@ public class FollowUpPage_3 {
 				+ "During the Scrum sprint, team members are expected to update the sprint backlog as new information is available, but minimally once per day. Many teams will do this during the daily scrum. Once each day, the estimated work remaining in the sprint is calculated and graphed by the ScrumMaster, resulting in a sprint burndown chart like this one.\n \n"
 				+ "The team does its best to pull the right amount of work into the Scrum sprint, but sometimes too much or too little work is pulled in during planning. In this case, the team needs to add or remove tasks.\n \n");
 		scrollPane.setViewportView(information);
-	    
-		frame.setBounds(100, 100, 908, 720);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		frame.setVisible(true);
 	}
 }
  

@@ -12,8 +12,10 @@ import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class LandingPage {
+public class LandingPage extends JFrame{
 
 	private JFrame frame;
 	private JLabel logo;
@@ -64,6 +66,8 @@ public class LandingPage {
 		frame.getContentPane().setForeground(new Color(128, 0, 0));
 		frame.getContentPane().setBackground(new Color(0, 206, 209));
 		frame.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 908, 720);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		logo = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/ScrumPlay Logo.jpg")).getImage();
@@ -93,6 +97,12 @@ public class LandingPage {
 		SubWindow1.setCaretColor(SubWindow1.getBackground());
 		
 		SubButton1 = new JButton("Read More->");
+		SubButton1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FollowUpPage_1 newFrame = new FollowUpPage_1();
+				newFrame.setVisible(true);
+			}
+		});
 		SubButton1.setBackground(Color.GRAY);
 		SubButton1.setBounds(30, 234, 140, 23);
 		frame.getContentPane().add(SubButton1);
@@ -118,6 +128,12 @@ public class LandingPage {
 		frame.getContentPane().add(SubWindow2);
 		
 		SubButton1_1 = new JButton("Read More->");
+		SubButton1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FollowUpPage_2 newFrame = new FollowUpPage_2();
+				newFrame.setVisible(true);
+			}
+		});
 		SubButton1_1.setBackground(Color.GRAY);
 		SubButton1_1.setBounds(31, 357, 139, 23);
 		frame.getContentPane().add(SubButton1_1);
@@ -132,6 +148,12 @@ public class LandingPage {
 		frame.getContentPane().add(SubWindow3);
 		
 		SubButton1_2 = new JButton("Read More->");
+		SubButton1_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FollowUpPage_3 newFrame = new FollowUpPage_3();
+				newFrame.setVisible(true);
+			}
+		});
 		SubButton1_2.setBackground(Color.GRAY);
 		SubButton1_2.setBounds(31, 492, 139, 23);
 		frame.getContentPane().add(SubButton1_2);
@@ -146,6 +168,12 @@ public class LandingPage {
 		frame.getContentPane().add(SubWindow4);
 		
 		SubButton1_3 = new JButton("Read More->");
+		SubButton1_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FollowUpPage_4 newFrame = new FollowUpPage_4();
+				newFrame.setVisible(true);
+			}
+		});
 		SubButton1_3.setBackground(Color.GRAY);
 		SubButton1_3.setBounds(270, 234, 275, 23);
 		frame.getContentPane().add(SubButton1_3);
@@ -160,11 +188,17 @@ public class LandingPage {
 		frame.getContentPane().add(SubWindow5);
 		
 		SubButton1_4 = new JButton("Read More->");
+		SubButton1_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FollowUpPage_5 newFrame = new FollowUpPage_5();
+				newFrame.setVisible(true);
+			}
+		});
 		SubButton1_4.setBackground(Color.GRAY);
 		SubButton1_4.setBounds(270, 357, 275, 23);
 		frame.getContentPane().add(SubButton1_4);
-		frame.setBounds(100, 100, 908, 715);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		frame.setVisible(true);
 	}
 }
  

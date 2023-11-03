@@ -17,8 +17,10 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class FollowUpPage_4 {
+public class FollowUpPage_4 extends JFrame{
 
 	private JFrame frame;
 	private JLabel logo;
@@ -60,6 +62,8 @@ public class FollowUpPage_4 {
 		frame.getContentPane().setForeground(new Color(128, 0, 0));
 		frame.getContentPane().setBackground(new Color(0, 206, 209));
 		frame.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 1038, 720);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		logo = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/ScrumPlay Logo.jpg")).getImage();
@@ -81,6 +85,12 @@ public class FollowUpPage_4 {
 		frame.getContentPane().add(FooterLogo);
 		
 		PreviousPageButton = new JButton("Back");
+		PreviousPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LandingPage newFrame = new LandingPage();
+				newFrame.setVisible(true);
+			}
+		});
 		PreviousPageButton.setBackground(new Color(139, 69, 19));
 		PreviousPageButton.setBounds(760, 526, 122, 43);
 		frame.getContentPane().add(PreviousPageButton);
@@ -100,8 +110,7 @@ public class FollowUpPage_4 {
 				+ "To get even more accurate we can also take the rate of changes in total work into account. However we have to be careful when using this model since the rate of change will be high in the beginning of the project but will drop at the end.\n \n");
 		scrollPane.setViewportView(information);
 	    
-		frame.setBounds(100, 100, 1038, 720);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }
  

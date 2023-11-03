@@ -17,8 +17,10 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class FollowUpPage_5 {
+public class FollowUpPage_5 extends JFrame{
 
 	private JFrame frame;
 	private JLabel logo;
@@ -60,6 +62,8 @@ public class FollowUpPage_5 {
 		frame.getContentPane().setForeground(new Color(128, 0, 0));
 		frame.getContentPane().setBackground(new Color(0, 206, 209));
 		frame.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 1038, 720);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		logo = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/ScrumPlay Logo.jpg")).getImage();
@@ -81,6 +85,12 @@ public class FollowUpPage_5 {
 		frame.getContentPane().add(FooterLogo);
 		
 		PreviousPageButton = new JButton("Back");
+		PreviousPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LandingPage newFrame = new LandingPage();
+				newFrame.setVisible(true);
+			}
+		});
 		PreviousPageButton.setBackground(new Color(139, 69, 19));
 		PreviousPageButton.setBounds(760, 526, 122, 43);
 		frame.getContentPane().add(PreviousPageButton);
@@ -114,8 +124,7 @@ public class FollowUpPage_5 {
 				+ "This is a relatively unknown but immensely useful way of saving time at meetings by avoiding re-explaining things in case some team members are unaware of particular references.\n \n");
 		scrollPane.setViewportView(information);
 	    
-		frame.setBounds(100, 100, 1038, 720);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }
  

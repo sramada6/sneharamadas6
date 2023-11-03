@@ -17,8 +17,10 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class FollowUpPage_2 {
+public class FollowUpPage_2 extends JFrame{
 
 	private JFrame frame;
 	private JLabel logo;
@@ -60,6 +62,8 @@ public class FollowUpPage_2 {
 		frame.getContentPane().setForeground(new Color(128, 0, 0));
 		frame.getContentPane().setBackground(new Color(0, 206, 209));
 		frame.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 908, 720);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		logo = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/ScrumPlay Logo.jpg")).getImage();
@@ -81,6 +85,12 @@ public class FollowUpPage_2 {
 		frame.getContentPane().add(FooterLogo);
 		
 		PreviousPageButton = new JButton("Back");
+		PreviousPageButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LandingPage newFrame = new LandingPage();
+				newFrame.setVisible(true);
+			}
+		});
 		PreviousPageButton.setBackground(new Color(139, 69, 19));
 		PreviousPageButton.setBounds(760, 526, 122, 43);
 		frame.getContentPane().add(PreviousPageButton);
@@ -99,8 +109,7 @@ public class FollowUpPage_2 {
 				+ "Optimizing sprint processes in Jira involves leveraging automation to streamline tasks. Three common automation rules include sending a weekly Slack message listing all open sprint issues, automatically assigning unfinished issues to the next sprint upon sprint completion, and facilitating the movement of issues to the next active sprint if they transition to 'In Progress' and the current sprint is empty. These rules enhance efficiency by ensuring better tracking, timely assignment, and smoother transitions within the sprint cycles.");
 		scrollPane.setViewportView(information);
 	    
-		frame.setBounds(100, 100, 908, 720);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }
  
