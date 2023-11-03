@@ -16,8 +16,8 @@ public class SprintServiceImpl implements SprintService {
     private SprintRepository sprintRepository;
 
     @Autowired
-    public SprintServiceImpl(SprintRepository SprintService){
-        this.sprintRepository = SprintService;
+    public SprintServiceImpl(SprintRepository sprintRepository){
+        this.sprintRepository = sprintRepository;
     }
     @Override
     public List<SprintDto> findAllSprints() {
@@ -31,6 +31,7 @@ public class SprintServiceImpl implements SprintService {
         sprint.setTeamSize(sprintDto.getTeamSize());
         sprint.setScrumCallLength(sprintDto.getScrumCallLength());
         sprint.setSprintLength(sprintDto.getSprintLength());
+        sprint.setSprintid(sprintDto.getSprintid());
         sprintRepository.save(sprint);
     }
 

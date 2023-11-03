@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class PlayerController {
@@ -30,6 +31,30 @@ public class PlayerController {
     public PlayerController(PlayerService playerService, SprintService sprintService) {
         this.playerService = playerService;
         this.sprintService = sprintService;
+    }
+    @GetMapping("/players")
+    public ResponseEntity<List<PlayerDto>> getAllPlayers() {
+        try {
+            List<PlayerDto> players = playerService.findAllPlayers();
+            return ResponseEntity.ok(players);
+        } catch (Exception e) {
+            log.error("Error retrieving players", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/player-names")
+    public ResponseEntity<List<String>> getPlayerNames() {
+        try {
+            List<PlayerDto> players = playerService.findAllPlayers();
+            List<String> playerNames = players.stream()
+                    .map(PlayerDto::getPlayerName)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(playerNames);
+        } catch (Exception e) {
+            log.error("Error retrieving player names", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
+        }
     }
 
     @PostMapping("/add-gameConfig")
