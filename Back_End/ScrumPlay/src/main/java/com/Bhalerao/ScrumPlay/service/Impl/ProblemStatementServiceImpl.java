@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +39,18 @@ public class ProblemStatementServiceImpl implements ProblemStatementService {
         ps.setNumOfUserStories(problemStatementDto.getNumOfUserStories());
         ps.setStatementid(problemStatementDto.getStatementid());
         problemStatementRepository.save(ps);
+    }
+
+    @Override
+    public ProblemStatementDto findStatementById(int statementId) {
+        Optional<ProblemStatement> statement = problemStatementRepository.findById((long) statementId);
+
+        if (statement.isPresent()) {
+            // Convert ProblemStatement entity to ProblemStatementDto
+            return mapToStatementDto(statement.get());
+        } else {
+            return null; // or throw an exception, depending on your use case
+        }
     }
 
     private ProblemStatementDto mapToStatementDto(ProblemStatement statement) {
