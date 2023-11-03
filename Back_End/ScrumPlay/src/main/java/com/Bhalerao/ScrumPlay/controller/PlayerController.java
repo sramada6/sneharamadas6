@@ -52,9 +52,11 @@ public class PlayerController {
             }
             playerService.savePlayers(playerDtos);
 
-            int teamSize = (int) requestData.get("teamSize");
-            int sprintLength = (int) requestData.get("sprintLength");
-            float scrumCallLength = ((Double) requestData.get("scrumCallLength")).floatValue();
+            int teamSize = Integer.parseInt(requestData.get("teamSize").toString()) ;
+            int sprintLength = Integer.parseInt(requestData.get("sprintLength").toString());
+
+            float scrumCallLength = Float.parseFloat(requestData.get("scrumCallLength").toString());
+
 
             SprintDto sprintDto = SprintDto.builder()
                     .teamSize(teamSize)
