@@ -73,6 +73,30 @@ LOCK TABLES `junction_table` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `player`
+--
+
+DROP TABLE IF EXISTS `player`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `player` (
+  `playerid` int NOT NULL AUTO_INCREMENT,
+  `player_name` varchar(255) DEFAULT NULL,
+  `player_role` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`playerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `player`
+--
+
+LOCK TABLES `player` WRITE;
+/*!40000 ALTER TABLE `player` DISABLE KEYS */;
+/*!40000 ALTER TABLE `player` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `player_details`
 --
 
@@ -97,6 +121,30 @@ LOCK TABLES `player_details` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `problem_statement`
+--
+
+DROP TABLE IF EXISTS `problem_statement`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `problem_statement` (
+  `statementid` int NOT NULL AUTO_INCREMENT,
+  `num_of_user_stories` int NOT NULL,
+  `problem_statement` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`statementid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `problem_statement`
+--
+
+LOCK TABLES `problem_statement` WRITE;
+/*!40000 ALTER TABLE `problem_statement` DISABLE KEYS */;
+/*!40000 ALTER TABLE `problem_statement` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ps_details`
 --
 
@@ -107,9 +155,7 @@ CREATE TABLE `ps_details` (
   `ps_id` int NOT NULL,
   `ps_title` varchar(1000) DEFAULT NULL,
   `ps_notes` varchar(5000) DEFAULT NULL,
-  `us_id` int DEFAULT NULL,
-  KEY `us_id` (`us_id`),
-  CONSTRAINT `ps_details_ibfk_1` FOREIGN KEY (`us_id`) REFERENCES `us_details` (`us_id`)
+  PRIMARY KEY (`ps_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -120,6 +166,57 @@ CREATE TABLE `ps_details` (
 LOCK TABLES `ps_details` WRITE;
 /*!40000 ALTER TABLE `ps_details` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ps_details` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `scrum_details`
+--
+
+DROP TABLE IF EXISTS `scrum_details`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `scrum_details` (
+  `scrum_id` int NOT NULL,
+  `scrum_time` varchar(500) DEFAULT NULL,
+  `ps_id` int DEFAULT NULL,
+  PRIMARY KEY (`scrum_id`),
+  KEY `ps_id` (`ps_id`),
+  CONSTRAINT `scrum_details_ibfk_1` FOREIGN KEY (`ps_id`) REFERENCES `ps_details` (`ps_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `scrum_details`
+--
+
+LOCK TABLES `scrum_details` WRITE;
+/*!40000 ALTER TABLE `scrum_details` DISABLE KEYS */;
+/*!40000 ALTER TABLE `scrum_details` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sprint`
+--
+
+DROP TABLE IF EXISTS `sprint`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sprint` (
+  `sprintid` int NOT NULL AUTO_INCREMENT,
+  `scrum_call_length` float NOT NULL,
+  `sprint_length` int NOT NULL,
+  `team_size` int NOT NULL,
+  PRIMARY KEY (`sprintid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sprint`
+--
+
+LOCK TABLES `sprint` WRITE;
+/*!40000 ALTER TABLE `sprint` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sprint` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -159,6 +256,9 @@ CREATE TABLE `us_details` (
   `us_description` varchar(600) DEFAULT NULL,
   `us_points` int DEFAULT NULL,
   `us_status` varchar(100) DEFAULT NULL,
+  `us_player` varchar(300) DEFAULT NULL,
+  `ps_id` int DEFAULT NULL,
+  `us_acc_criteria` varchar(600) DEFAULT NULL,
   PRIMARY KEY (`us_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -181,4 +281,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-31 23:20:21
+-- Dump completed on 2023-11-03 17:55:15
