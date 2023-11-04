@@ -12,8 +12,8 @@ public class main
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    configPage frame = new configPage();
-                    frame.setVisible(true);
+                    LandingPage firstPage = new LandingPage();
+                    firstPage.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
