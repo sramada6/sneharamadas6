@@ -67,11 +67,11 @@ public class FollowUpPage_5 extends JFrame{
 		frame.setBounds(100, 100, 1038, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		logo = new JLabel("");
-		Image img = new ImageIcon(this.getClass().getResource("/ScrumPlay Logo.jpg")).getImage();
-		logo.setIcon(new ImageIcon(img));
-		logo.setBounds(10, 24, 100, 100);
-		frame.getContentPane().add(logo);
+//		logo = new JLabel("");
+//		Image img = new ImageIcon(this.getClass().getResource("/ScrumPlay Logo.jpg")).getImage();
+//		logo.setIcon(new ImageIcon(img));
+//		logo.setBounds(10, 24, 100, 100);
+//		frame.getContentPane().add(logo);
 		
 		title = new JLabel("How to Manage Sprint Efficiently?");
 		title.setBackground(Color.BLUE);
@@ -80,11 +80,11 @@ public class FollowUpPage_5 extends JFrame{
 		title.setBounds(119, 24, 872, 100);
 		frame.getContentPane().add(title);
 		
-		FooterLogo = new JLabel("");
-		Image FootImg = new ImageIcon(this.getClass().getResource("/ScrumPlay Footer Logo.png")).getImage();
-		FooterLogo.setIcon(new ImageIcon(FootImg));
-		FooterLogo.setBounds(10, 572, 872, 93);
-		frame.getContentPane().add(FooterLogo);
+//		FooterLogo = new JLabel("");
+//		Image FootImg = new ImageIcon(this.getClass().getResource("/ScrumPlay Footer Logo.png")).getImage();
+//		FooterLogo.setIcon(new ImageIcon(FootImg));
+//		FooterLogo.setBounds(10, 572, 872, 93);
+//		frame.getContentPane().add(FooterLogo);
 		
 		PreviousPageButton = new JButton("Back");
 		PreviousPageButton.addActionListener(new ActionListener() {

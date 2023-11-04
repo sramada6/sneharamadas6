@@ -71,11 +71,11 @@ public class LandingPage extends JFrame{
 		frame.setBounds(100, 100, 908, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		logo = new JLabel("");
-		Image img = new ImageIcon(this.getClass().getResource("/ScrumPlay Logo.jpg")).getImage();
-		logo.setIcon(new ImageIcon(img));
-		logo.setBounds(10, 24, 100, 100);
-		frame.getContentPane().add(logo);
+//		logo = new JLabel("");
+//		Image img = new ImageIcon(this.getClass().getResource("/images/ScrumPlay Logo.jpg")).getImage();
+//		logo.setIcon(new ImageIcon(img));
+//		logo.setBounds(10, 24, 100, 100);
+//		frame.getContentPane().add(logo);
 		
 		title = new JLabel("ScrumPlay: A Scrum Game Experience");
 		title.setBackground(Color.BLUE);
@@ -109,11 +109,11 @@ public class LandingPage extends JFrame{
 		SubButton1.setBounds(30, 234, 140, 23);
 		frame.getContentPane().add(SubButton1);
 		
-		FooterLogo = new JLabel("");
-		Image FootImg = new ImageIcon(this.getClass().getResource("/ScrumPlay Footer Logo.png")).getImage();
-		FooterLogo.setIcon(new ImageIcon(FootImg));
-		FooterLogo.setBounds(10, 572, 872, 93);
-		frame.getContentPane().add(FooterLogo);
+//		FooterLogo = new JLabel("");
+//		Image FootImg = new ImageIcon(this.getClass().getResource("/ScrumPlay Footer Logo.png")).getImage();
+//		FooterLogo.setIcon(new ImageIcon(FootImg));
+//		FooterLogo.setBounds(10, 572, 872, 93);
+//		frame.getContentPane().add(FooterLogo);
 		
 		NextPageButton = new JButton("Let's Go!");
 		NextPageButton.addActionListener(new ActionListener() {
