@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -89,6 +91,7 @@ public class PlayerController {
                     .teamSize(teamSize)
                     .sprintLength(sprintLength)
                     .scrumCallLength(scrumCallLength)
+                    .startDate(LocalDate.now())
                     .build();
             sprintService.saveSprint(sprintDto);
 
