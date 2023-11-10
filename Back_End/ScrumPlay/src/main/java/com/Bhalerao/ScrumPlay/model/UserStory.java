@@ -21,6 +21,7 @@ public class UserStory {
 
     private int storyPoints = 0;
     private String status = "new";
+    private String storyDescription;
 
     @ManyToOne
     @JoinColumn(name = "assigned_player_id")

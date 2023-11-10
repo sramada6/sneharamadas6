@@ -1,6 +1,7 @@
 package com.Bhalerao.ScrumPlay.controller;
 
 import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
+import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
 import lombok.Builder;
 
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.slf4j.Logger;
@@ -59,6 +61,11 @@ public class PlayerController {
             log.error("Error retrieving player names", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
         }
+    }
+    @GetMapping("/players/{id}")
+    public ResponseEntity<PlayerDto> getPlayerById(@PathVariable Long id) {
+        PlayerDto p = playerService.findPlayerById(id);
+        return new ResponseEntity<>(p, HttpStatus.OK);
     }
 
     @PostMapping("/add-gameConfig")

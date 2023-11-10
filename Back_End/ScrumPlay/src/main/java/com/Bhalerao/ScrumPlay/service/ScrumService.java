@@ -5,6 +5,6 @@ import com.Bhalerao.ScrumPlay.Dto.ScrumDto;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface ScrumImpl {
+public interface ScrumService {
     void saveScrum(ScrumDto sprintDto);
 }
