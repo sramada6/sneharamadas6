@@ -17,10 +17,20 @@ public class ProductBacklog extends JFrame {
     private JComboBox<String> statusDropdown;
     private JTextArea commentsTextArea;
 
+    private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 30));
+		frame.getContentPane().setForeground(new Color(128, 0, 0));
+		frame.getContentPane().setBackground(new Color(0, 206, 209));
+		frame.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 908, 720);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
     public ProductBacklog() {
         setTitle("Product Backlog");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 800, 500);
+        initialize();
+        
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         setContentPane(mainPanel);
@@ -125,7 +135,7 @@ public class ProductBacklog extends JFrame {
         detailPanel.repaint();
     }
 }
- /*   public static void main(String[] args) {
+    public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
                 ProductBacklog frame = new ProductBacklog();
@@ -133,7 +143,6 @@ public class ProductBacklog extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
-    }
+        });
+    }
 }
-*/
