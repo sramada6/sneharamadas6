@@ -36,11 +36,20 @@ public class ProblemStatement extends JFrame {
 //            }
 //        });
 //    }
+ private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 30));
+		frame.getContentPane().setForeground(new Color(128, 0, 0));
+		frame.getContentPane().setBackground(new Color(0, 206, 209));
+		frame.getContentPane().setLayout(null);
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
 
     public ProblemStatement() {
         setTitle("Problem Statement");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 300);
+        intialize();
         contentPane = new JPanel();
         setContentPane(contentPane);
         contentPane.setLayout(null);
