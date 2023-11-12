@@ -13,8 +13,5 @@ public class UserStoryDto {
     private String assignedTo;
     private Integer storyPoints;
     private String description;
-
-    // No-args constructor to handle instantiation without parameters
-    public UserStoryDto() {
-    }
+    private String problemStatementId;
 }

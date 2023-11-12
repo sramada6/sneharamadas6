@@ -4,11 +4,13 @@ import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
 import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.UserStoryRepository;
 import com.Bhalerao.ScrumPlay.service.UserStoryService;
-//import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserStoryServiceImpl implements UserStoryService {
@@ -33,30 +35,33 @@ public class UserStoryServiceImpl implements UserStoryService {
         if (userStoryOptional.isPresent()) {
             UserStory existingUserStory = userStoryOptional.get();
 
-            // Set the updated values directly
             existingUserStory.setStatus(status);
             existingUserStory.setAssignedTo(assignedTo);
             existingUserStory.setStoryPoints(storyPoints);
             existingUserStory.setDescription(description);
 
-            // Save the updated UserStory to the repository
             userStoryRepository.save(existingUserStory);
 
-            // Convert UserStory entity to UserStoryDto using a mapper if needed
             return convertToDto(existingUserStory);
         }
 
-        return null; // or handle the case where the UserStory is not found
+        return null;
+    }
+
+    @Override
+    public List<UserStoryDto> getUserStoriesByProblemStatementId(String problemStatementId) {
+        List<UserStory> userStories = userStoryRepository.findByProblemStatementId(problemStatementId);
+        return userStories.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     private UserStoryDto convertToDto(UserStory userStory) {
-        // Convert UserStory entity to UserStoryDto
         return new UserStoryDto(
                 userStory.getId(),
                 userStory.getStatus(),
                 userStory.getAssignedTo(),
                 userStory.getStoryPoints(),
-                userStory.getDescription()
+                userStory.getDescription(),
+                userStory.getProblemStatementId()
         );
     }
 }

@@ -1,11 +1,9 @@
-ppackage com.Bhalerao.ScrumPlay.model;
+package com.Bhalerao.ScrumPlay.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.lang.model.element.Name;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +19,7 @@ public class UserStory {
     private String assignedTo;
     private Integer storyPoints;
     private String description;
+    private String problemStatementId;
 
     public String getId() {
         return id;
@@ -60,5 +59,13 @@ public class UserStory {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getProblemStatementId() {
+        return problemStatementId;
+    }
+
+    public void setProblemStatementId(String problemStatementId) {
+        this.problemStatementId = problemStatementId;
     }
 }
