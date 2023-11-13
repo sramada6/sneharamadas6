@@ -119,15 +119,30 @@ public class ProductBacklog extends JFrame {
         userStoryInfoPanel.add(descriptionPanel);
         userStoryInfoPanel.add(commentsPanel);
 
-        // Panel for the "End Sprint Planning" button
+        // Panel for the "Start Sprint Planning" button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton endSprintButton = new JButton("End Sprint Planning");
-        endSprintButton.addActionListener(new ActionListener() {
+        JButton startSprintButton = new JButton("Start Sprint");
+        startSprintButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Handle button action here
             }
         });
-        buttonPanel.add(endSprintButton);
+        buttonPanel.add(startSprintButton);
+
+        detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
+        detailPanel.add(buttonPanel, BorderLayout.SOUTH);
+        detailPanel.revalidate();
+        detailPanel.repaint();
+        
+        //Panel for "Fetch User Stories"
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton FetchUSButton = new JButton("Fetch US");
+        FetchUSButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Handle button action here
+            }
+        });
+        buttonPanel.add(FetchUSButton);
 
         detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
         detailPanel.add(buttonPanel, BorderLayout.SOUTH);
