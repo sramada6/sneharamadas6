@@ -1,3 +1,4 @@
+package ScrumPlay_FrontEnd;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScrumBoard extends JFrame {
-    private Map<String, Map<String, String>> userData;
-    private JComboBox<String> userDropdown;
-    private JPanel boardPanel;
-    private JTextArea updateArea;
+    public Map<String, Map<String, String>> userData;
+    public JComboBox<String> userDropdown;
+    public JPanel boardPanel;
+    public JTextArea updateArea;
 
     public ScrumBoard() {
         // Initialize user data
@@ -78,7 +79,7 @@ public class ScrumBoard extends JFrame {
         updateBoard();
     }
 
-    private JPanel createBoardPanel() {
+    public JPanel createBoardPanel() {
         JPanel boardPanel = new JPanel(new GridLayout(1, 3));
 
         for (String lane : new String[]{"To Do", "In Progress", "Done"}) {
@@ -93,7 +94,7 @@ public class ScrumBoard extends JFrame {
         return boardPanel;
     }
 
-    private void updateBoard() {
+    public void updateBoard() {
         String selectedUser = (String) userDropdown.getSelectedItem();
         if (selectedUser != null) {
             Map<String, String> userStories = userData.get(selectedUser);
@@ -109,7 +110,7 @@ public class ScrumBoard extends JFrame {
         }
     }
 
-    private JPanel createCardPanel(String userStory, String status) {
+    public JPanel createCardPanel(String userStory, String status) {
         JPanel cardPanel = new JPanel();
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
         cardPanel.setBorder(BorderFactory.createEtchedBorder());
@@ -138,7 +139,7 @@ public class ScrumBoard extends JFrame {
     }
 
 
-    private void addToLanePanel(String status, JPanel cardPanel) {
+    public void addToLanePanel(String status, JPanel cardPanel) {
         Component[] lanePanels = boardPanel.getComponents();
         switch (status) {
             case "To Do":
@@ -155,7 +156,7 @@ public class ScrumBoard extends JFrame {
         boardPanel.repaint();
     }
 
-    private void clearBoard() {
+    public void clearBoard() {
         Component[] lanePanels = boardPanel.getComponents();
         for (Component lanePanel : lanePanels) {
             ((JPanel) lanePanel).removeAll();
@@ -164,7 +165,7 @@ public class ScrumBoard extends JFrame {
         boardPanel.repaint();
     }
 
-    private JPanel createUpdatePanel() {
+    public JPanel createUpdatePanel() {
         JPanel updatePanel = new JPanel();
         updatePanel.setLayout(new BorderLayout());
         updatePanel.setBackground(new Color(240, 240, 240)); // Set background color
@@ -178,12 +179,12 @@ public class ScrumBoard extends JFrame {
         return updatePanel;
     }
 
-    private String getUpdateForUserStory(String userStory) {
+    public String getUpdateForUserStory(String userStory) {
 
         return "Update for " + userStory + ": Today's progress...";
     }
 
-    private void showStatusInputDialog(String userStory) {
+    public void showStatusInputDialog(String userStory) {
         JTextArea statusInput = new JTextArea();
         statusInput.setLineWrap(true);
         statusInput.setWrapStyleWord(true);
@@ -199,7 +200,7 @@ public class ScrumBoard extends JFrame {
         }
     }
 
-    private void endScrumCall() {
+    public void endScrumCall() {
         JOptionPane.showMessageDialog(this, "Scrum Call Ended!", "Scrum Ended", JOptionPane.INFORMATION_MESSAGE);
     }
 
