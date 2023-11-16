@@ -3,6 +3,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -149,7 +153,67 @@ public class ProductBacklog extends JFrame {
         detailPanel.revalidate();
         detailPanel.repaint();
     }
-}
+    private String sendGetRequestToBackend(String apiUrl) {
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            connection.disconnect();
+
+            return response.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }}
+    private void showUserStoryDetails(String userStory) {
+        // Existing code...
+
+        // Panel for the "Start Sprint Planning" button
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton startSprintButton = new JButton("Start Sprint");
+        startSprintButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Handle button action here
+            }
+        });
+        buttonPanel.add(startSprintButton);
+
+        // Panel for "Fetch User Stories"
+        JButton fetchUSButton = new JButton("Fetch User Stories");
+        fetchUSButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fetchUserStories(); // Call the method to fetch user stories
+            }
+        });
+        buttonPanel.add(fetchUSButton);
+
+        detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
+        detailPanel.add(buttonPanel, BorderLayout.SOUTH);
+        detailPanel.revalidate();
+        detailPanel.repaint();
+    }
+
+    // New method to fetch user stories
+    private void fetchUserStories() {
+        // Implement the logic to fetch user stories from the backend
+        // You can use the existing sendGetRequestToBackend method
+
+        String apiUrl = "http://localhost:8080/userstories"; // Update the API URL
+        String userStoriesResponse = sendGetRequestToBackend(apiUrl);
+
+        // Display a pop-up with the fetched user stories
+        JOptionPane.showMessageDialog(this, userStoriesResponse, "Fetched User Stories", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -158,6 +222,6 @@ public class ProductBacklog extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
-    }
+   });
+}
 }
