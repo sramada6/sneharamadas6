@@ -2,6 +2,7 @@ package com.Bhalerao.ScrumPlay.Dto;
 
 import com.Bhalerao.ScrumPlay.model.Player;
 import com.Bhalerao.ScrumPlay.model.ProblemStatement;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class UserStoryDto {
     private int storyid;
     private String storyDescription;

@@ -18,7 +18,7 @@ import java.util.List;
 
 @Controller
 public class GameController {
-    private static final Logger log = LoggerFactory.getLogger(PlayerController.class);
+    private static final Logger log = LoggerFactory.getLogger(GameController.class);
     private final SprintService sprintService;
     private final ScrumService scrumService;
     private final UserStoryService userStoryService;
@@ -44,9 +44,15 @@ public class GameController {
         return new ResponseEntity<>(userStory, HttpStatus.OK);
     }
 
-    @GetMapping("/stories/{playerId}")
-    public ResponseEntity<List<UserStoryDto>> getStoriesAssignedToPlayer(@PathVariable Long playerId) {
-        List<UserStoryDto> stories = userStoryService.getAllStoriesAssignedToPlayer(playerId);
+    @GetMapping("/player-stories/{playerid}")
+    public ResponseEntity<List<UserStoryDto>> getStoriesAssignedToPlayer(@PathVariable int playerid) {
+        List<UserStoryDto> stories = userStoryService.getAllStoriesAssignedToPlayer(playerid);
         return ResponseEntity.ok(stories);
+    }
+
+    @GetMapping("/problem-stories/{statementid}")
+    public ResponseEntity<List<UserStoryDto>> getUserStoriesByProblemId(@PathVariable int statementid) {
+        List<UserStoryDto> userStories = userStoryService.getStoriesBystatementid(statementid);
+        return ResponseEntity.ok(userStories);
     }
 }
