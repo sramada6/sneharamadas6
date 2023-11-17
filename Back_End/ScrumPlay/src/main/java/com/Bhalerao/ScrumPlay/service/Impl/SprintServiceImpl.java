@@ -5,6 +5,7 @@ import com.Bhalerao.ScrumPlay.Dto.SprintDto;
 import com.Bhalerao.ScrumPlay.model.Sprint;
 import com.Bhalerao.ScrumPlay.repository.SprintRepository;
 import com.Bhalerao.ScrumPlay.service.SprintService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,13 @@ public class SprintServiceImpl implements SprintService {
         sprint.setStartDate(sprintDto.getStartDate());
         sprint.setEndDate(sprintDto.getEndDate());
         sprintRepository.save(sprint);
+    }
+
+    @Override
+    public SprintDto findSprintById(long id) {
+        Sprint s = sprintRepository.findById( id)
+                .orElseThrow(() -> new EntityNotFoundException("Sprint not found with ID: " + id));
+        return mapToSprintDto(s);
     }
 
     private SprintDto mapToSprintDto(Sprint sprint) {
