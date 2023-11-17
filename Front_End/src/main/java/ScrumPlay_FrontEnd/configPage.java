@@ -1,17 +1,14 @@
 package ScrumPlay_FrontEnd;
 
-import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JSpinner;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.OutputStream;
@@ -126,7 +123,7 @@ public class configPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				sendDataToBackend();
-				ScrumPlay_FrontEnd.ProblemStatement problemStatementFrame = new ScrumPlay_FrontEnd.ProblemStatement();
+				ProblemStatement problemStatementFrame = new ProblemStatement();
 				problemStatementFrame.setVisible(true);
 			}			
 		});	

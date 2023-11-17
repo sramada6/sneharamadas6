@@ -6,22 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "Sprint")
-public class Sprint {
+@Table(name = "Scrum")
+public class Scrum {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sprintid;
-    private int teamSize;
-    private int sprintLength;
-    private float scrumCallLength;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Long scrumid;
+    private int scrumCallDuration;
+
+    @ManyToOne
+    @JoinColumn(name = "sprint_id")
+    private Sprint sprint;
 }
