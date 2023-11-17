@@ -2,6 +2,7 @@
 package ScrumPlay_FrontEnd;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -23,32 +24,23 @@ public class ProblemStatement extends JFrame {
     private JLabel lblNewLabel_1;
     private JTextArea textArea;
 
-//    public static void main(String[] args) {
-//        EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                try {
-//                    ProblemStatement frame = new ProblemStatement();
-//                    frame.setVisible(true);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
- private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 30));
-		frame.getContentPane().setForeground(new Color(128, 0, 0));
-		frame.getContentPane().setBackground(new Color(0, 206, 209));
-		frame.getContentPane().setLayout(null);
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    ProblemStatement frame = new ProblemStatement();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
-    
 
     public ProblemStatement() {
         setTitle("Problem Statement");
-        intialize();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 450, 300);
         contentPane = new JPanel();
         setContentPane(contentPane);
         contentPane.setLayout(null);
@@ -94,8 +86,8 @@ public class ProblemStatement extends JFrame {
                 String problemStatements = sendGetRequestToBackend(apiUrl);
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        SelectProblemStatement selectProblemStatement = new SelectProblemStatement(problemStatements);
-                        selectProblemStatement.addSelectionListener(new SelectionListener() {
+                        ScrumPlay_FrontEnd.SelectProblemStatement selectProblemStatement = new ScrumPlay_FrontEnd.SelectProblemStatement(problemStatements);
+                        selectProblemStatement.addSelectionListener(new ScrumPlay_FrontEnd.SelectionListener() {
                             @Override
                             public void onSelection(String selectedProblemStatement, String comments) {
                                 lblNewLabel_1.setText("<html>" + selectedProblemStatement + "</html");
@@ -160,4 +152,3 @@ public class ProblemStatement extends JFrame {
         }
     }
 }
-

@@ -21,23 +21,14 @@ public class ProductBacklog extends JFrame {
     private JComboBox<String> statusDropdown;
     private JTextArea commentsTextArea;
 
-    private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 30));
-		frame.getContentPane().setForeground(new Color(128, 0, 0));
-		frame.getContentPane().setBackground(new Color(0, 206, 209));
-		frame.getContentPane().setLayout(null);
-		frame.setBounds(100, 100, 908, 720);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-    
+
+
     public ProductBacklog() {
         setTitle("Product Backlog");
-        initialize();
-        
-
         JPanel mainPanel = new JPanel(new BorderLayout());
         setContentPane(mainPanel);
+        getContentPane().setBackground(new Color(0,255,255));
+        getContentPane().setBounds(100, 100, 908, 720);
 
         listModel = new DefaultListModel<>();
         listModel.addElement("US#001/Create Landing Page");
@@ -52,10 +43,14 @@ public class ProductBacklog extends JFrame {
         JScrollPane listScrollPane = new JScrollPane(userList);
         listScrollPane.setPreferredSize(new Dimension(200, 0));
 
+
         detailPanel = new JPanel(new BorderLayout());
         mainPanel.add(listScrollPane, BorderLayout.WEST);
-        mainPanel.add(detailPanel, BorderLayout.CENTER);
+        getContentPane().setBackground(new Color(0,255,255));
+        mainPanel.setPreferredSize(new Dimension(800, 600));
 
+        mainPanel.add(detailPanel, BorderLayout.CENTER);
+        getContentPane().setBackground(new Color(0,255,255));
         userList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 String selectedUserStory = userList.getSelectedValue();
@@ -69,6 +64,7 @@ public class ProductBacklog extends JFrame {
         userStoryDescriptions.put("US#003/Create Database", "As a developer, I want to design a database which can store all the information regarding ScrumPlay which includes the game configuration, problem statement, user stories, etc. This can be used to fetch details when required so that it can be displayed in the front-end of ScrumPlay.");
         userStoryDescriptions.put("US#004/Design game configuration page", "As a developer, I want to create a set game configuration page where the user can set parameters such as team size, length of sprint and length of scrum call. The user can also decide the roles of the players, such as Product Owner, Scrum Master and developers.");
         userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "As a developer, I want to display previous game scores and sprint charts so that the user can have an idea what all values are expected and also to know about the history of the previous games.");
+        pack();
     }
 
     private void showUserStoryDetails(String userStory) {
@@ -125,32 +121,59 @@ public class ProductBacklog extends JFrame {
 
         // Panel for the "Start Sprint Planning" button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-	//Button to clear comments
-	JButton clearCommentsButton = new JButton("Clear Comments");
+        //Button to clear comments
+        JButton clearCommentsButton = new JButton("Clear Comments");
+        JButton FetchUSButton = new JButton("More User Stories");
+
         clearCommentsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 commentsTextArea.setText("");
             }
         });
+        userStoryInfoPanel.add(clearCommentsButton);
         JButton startSprintButton = new JButton("Start Sprint");
         startSprintButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Handle button action here
+                ScrumBoard ScrumBoardFrame = new ScrumBoard();
+                ScrumBoardFrame.setVisible(true);
             }
         });
         buttonPanel.add(startSprintButton);
+        getContentPane().setBackground(new Color(0,255,255));
 
         detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
         detailPanel.add(buttonPanel, BorderLayout.SOUTH);
         detailPanel.revalidate();
         detailPanel.repaint();
-        
+
         //Panel for "Fetch User Stories"
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton FetchUSButton = new JButton("Fetch US");
+
+
         FetchUSButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Handle button action here
+                // Create and show the SelectUserStory popup
+                String apiUrl = "http://localhost:8080/statements"; // Update the API URL accordingly
+                String userStories = sendGetRequestToBackend(apiUrl);
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        SelectUserStory selectUserStory = new SelectUserStory(userStories);
+                        selectUserStory.addSelectionListener(new SelectionListener() {
+                            @Override
+                            public void onSelection(String selectedUserStory, String comments) {
+                                // Update the UI with the selected user story and comments
+                                // You can update the UI components as per your requirement
+                                userStoryPointsField.setSelectedIndex(1); // Example update
+                                commentsTextArea.setText(comments);
+
+                                // Add the selected user story to the listModel
+                                listModel.addElement(selectedUserStory);
+                                userList.setSelectedValue(selectedUserStory, true); // Select the newly added user story
+                            }
+                        });
+                        selectUserStory.setVisible(true);
+                    }
+                });
             }
         });
         buttonPanel.add(FetchUSButton);
@@ -181,45 +204,9 @@ public class ProductBacklog extends JFrame {
             e.printStackTrace();
             return "";
         }}
-    private void showUserStoryDetails(String userStory) {
-        // Existing code...
 
-        // Panel for the "Start Sprint Planning" button
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton startSprintButton = new JButton("Start Sprint");
-        startSprintButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Handle button action here
-            }
-        });
-        buttonPanel.add(startSprintButton);
-
-        // Panel for "Fetch User Stories"
-        JButton fetchUSButton = new JButton("Fetch User Stories");
-        fetchUSButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fetchUserStories(); // Call the method to fetch user stories
-            }
-        });
-        buttonPanel.add(fetchUSButton);
-
-        detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
-        detailPanel.add(buttonPanel, BorderLayout.SOUTH);
-        detailPanel.revalidate();
-        detailPanel.repaint();
-    }
 
     // New method to fetch user stories
-    private void fetchUserStories() {
-        // Implement the logic to fetch user stories from the backend
-        // You can use the existing sendGetRequestToBackend method
-
-        String apiUrl = "http://localhost:8080/userstories"; // Update the API URL
-        String userStoriesResponse = sendGetRequestToBackend(apiUrl);
-
-        // Display a pop-up with the fetched user stories
-        JOptionPane.showMessageDialog(this, userStoriesResponse, "Fetched User Stories", JOptionPane.INFORMATION_MESSAGE);
-    }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -229,6 +216,6 @@ public class ProductBacklog extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-   });
-}
+        });
+    }
 }
