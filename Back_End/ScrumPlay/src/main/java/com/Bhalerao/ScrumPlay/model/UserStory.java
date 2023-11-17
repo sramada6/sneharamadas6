@@ -41,4 +41,6 @@ public class UserStory {
     private Date completionDate;
 
     private int workRemaining;
+
 }
+

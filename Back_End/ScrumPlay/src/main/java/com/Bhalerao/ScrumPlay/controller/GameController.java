@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -55,4 +57,48 @@ public class GameController {
         List<UserStoryDto> userStories = userStoryService.getStoriesBystatementid(statementid);
         return ResponseEntity.ok(userStories);
     }
+
+
+    @PutMapping("/backlog-modify/{userStoryId}")
+    public ResponseEntity<UserStoryDto> modifyUserStory(@PathVariable int userStoryId, @RequestBody UserStoryDto updatedStoryDto) {
+        UserStoryDto existingStory = userStoryService.findStoryById(userStoryId);
+
+        if (existingStory == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (existingStory == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (updatedStoryDto.getStoryPoints() != 0) {
+            existingStory.setStoryPoints(updatedStoryDto.getStoryPoints());
+        }
+
+        if (updatedStoryDto.getStatus() != null) {
+            existingStory.setStatus(updatedStoryDto.getStatus());
+        }
+
+        if (updatedStoryDto.getStoryDescription() != null) {
+            existingStory.setStoryDescription(updatedStoryDto.getStoryDescription());
+        }
+
+        if (updatedStoryDto.getAssignedTo() != null) {
+            existingStory.setAssignedTo(updatedStoryDto.getAssignedTo());
+        }
+
+        if (updatedStoryDto.getCompletionDate() != null) {
+            existingStory.setCompletionDate(updatedStoryDto.getCompletionDate());
+        }
+
+        if (updatedStoryDto.getWorkRemaining() != 0) {
+            existingStory.setWorkRemaining(updatedStoryDto.getWorkRemaining());
+        }
+
+        userStoryService.saveStory(existingStory); // Use existingStory instead of updatedStoryDto
+
+        log.info("Updated the user story!");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
