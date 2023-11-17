@@ -15,6 +15,8 @@ public class ScrumServiceImpl implements ScrumService {
         Scrum scrum = new Scrum();
         scrum.setScrumCallDuration(15);
         scrum.setSprint(scrumDto.getSprint());
+        scrum.setScrumMaster(scrumDto.getScrumMaster());
+        scrum.setPlayersPresent(scrumDto.getPlayersPresent());
         scrumRepository.save(scrum);
     }
 }

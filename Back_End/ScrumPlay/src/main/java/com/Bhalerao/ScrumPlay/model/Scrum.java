@@ -18,6 +18,8 @@ public class Scrum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scrumid;
     private int scrumCallDuration;
+    private int playersPresent;
+    private Player scrumMaster;
 
     @ManyToOne
     @JoinColumn(name = "sprint_id")
