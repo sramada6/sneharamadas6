@@ -114,7 +114,7 @@ public class ScrumBoard extends JFrame {
         JPanel cardPanel = new JPanel();
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
         cardPanel.setBorder(BorderFactory.createEtchedBorder());
-        cardPanel.setBackground(new Color(255, 250, 250)); // Set card background color
+        cardPanel.setBackground(Color.RED); // Set card background color
         cardPanel.setPreferredSize(new Dimension(800, 200)); // Set fixed size
 
         JLabel userStoryLabel = new JLabel(userStory);
@@ -137,11 +137,36 @@ public class ScrumBoard extends JFrame {
         JPanel flipPanel = new JPanel();
         flipPanel.setLayout(new BoxLayout(flipPanel, BoxLayout.Y_AXIS));
         flipPanel.setBorder(BorderFactory.createEtchedBorder());
-        flipPanel.setBackground(new Color(255, 250, 250)); // Set card background color
+        flipPanel.setBackground(Color.GREEN); // Set card background color
         flipPanel.setPreferredSize(new Dimension(800, 200));
         flipPanel.setVisible(false);
 
-        JButton provideUpdate = new JButton("Provide Status");
+        JLabel flippedUserStoryLabel = new JLabel(userStory);
+        flippedUserStoryLabel.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
+        flippedUserStoryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        flipPanel.add(flippedUserStoryLabel);
+
+        JLabel storyPoints = new JLabel("Story Points");
+        storyPoints.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
+        storyPoints.setAlignmentX(Component.CENTER_ALIGNMENT);
+        flipPanel.add(storyPoints);
+
+        JLabel description = new JLabel("Description");
+        description.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
+        description.setAlignmentX(Component.CENTER_ALIGNMENT);
+        flipPanel.add(description);
+
+        JLabel acceptanceCriteria = new JLabel("Acceptance Criteria");
+        acceptanceCriteria.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
+        acceptanceCriteria.setAlignmentX(Component.CENTER_ALIGNMENT);
+        flipPanel.add(acceptanceCriteria);
+
+        JLabel todayUpdate = new JLabel("Today's Update");
+        todayUpdate.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
+        todayUpdate.setAlignmentX(Component.CENTER_ALIGNMENT);
+        flipPanel.add(todayUpdate);
+
+        JButton provideUpdate = new JButton("Provide Update");
         provideUpdate.setAlignmentX(Component.CENTER_ALIGNMENT);
         provideUpdate.addActionListener(new ActionListener() {
             @Override
@@ -151,6 +176,18 @@ public class ScrumBoard extends JFrame {
                 flipPanel.setVisible(!flipPanel.isVisible());
             }
         });
+
+        JButton backButton = new JButton("Back");
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show daily status input dialog
+                cardPanel.setVisible(!cardPanel.isVisible());
+                flipPanel.setVisible(!flipPanel.isVisible());
+            }
+        });
+        flipPanel.add(backButton);
         cardPanel.add(updateStatus);
         cardPanel.add(provideUpdate);
 
