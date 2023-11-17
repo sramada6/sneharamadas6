@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,18 +27,32 @@ public class UserStoryServiceImpl implements UserStoryService {
 
     @Override
     public void saveStory(UserStoryDto storyDto) {
-        UserStory userStory = new UserStory();
-        userStory.setStoryid(storyDto.getStoryid());
-        userStory.setStoryPoints(storyDto.getStoryPoints());
-        userStory.setStatus(storyDto.getStatus());
-        userStory.setStoryDescription(storyDto.getStoryDescription());
-        userStory.setAssignedTo(storyDto.getAssignedTo() != null ? storyDto.getAssignedTo() : null);
-        userStory.setProblemStatement(storyDto.getProblemStatement() != null ? storyDto.getProblemStatement() : null);
-        userStory.setCreationDate(storyDto.getCreationDate());
-        userStory.setStartDate(storyDto.getStartDate());
-        userStory.setCompletionDate(storyDto.getCompletionDate());
-        userStory.setWorkRemaining(storyDto.getWorkRemaining());
-        userStoryRepository.save(userStory);
+
+        Optional<UserStory> existingStoryOptional = userStoryRepository.findById((long)storyDto.getStoryid());
+
+        if (existingStoryOptional.isPresent()) {
+            UserStory existingStory = existingStoryOptional.get();
+            existingStory.setStoryPoints(storyDto.getStoryPoints());
+            existingStory.setStatus(storyDto.getStatus());
+            existingStory.setStoryDescription(storyDto.getStoryDescription());
+            existingStory.setAssignedTo(storyDto.getAssignedTo() != null ? storyDto.getAssignedTo() : null);
+            existingStory.setCompletionDate(storyDto.getCompletionDate());
+            existingStory.setWorkRemaining(storyDto.getWorkRemaining());
+            userStoryRepository.save(existingStory);
+        }else{
+            UserStory userStory = new UserStory();
+            userStory.setStoryid(storyDto.getStoryid());
+            userStory.setStoryPoints(storyDto.getStoryPoints());
+            userStory.setStatus(storyDto.getStatus());
+            userStory.setStoryDescription(storyDto.getStoryDescription());
+            userStory.setAssignedTo(storyDto.getAssignedTo() != null ? storyDto.getAssignedTo() : null);
+            userStory.setProblemStatement(storyDto.getProblemStatement() != null ? storyDto.getProblemStatement() : null);
+            userStory.setCreationDate(storyDto.getCreationDate());
+            userStory.setStartDate(storyDto.getStartDate());
+            userStory.setCompletionDate(storyDto.getCompletionDate());
+            userStory.setWorkRemaining(storyDto.getWorkRemaining());
+            userStoryRepository.save(userStory);
+        }
     }
 
     @Override
