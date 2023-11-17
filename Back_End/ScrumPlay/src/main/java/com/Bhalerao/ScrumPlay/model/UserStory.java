@@ -1,7 +1,6 @@
 package com.Bhalerao.ScrumPlay.model;
 
-//import jakarta.persistence.*;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "UserStory")
+@Table(name = "user_story")
 public class UserStory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +42,4 @@ public class UserStory {
 
     private int workRemaining;
 
-    public void setDescription(String description) {
-    }
 }
