@@ -43,4 +43,3 @@ public class UserStory {
     private int workRemaining;
 
 }
-

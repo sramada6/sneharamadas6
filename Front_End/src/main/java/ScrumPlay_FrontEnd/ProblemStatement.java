@@ -2,7 +2,6 @@
 package ScrumPlay_FrontEnd;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -86,8 +85,8 @@ public class ProblemStatement extends JFrame {
                 String problemStatements = sendGetRequestToBackend(apiUrl);
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        ScrumPlay_FrontEnd.SelectProblemStatement selectProblemStatement = new ScrumPlay_FrontEnd.SelectProblemStatement(problemStatements);
-                        selectProblemStatement.addSelectionListener(new ScrumPlay_FrontEnd.SelectionListener() {
+                        SelectProblemStatement selectProblemStatement = new SelectProblemStatement(problemStatements);
+                        selectProblemStatement.addSelectionListener(new SelectionListener() {
                             @Override
                             public void onSelection(String selectedProblemStatement, String comments) {
                                 lblNewLabel_1.setText("<html>" + selectedProblemStatement + "</html");

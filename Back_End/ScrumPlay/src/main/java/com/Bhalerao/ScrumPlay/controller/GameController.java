@@ -14,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.List;
 
@@ -67,10 +69,6 @@ public class GameController {
             return ResponseEntity.notFound().build();
         }
 
-        if (existingStory == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         if (updatedStoryDto.getStoryPoints() != 0) {
             existingStory.setStoryPoints(updatedStoryDto.getStoryPoints());
         }
@@ -100,5 +98,4 @@ public class GameController {
         log.info("Updated the user story!");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }
