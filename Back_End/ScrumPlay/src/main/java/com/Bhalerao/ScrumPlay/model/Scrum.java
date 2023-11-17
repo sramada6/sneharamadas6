@@ -19,6 +19,8 @@ public class Scrum {
     private Long scrumid;
     private int scrumCallDuration;
     private int playersPresent;
+    @OneToOne
+    @JoinColumn(name = "player_id")
     private Player scrumMaster;
 
     @ManyToOne
