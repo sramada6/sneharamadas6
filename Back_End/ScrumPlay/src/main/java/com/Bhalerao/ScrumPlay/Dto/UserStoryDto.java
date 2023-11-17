@@ -1,6 +1,9 @@
 package com.Bhalerao.ScrumPlay.Dto;
 
-import com.Bhalerao.ScrumPlay.model.UserStory;
+
+import com.Bhalerao.ScrumPlay.model.Player;
+import com.Bhalerao.ScrumPlay.model.ProblemStatement;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +14,8 @@ import java.util.Date;
 
 @Data
 @Builder
-public class UserStoryDto extends UserStory {
+@AllArgsConstructor
+public class UserStoryDto {
     private int storyid;
     private String storyDescription;
     private int storyPoints;
