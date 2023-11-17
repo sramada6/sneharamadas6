@@ -178,7 +178,7 @@ public class configPage extends JFrame {
 	    }
 	
 
-	private void sendDataToBackend() {
+	void sendDataToBackend() {
         try {
             URL url = new URL("http://localhost:8080/add-gameConfig");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
