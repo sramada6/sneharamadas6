@@ -7,17 +7,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "ProblemStatement")
-public class ProblemStatement {
+@Table(name = "Scrum")
+public class Scrum {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int statementid;
-    private String Statement;
-    private int NumOfUserStories;
-    private String comments;
+    private Long scrumid;
+    private int scrumCallDuration;
+
+    @ManyToOne
+    @JoinColumn(name = "sprint_id")
+    private Sprint sprint;
 }

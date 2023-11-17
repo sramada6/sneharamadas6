@@ -4,8 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+//import org.hibernate.annotations.Entity;
+//import org.hibernate.annotations.Table;
 
 import javax.lang.model.element.Name;
+//import javax.persistence.GeneratedValue;
+//import javax.persistence.GenerationType;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor

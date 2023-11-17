@@ -1,9 +1,13 @@
 package com.Bhalerao.ScrumPlay.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+//import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -12,60 +16,33 @@ import lombok.Builder;
 @Entity
 @Table(name = "UserStory")
 public class UserStory {
-
     @Id
-    private String id;
-    private String status;
-    private String assignedTo;
-    private Integer storyPoints;
-    private String description;
-    private String problemStatementId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int storyid;
 
-    public String getId() {
-        return id;
-    }
+    private int storyPoints = 0;
+    private String status = "new";
+    private String storyDescription;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "assigned_player_id")
+    private Player assignedTo;
 
-    public String getStatus() {
-        return status;
-    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    @ManyToOne
+    @JoinColumn(name = "problem_id")
+    private ProblemStatement problemStatement;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate;
 
-    public String getAssignedTo() {
-        return assignedTo;
-    }
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startDate;
 
-    public void setAssignedTo(String assignedTo) {
-        this.assignedTo = assignedTo;
-    }
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date completionDate;
 
-    public Integer getStoryPoints() {
-        return storyPoints;
-    }
-
-    public void setStoryPoints(Integer storyPoints) {
-        this.storyPoints = storyPoints;
-    }
-
-    public String getDescription() {
-        return description;
-    }
+    private int workRemaining;
 
     public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getProblemStatementId() {
-        return problemStatementId;
-    }
-
-    public void setProblemStatementId(String problemStatementId) {
-        this.problemStatementId = problemStatementId;
     }
 }

@@ -2,8 +2,10 @@ package com.Bhalerao.ScrumPlay.service.Impl;
 
 import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
 import com.Bhalerao.ScrumPlay.model.Player;
+import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.PlayerRepository;
 import com.Bhalerao.ScrumPlay.service.PlayerService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +50,13 @@ public class PlayerServiceImpl implements PlayerService {
                 .map(this::convertToEntity)
                 .collect(Collectors.toList());
         playerRepository.saveAll(players);
+    }
+
+    @Override
+    public PlayerDto findPlayerById(long id) {
+        Player p = playerRepository.findById( id)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with ID: " + id));
+        return mapToPlayerDto(p);
     }
 
     // You may need a method to convert PlayerDto to Player entity

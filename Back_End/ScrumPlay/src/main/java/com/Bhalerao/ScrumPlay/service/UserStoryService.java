@@ -1,12 +1,21 @@
 package com.Bhalerao.ScrumPlay.service;
 
+
+import com.Bhalerao.ScrumPlay.Dto.ProblemStatementDto;
 import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
+import com.Bhalerao.ScrumPlay.model.UserStory;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public interface UserStoryService {
-    Optional<UserStoryDto> getUserStoryById(String userStoryId);
-    UserStoryDto updateUserStory(String userStoryId, String status, String assignedTo, Integer storyPoints, String description);
-    List<UserStoryDto> getUserStoriesByProblemStatementId(String problemStatementId);
+    void saveStory(UserStoryDto storyDto);
+
+    List<UserStoryDto> getAllUserStories();
+
+    UserStoryDto findStoryById(long id);
+    List<UserStoryDto> getAllStoriesAssignedToPlayer(int playerId);
+
+    List<UserStoryDto> getStoriesBystatementid(int statementid);
 }
