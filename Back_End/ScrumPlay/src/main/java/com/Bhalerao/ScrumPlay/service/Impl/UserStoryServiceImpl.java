@@ -54,8 +54,18 @@ public class UserStoryServiceImpl implements UserStoryService {
         return mapToStoryDto(userStory);
     }
 
-    public List<UserStoryDto> getAllStoriesAssignedToPlayer(long playerId) {
-        List<UserStory> stories = userStoryRepository.findByAssignedToPlayerId(playerId);
+    public List<UserStoryDto> getAllStoriesAssignedToPlayer(int playerid) {
+        List<UserStory> stories = userStoryRepository.findByAssignedToPlayerid(playerid);
+
+        // Map the entities to DTOs
+        return stories.stream()
+                .map(this::mapToStoryDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserStoryDto> getStoriesBystatementid(int statementid) {
+        List<UserStory> stories = userStoryRepository.findByProblemStatementStatementid(statementid);
 
         // Map the entities to DTOs
         return stories.stream()
