@@ -54,7 +54,7 @@ public class ScrumBoard extends JFrame {
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(240, 240, 240)); // Set background color
+        getContentPane().setBackground(new Color(0,255,255));// Set background color
 
         userDropdown = new JComboBox<>(userData.keySet().toArray(new String[0]));
         userDropdown.addActionListener(new ActionListener() {
