@@ -124,20 +124,42 @@ public class ScrumBoard extends JFrame {
 
         cardPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        JButton flipButton = new JButton("Update Status");
-        flipButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        flipButton.addActionListener(new ActionListener() {
+        JButton updateStatus = new JButton("Update Status");
+        updateStatus.setAlignmentX(Component.CENTER_ALIGNMENT);
+        updateStatus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Show daily status input dialog
                 showStatusInputDialog(userStory);
             }
         });
-        cardPanel.add(flipButton);
 
-        return cardPanel;
+        JPanel flipPanel = new JPanel();
+        flipPanel.setLayout(new BoxLayout(flipPanel, BoxLayout.Y_AXIS));
+        flipPanel.setBorder(BorderFactory.createEtchedBorder());
+        flipPanel.setBackground(new Color(255, 250, 250)); // Set card background color
+        flipPanel.setPreferredSize(new Dimension(800, 200));
+        flipPanel.setVisible(false);
+
+        JButton provideUpdate = new JButton("Provide Status");
+        provideUpdate.setAlignmentX(Component.CENTER_ALIGNMENT);
+        provideUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show daily status input dialog
+                cardPanel.setVisible(!cardPanel.isVisible());
+                flipPanel.setVisible(!flipPanel.isVisible());
+            }
+        });
+        cardPanel.add(updateStatus);
+        cardPanel.add(provideUpdate);
+
+        JPanel container = new JPanel();
+        container.add(cardPanel);
+        container.add(flipPanel);
+
+        return container;
     }
-
 
     public void addToLanePanel(String status, JPanel cardPanel) {
         Component[] lanePanels = boardPanel.getComponents();
