@@ -8,9 +8,9 @@ import java.util.Map;
 
 public class ProductBacklog extends JFrame {
     private static final long serialVersionUID = 1L;
-    private JList<String> userList;
+    public JList<String> userList;
     private DefaultListModel<String> listModel;
-    private JPanel detailPanel;
+    public JPanel detailPanel;
     private Map<String, String> userStoryDescriptions;
     private JComboBox<String> userStoryPointsField; // Updated to JComboBox
     private JComboBox<String> playerDropdown;

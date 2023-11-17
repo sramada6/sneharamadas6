@@ -1,6 +1,7 @@
 package com.Bhalerao.ScrumPlay.model;
 
 import jakarta.persistence.*;
+//import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,10 @@ public class Scrum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scrumid;
     private int scrumCallDuration;
+    private int playersPresent;
+    @OneToOne
+    @JoinColumn(name = "player_id")
+    private Player scrumMaster;
 
     @ManyToOne
     @JoinColumn(name = "sprint_id")

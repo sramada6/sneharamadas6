@@ -13,12 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.List;
 
 @Controller
 public class GameController {
-    private static final Logger log = LoggerFactory.getLogger(PlayerController.class);
+    private static final Logger log = LoggerFactory.getLogger(GameController.class);
     private final SprintService sprintService;
     private final ScrumService scrumService;
     private final UserStoryService userStoryService;
@@ -44,9 +48,54 @@ public class GameController {
         return new ResponseEntity<>(userStory, HttpStatus.OK);
     }
 
-    @GetMapping("/stories/{playerId}")
-    public ResponseEntity<List<UserStoryDto>> getStoriesAssignedToPlayer(@PathVariable Long playerId) {
-        List<UserStoryDto> stories = userStoryService.getAllStoriesAssignedToPlayer(playerId);
+    @GetMapping("/player-stories/{playerid}")
+    public ResponseEntity<List<UserStoryDto>> getStoriesAssignedToPlayer(@PathVariable int playerid) {
+        List<UserStoryDto> stories = userStoryService.getAllStoriesAssignedToPlayer(playerid);
         return ResponseEntity.ok(stories);
+    }
+
+    @GetMapping("/problem-stories/{statementid}")
+    public ResponseEntity<List<UserStoryDto>> getUserStoriesByProblemId(@PathVariable int statementid) {
+        List<UserStoryDto> userStories = userStoryService.getStoriesBystatementid(statementid);
+        return ResponseEntity.ok(userStories);
+    }
+
+
+    @PutMapping("/backlog-modify/{userStoryId}")
+    public ResponseEntity<UserStoryDto> modifyUserStory(@PathVariable int userStoryId, @RequestBody UserStoryDto updatedStoryDto) {
+        UserStoryDto existingStory = userStoryService.findStoryById(userStoryId);
+
+        if (existingStory == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (updatedStoryDto.getStoryPoints() != 0) {
+            existingStory.setStoryPoints(updatedStoryDto.getStoryPoints());
+        }
+
+        if (updatedStoryDto.getStatus() != null) {
+            existingStory.setStatus(updatedStoryDto.getStatus());
+        }
+
+        if (updatedStoryDto.getStoryDescription() != null) {
+            existingStory.setStoryDescription(updatedStoryDto.getStoryDescription());
+        }
+
+        if (updatedStoryDto.getAssignedTo() != null) {
+            existingStory.setAssignedTo(updatedStoryDto.getAssignedTo());
+        }
+
+        if (updatedStoryDto.getCompletionDate() != null) {
+            existingStory.setCompletionDate(updatedStoryDto.getCompletionDate());
+        }
+
+        if (updatedStoryDto.getWorkRemaining() != 0) {
+            existingStory.setWorkRemaining(updatedStoryDto.getWorkRemaining());
+        }
+
+        userStoryService.saveStory(existingStory); // Use existingStory instead of updatedStoryDto
+
+        log.info("Updated the user story!");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

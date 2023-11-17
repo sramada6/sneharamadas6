@@ -1,6 +1,7 @@
 package com.Bhalerao.ScrumPlay.model;
 
 import jakarta.persistence.*;
+//import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,4 +42,5 @@ public class UserStory {
     private Date completionDate;
 
     private int workRemaining;
+
 }

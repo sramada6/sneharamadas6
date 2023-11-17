@@ -1,3 +1,4 @@
+
 package com.Bhalerao.ScrumPlay.service.Impl;
 
 
@@ -9,10 +10,12 @@ import com.Bhalerao.ScrumPlay.model.ProblemStatement;
 import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.UserStoryRepository;
 import com.Bhalerao.ScrumPlay.service.UserStoryService;
-import jakarta.persistence.EntityNotFoundException;
+//import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,18 +28,32 @@ public class UserStoryServiceImpl implements UserStoryService {
 
     @Override
     public void saveStory(UserStoryDto storyDto) {
-        UserStory userStory = new UserStory();
-        userStory.setStoryid(storyDto.getStoryid());
-        userStory.setStoryPoints(storyDto.getStoryPoints());
-        userStory.setStatus(storyDto.getStatus());
-        userStory.setStoryDescription(storyDto.getStoryDescription());
-        userStory.setAssignedTo(storyDto.getAssignedTo() != null ? storyDto.getAssignedTo() : null);
-        userStory.setProblemStatement(storyDto.getProblemStatement() != null ? storyDto.getProblemStatement() : null);
-        userStory.setCreationDate(storyDto.getCreationDate());
-        userStory.setStartDate(storyDto.getStartDate());
-        userStory.setCompletionDate(storyDto.getCompletionDate());
-        userStory.setWorkRemaining(storyDto.getWorkRemaining());
-        userStoryRepository.save(userStory);
+
+        Optional<UserStory> existingStoryOptional = userStoryRepository.findById((long)storyDto.getStoryid());
+
+        if (existingStoryOptional.isPresent()) {
+            UserStory existingStory = existingStoryOptional.get();
+            existingStory.setStoryPoints(storyDto.getStoryPoints());
+            existingStory.setStatus(storyDto.getStatus());
+            existingStory.setStoryDescription(storyDto.getStoryDescription());
+            existingStory.setAssignedTo(storyDto.getAssignedTo() != null ? storyDto.getAssignedTo() : null);
+            existingStory.setCompletionDate(storyDto.getCompletionDate());
+            existingStory.setWorkRemaining(storyDto.getWorkRemaining());
+            userStoryRepository.save(existingStory);
+        }else{
+            UserStory userStory = new UserStory();
+            userStory.setStoryid(storyDto.getStoryid());
+            userStory.setStoryPoints(storyDto.getStoryPoints());
+            userStory.setStatus(storyDto.getStatus());
+            userStory.setStoryDescription(storyDto.getStoryDescription());
+            userStory.setAssignedTo(storyDto.getAssignedTo() != null ? storyDto.getAssignedTo() : null);
+            userStory.setProblemStatement(storyDto.getProblemStatement() != null ? storyDto.getProblemStatement() : null);
+            userStory.setCreationDate(storyDto.getCreationDate());
+            userStory.setStartDate(storyDto.getStartDate());
+            userStory.setCompletionDate(storyDto.getCompletionDate());
+            userStory.setWorkRemaining(storyDto.getWorkRemaining());
+            userStoryRepository.save(userStory);
+        }
     }
 
     @Override
@@ -54,8 +71,18 @@ public class UserStoryServiceImpl implements UserStoryService {
         return mapToStoryDto(userStory);
     }
 
-    public List<UserStoryDto> getAllStoriesAssignedToPlayer(long playerId) {
-        List<UserStory> stories = userStoryRepository.findByAssignedToPlayerId(playerId);
+    public List<UserStoryDto> getAllStoriesAssignedToPlayer(int playerid) {
+        List<UserStory> stories = userStoryRepository.findByAssignedToPlayerid(playerid);
+
+        // Map the entities to DTOs
+        return stories.stream()
+                .map(this::mapToStoryDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserStoryDto> getStoriesBystatementid(int statementid) {
+        List<UserStory> stories = userStoryRepository.findByProblemStatementStatementid(statementid);
 
         // Map the entities to DTOs
         return stories.stream()

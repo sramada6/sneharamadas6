@@ -5,7 +5,8 @@ import com.Bhalerao.ScrumPlay.model.Player;
 import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.PlayerRepository;
 import com.Bhalerao.ScrumPlay.service.PlayerService;
-import jakarta.persistence.EntityNotFoundException;
+//import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +29,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     private PlayerDto mapToPlayerDto(Player player) {
         PlayerDto pdto = PlayerDto.builder()
-                        .playerid(player.getPlayerid())
-                                .playerName(player.getPlayerName())
-                                        .playerRole(player.getPlayerRole()).build();
+                .playerid(player.getPlayerid())
+                .playerName(player.getPlayerName())
+                .playerRole(player.getPlayerRole()).build();
         return pdto;
     }
 
