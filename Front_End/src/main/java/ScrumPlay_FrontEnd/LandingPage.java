@@ -1,17 +1,11 @@
 package ScrumPlay_FrontEnd;
 
 import java.awt.EventQueue;
-import java.awt.Image;
 
 import javax.swing.JFrame;
 import java.awt.Color;
-import javax.swing.BoxLayout;
-import java.awt.GridBagLayout;
 import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
-import javax.swing.ImageIcon;
 import java.awt.Font;
-import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
