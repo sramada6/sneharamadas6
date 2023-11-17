@@ -29,9 +29,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     private PlayerDto mapToPlayerDto(Player player) {
         PlayerDto pdto = PlayerDto.builder()
-                        .playerid(player.getPlayerid())
-                                .playerName(player.getPlayerName())
-                                        .playerRole(player.getPlayerRole()).build();
+                .playerid(player.getPlayerid())
+                .playerName(player.getPlayerName())
+                .playerRole(player.getPlayerRole()).build();
         return pdto;
     }
 

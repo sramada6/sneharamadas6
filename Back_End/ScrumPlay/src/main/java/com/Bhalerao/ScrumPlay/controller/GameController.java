@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -60,23 +60,42 @@ public class GameController {
         return ResponseEntity.ok(userStories);
     }
 
+
     @PutMapping("/backlog-modify/{userStoryId}")
-    public ResponseEntity<UserStoryDto> modifyUserStory(@PathVariable int id, @RequestBody UserStoryDto updatedStoryDto) {
-        UserStoryDto existingStory = userStoryService.findStoryById(id);
+    public ResponseEntity<UserStoryDto> modifyUserStory(@PathVariable int userStoryId, @RequestBody UserStoryDto updatedStoryDto) {
+        UserStoryDto existingStory = userStoryService.findStoryById(userStoryId);
 
         if (existingStory == null) {
             return ResponseEntity.notFound().build();
         }
 
-        existingStory.setStoryPoints(updatedStoryDto.getStoryPoints());
-        existingStory.setStatus(updatedStoryDto.getStatus());
-        existingStory.setStoryDescription(updatedStoryDto.getStoryDescription());
-        existingStory.setAssignedTo(updatedStoryDto.getAssignedTo());
-        existingStory.setCompletionDate(updatedStoryDto.getCompletionDate());
-        existingStory.setWorkRemaining(updatedStoryDto.getWorkRemaining());
+        if (updatedStoryDto.getStoryPoints() != 0) {
+            existingStory.setStoryPoints(updatedStoryDto.getStoryPoints());
+        }
 
-        userStoryService.saveStory(updatedStoryDto);
+        if (updatedStoryDto.getStatus() != null) {
+            existingStory.setStatus(updatedStoryDto.getStatus());
+        }
 
+        if (updatedStoryDto.getStoryDescription() != null) {
+            existingStory.setStoryDescription(updatedStoryDto.getStoryDescription());
+        }
+
+        if (updatedStoryDto.getAssignedTo() != null) {
+            existingStory.setAssignedTo(updatedStoryDto.getAssignedTo());
+        }
+
+        if (updatedStoryDto.getCompletionDate() != null) {
+            existingStory.setCompletionDate(updatedStoryDto.getCompletionDate());
+        }
+
+        if (updatedStoryDto.getWorkRemaining() != 0) {
+            existingStory.setWorkRemaining(updatedStoryDto.getWorkRemaining());
+        }
+
+        userStoryService.saveStory(existingStory); // Use existingStory instead of updatedStoryDto
+
+        log.info("Updated the user story!");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
