@@ -125,6 +125,13 @@ public class ProductBacklog extends JFrame {
 
         // Panel for the "Start Sprint Planning" button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	//Button to clear comments
+	JButton clearCommentsButton = new JButton("Clear Comments");
+        clearCommentsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                commentsTextArea.setText("");
+            }
+        });
         JButton startSprintButton = new JButton("Start Sprint");
         startSprintButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
