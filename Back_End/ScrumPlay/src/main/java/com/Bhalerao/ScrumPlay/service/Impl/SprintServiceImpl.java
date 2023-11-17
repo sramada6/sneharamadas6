@@ -32,6 +32,8 @@ public class SprintServiceImpl implements SprintService {
         sprint.setScrumCallLength(sprintDto.getScrumCallLength());
         sprint.setSprintLength(sprintDto.getSprintLength());
         sprint.setSprintid(sprintDto.getSprintid());
+        sprint.setStartDate(sprintDto.getStartDate());
+        sprint.setEndDate(sprintDto.getEndDate());
         sprintRepository.save(sprint);
     }
 
@@ -40,7 +42,9 @@ public class SprintServiceImpl implements SprintService {
                 .sprintid(sprint.getSprintid())
                 .teamSize(sprint.getTeamSize())
                 .sprintLength(sprint.getSprintLength())
-                .scrumCallLength(sprint.getScrumCallLength()).build();
+                .scrumCallLength(sprint.getScrumCallLength())
+                .startDate(sprint.getStartDate())
+                .endDate(sprint.getEndDate()).build();
         return sdto;
     }
 }
