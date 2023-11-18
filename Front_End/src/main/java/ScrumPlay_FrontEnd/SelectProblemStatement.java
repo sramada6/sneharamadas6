@@ -1,5 +1,6 @@
 package ScrumPlay_FrontEnd;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class SelectProblemStatement extends JFrame {
         contentPane = new JPanel();
         setContentPane(contentPane);
         contentPane.setLayout(null);
+        getContentPane().setBackground(new Color(0,255,255));
+
 
         JLabel lblNewLabel = new JLabel("Select a Problem Statement:");
         lblNewLabel.setBounds(10, 10, 200, 20);
@@ -45,8 +48,8 @@ public class SelectProblemStatement extends JFrame {
         problemStatementList.setBounds(10, 40, 380, 150);
         contentPane.add(problemStatementList);
 
-        okButton = new JButton("OK");
-        okButton.setBounds(150, 200, 100, 30);
+        okButton = new JButton("Add to Sprint");
+        okButton.setBounds(150, 200, 200, 30);
         contentPane.add(okButton);
 
         okButton.addActionListener(new ActionListener() {
@@ -104,7 +107,7 @@ public class SelectProblemStatement extends JFrame {
         return statements;
     }
 
-    private String getCommentsForStatement(String selectedStatement, ArrayList<Map<String, Object>> mapStComments) {
+    public String getCommentsForStatement(String selectedStatement, ArrayList<Map<String, Object>> mapStComments) {
         for (Map<String, Object> comment : mapStComments) {
             String statement = comment.get("statement").toString();
             if (selectedStatement.equals(statement)) {

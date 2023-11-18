@@ -1,8 +1,6 @@
 
 package ScrumPlay_FrontEnd;
 
-import ScrumPlay_FrontEnd.configPage;
-
 import java.awt.*;
 
 

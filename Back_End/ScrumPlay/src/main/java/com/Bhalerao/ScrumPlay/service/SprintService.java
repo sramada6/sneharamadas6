@@ -1,6 +1,7 @@
 package com.Bhalerao.ScrumPlay.service;
 
 
+import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
 import org.springframework.stereotype.Service;
 
@@ -11,4 +12,6 @@ public interface SprintService {
     List<SprintDto> findAllSprints();
 
     void saveSprint(SprintDto sprintDto);
+
+    SprintDto findSprintById(long id);
 }

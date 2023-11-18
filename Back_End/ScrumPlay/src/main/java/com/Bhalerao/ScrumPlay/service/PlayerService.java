@@ -12,4 +12,6 @@ public interface PlayerService {
     void savePlayer(PlayerDto playerDTO);
 
     void savePlayers(List<PlayerDto> playerDtos);
+
+    PlayerDto findPlayerById(long id);
 }
