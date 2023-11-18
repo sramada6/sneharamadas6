@@ -15,20 +15,20 @@ public class LandingPage extends JFrame{
 
 	private JFrame frame;
 	private JLabel logo;
-	private JLabel title;
-	private JLabel Description;
-	private JTextField SubWindow1;
-	private JButton SubButton1;
-	private JLabel FooterLogo;
-	private JButton NextPageButton;
-	private JTextField SubWindow2;
-	private JButton SubButton1_1;
-	private JTextField SubWindow3;
-	private JButton SubButton1_2;
-	private JTextField SubWindow4;
-	private JButton SubButton1_3;
-	private JTextField SubWindow5;
-	private JButton SubButton1_4;
+	JLabel title;
+	JLabel Description;
+	JTextField SubWindow1;
+	JButton SubButton1;
+	JLabel FooterLogo;
+	JButton NextPageButton;
+	JTextField SubWindow2;
+	JButton SubButton1_1;
+	JTextField SubWindow3;
+	JButton SubButton1_2;
+	JTextField SubWindow4;
+	JButton SubButton1_3;
+	JTextField SubWindow5;
+	JButton SubButton1_4;
 	
 	/**
 	 * Launch the application.
