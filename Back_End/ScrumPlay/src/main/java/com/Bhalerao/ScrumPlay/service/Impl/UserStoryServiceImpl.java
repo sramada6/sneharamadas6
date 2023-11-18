@@ -10,8 +10,10 @@ import com.Bhalerao.ScrumPlay.model.ProblemStatement;
 import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.UserStoryRepository;
 import com.Bhalerao.ScrumPlay.service.UserStoryService;
+//import jakarta.persistence.EntityNotFoundException;
+
 import jakarta.persistence.EntityNotFoundException;
-//import javax.persistence.*;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +41,7 @@ public class UserStoryServiceImpl implements UserStoryService {
             existingStory.setAssignedTo(storyDto.getAssignedTo() != null ? storyDto.getAssignedTo() : null);
             existingStory.setCompletionDate(storyDto.getCompletionDate());
             existingStory.setWorkRemaining(storyDto.getWorkRemaining());
+            existingStory.setStoryTitle(storyDto.getStoryTitle());
             userStoryRepository.save(existingStory);
         }else{
             UserStory userStory = new UserStory();
@@ -52,6 +55,7 @@ public class UserStoryServiceImpl implements UserStoryService {
             userStory.setStartDate(storyDto.getStartDate());
             userStory.setCompletionDate(storyDto.getCompletionDate());
             userStory.setWorkRemaining(storyDto.getWorkRemaining());
+            userStory.setStoryTitle(storyDto.getStoryTitle());
             userStoryRepository.save(userStory);
         }
     }
@@ -101,7 +105,7 @@ public class UserStoryServiceImpl implements UserStoryService {
                 .creationDate(story.getCreationDate())
                 .startDate(story.getStartDate())
                 .completionDate(story.getCompletionDate())
-                .workRemaining(story.getWorkRemaining())
+                .workRemaining(story.getWorkRemaining()).storyTitle(story.getStoryTitle())
                 .build();
         return usdto;
     }
