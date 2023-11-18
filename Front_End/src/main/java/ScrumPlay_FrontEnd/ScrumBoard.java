@@ -59,6 +59,7 @@ public class ScrumBoard extends JFrame {
         userData.put(playerNames[3], user4Data);
         userData.put(playerNames[4], user5Data);
 
+
         // Set up the main frame
         setTitle("Scrum Board");
         setSize(1200, 800);
