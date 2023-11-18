@@ -3,6 +3,7 @@ package com.Bhalerao.ScrumPlay.controller;
 
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
 
+import com.Bhalerao.ScrumPlay.service.ScrumService;
 import com.Bhalerao.ScrumPlay.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.HashMap;
@@ -20,11 +23,13 @@ import java.util.Map;
 @Controller
 public class SprintController {
     private SprintService sprintService;
+    private final ScrumService scrumService;
 
     @Autowired
-    SprintController(SprintService sprintService)
+    SprintController(SprintService sprintService, ScrumService scrumService)
     {
         this.sprintService = sprintService;
+        this.scrumService = scrumService;
     }
 
     @GetMapping("/sprint/{id}")
@@ -48,5 +53,18 @@ public class SprintController {
         Map<String, Float> response = new HashMap<>();
         response.put("scrumCallLength:", s.getScrumCallLength());
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/sprint/update-call-duration/{scrumId}")
+    public ResponseEntity<String> updateScrumCallDuration(
+            @PathVariable Long scrumId,
+            @RequestParam int newScrumCallDuration
+    ) {
+        try {
+            scrumService.updateScrumCallDuration(scrumId, newScrumCallDuration);
+            return ResponseEntity.ok("Scrum Call Duration updated successfully.");
+        }  catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
     }
 }
