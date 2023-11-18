@@ -208,14 +208,15 @@ public class ProductBacklog extends JFrame {
 
     // New method to fetch user stories
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                ProductBacklog frame = new ProductBacklog();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        EventQueue.invokeLater(() -> {
+//            try {
+//                ProductBacklog frame = new ProductBacklog();
+//                frame.setVisible(true);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
 }
+
