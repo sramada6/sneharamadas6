@@ -79,5 +79,10 @@
 			<version>1.18.22</version> <!-- Use the latest version -->
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+		<groupId>jakarta.persistence</groupId>
+		<artifactId>jakarta.persistence-api</artifactId>
+		<version>3.1.0</version>
+	</dependency>
 	</dependencies>
 </project>

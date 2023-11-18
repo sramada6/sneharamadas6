@@ -6,7 +6,12 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Timer;
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import org.json.JSONArray;
+import org.json.JSONObject;
 public class ScrumBoard extends JFrame {
     public Map<String, Map<String, String>> userData;
     public JComboBox<String> userDropdown;
@@ -17,7 +22,7 @@ public class ScrumBoard extends JFrame {
         // Initialize user data
         userData = new HashMap<>();
 
-        Map<String, String> user1Data = new HashMap<>();
+        /*Map<String, String> user1Data = new HashMap<>();
         user1Data.put("Implement User Authentication", "To Do");
         user1Data.put("Design Scrum Board UI", "In Progress");
         user1Data.put("Implement Task Management", "Done");
@@ -43,7 +48,7 @@ public class ScrumBoard extends JFrame {
         userData.put("RobertJohnson", user3Data);
         userData.put("EmilyDavis", user4Data);
         userData.put("MichaelBrown", user5Data);
-
+*/
         // Set up the main frame
         setTitle("Scrum Board");
         setSize(1200, 800);
@@ -58,6 +63,33 @@ public class ScrumBoard extends JFrame {
                 updateBoard();
             }
         });
+
+        try {
+            // Send a GET request to the backend API to fetch the players
+            URL url = new URL("http://localhost:8080/players");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            conn.disconnect();
+
+            JSONArray players = new JSONArray(response.toString());
+
+            for (int i = 0; i < players.length(); i++) {
+                JSONObject player = players.getJSONObject(i);
+                String item = player.getString("playerId") + " - " + player.getString("playerName");
+                userDropdown.addItem(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         boardPanel = createBoardPanel();
         add(userDropdown, BorderLayout.NORTH);

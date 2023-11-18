@@ -27,6 +27,7 @@ public class UserStory {
     @ManyToOne
     @JoinColumn(name = "assigned_player_id")
     private Player assignedTo;
+    private String storyTitle;
 
 
     @ManyToOne

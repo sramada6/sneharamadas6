@@ -77,6 +77,10 @@ public class GameController {
             existingStory.setStatus(updatedStoryDto.getStatus());
         }
 
+        if (updatedStoryDto.getStoryTitle() != null) {
+            existingStory.setStoryTitle(updatedStoryDto.getStoryTitle());
+        }
+
         if (updatedStoryDto.getStoryDescription() != null) {
             existingStory.setStoryDescription(updatedStoryDto.getStoryDescription());
         }

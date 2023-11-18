@@ -18,6 +18,7 @@ import java.util.Date;
 public class UserStoryDto {
     private int storyid;
     private String storyDescription;
+    private String storyTitle;
     private int storyPoints;
     private String status;
     private Player assignedTo;
