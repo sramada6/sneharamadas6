@@ -45,3 +45,4 @@ Scrumplay in sprint 2 should work as shown in this [video](https://drive.google.
 
 
 
+For Sprint 2, run the code from sprint-2 branch.
