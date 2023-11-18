@@ -83,35 +83,53 @@ public class SelectUserStory extends JFrame{
     }
 
     public static ArrayList<Map<String, Object>> jsonStringToList(String jsonString) {
-        ArrayList<Map<String, Object>> statements = new ArrayList<>();
+        ArrayList<Map<String, Object>> stories = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                Map<String, Object> statementMap = new HashMap<>();
-                statementMap.put("statementid", jsonObject.getInt("statementid"));
-                statementMap.put("comments", jsonObject.getString("comments"));
-                statementMap.put("statement", jsonObject.getString("statement"));
-                statementMap.put("numOfUserStories", jsonObject.getInt("numOfUserStories"));
+                Map<String, Object> storyMap = new HashMap<>();
+                storyMap.put("storyid", jsonObject.getInt("storyid"));
+                storyMap.put("storyDescription", jsonObject.getString("storyDescription"));
+                storyMap.put("storyPoints", jsonObject.getInt("storyPoints"));
+                storyMap.put("status", jsonObject.getString("status"));
 
-                statements.add(statementMap);
+                JSONObject assignedTo = jsonObject.getJSONObject("assignedTo");
+                storyMap.put("playerid", assignedTo.getInt("playerid"));
+                storyMap.put("playerName", assignedTo.getString("playerName"));
+                storyMap.put("playerRole", assignedTo.getString("playerRole"));
+
+                JSONObject problemStatement = jsonObject.getJSONObject("problemStatement");
+                storyMap.put("statementid", problemStatement.getInt("statementid"));
+                storyMap.put("comments", problemStatement.getString("comments"));
+                storyMap.put("statement", problemStatement.getString("statement"));
+                storyMap.put("numOfUserStories", problemStatement.getInt("numOfUserStories"));
+
+                storyMap.put("creationDate", jsonObject.getString("creationDate"));
+                storyMap.put("startDate", jsonObject.getString("startDate"));
+                storyMap.put("completionDate", jsonObject.getString("completionDate"));
+                storyMap.put("workRemaining", jsonObject.getInt("workRemaining"));
+
+                stories.add(storyMap);
+                System.out.println(stories);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return statements;
+        return stories;
     }
+
 
     private String getCommentsForStatement(String selectedStatement, ArrayList<Map<String, Object>> mapStComments) {
         for (Map<String, Object> comment : mapStComments) {
-            String statement = comment.get("statement").toString();
-            if (selectedStatement.equals(statement)) {
-                String comments = comment.get("comments").toString();
-                return comments;
-            }
+            String statement = comment.get("storyDescription").toString();
+//            if (selectedStatement.equals(statement)) {
+//                String comments = comment.get("comments").toString();
+//                return comments;
+//            }
         }
         return selectedStatement;
     }

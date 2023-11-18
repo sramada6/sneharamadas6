@@ -21,21 +21,21 @@ import org.json.JSONObject;
 public class ProblemStatement extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JLabel lblNewLabel_1;
-    private JTextArea textArea;
+    JLabel lblNewLabel_1;
+    JTextArea textArea;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ProblemStatement frame = new ProblemStatement();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                try {
+//                    ProblemStatement frame = new ProblemStatement();
+//                    frame.setVisible(true);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//    }
 
     public ProblemStatement() {
         setTitle("Problem Statement");
@@ -129,7 +129,7 @@ public class ProblemStatement extends JFrame {
         return new JSONObject(jsonString).toMap();
     }
 
-    private String sendGetRequestToBackend(String apiUrl) {
+    public String sendGetRequestToBackend(String apiUrl) {
         try {
             URL url = new URL(apiUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

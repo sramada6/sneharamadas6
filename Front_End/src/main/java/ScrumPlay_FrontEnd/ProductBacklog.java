@@ -1,4 +1,8 @@
 package ScrumPlay_FrontEnd;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,22 +16,20 @@ import java.util.Map;
 
 public class ProductBacklog extends JFrame {
     private static final long serialVersionUID = 1L;
-    private JList<String> userList;
+    public JList<String> userList;
     private DefaultListModel<String> listModel;
-    private JPanel detailPanel;
+    public JPanel detailPanel;
     private Map<String, String> userStoryDescriptions;
     private JComboBox<String> userStoryPointsField; // Updated to JComboBox
     private JComboBox<String> playerDropdown;
     private JComboBox<String> statusDropdown;
     private JTextArea commentsTextArea;
 
-
-
     public ProductBacklog() {
         setTitle("Product Backlog");
         JPanel mainPanel = new JPanel(new BorderLayout());
         setContentPane(mainPanel);
-        getContentPane().setBackground(new Color(0,255,255));
+        getContentPane().setBackground(new Color(0, 255, 255));
         getContentPane().setBounds(100, 100, 908, 720);
 
         listModel = new DefaultListModel<>();
@@ -39,21 +41,21 @@ public class ProductBacklog extends JFrame {
 
         userList = new JList<>(listModel);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+        fetchUserStoriesFromAPI();
         JScrollPane listScrollPane = new JScrollPane(userList);
         listScrollPane.setPreferredSize(new Dimension(200, 0));
 
-
         detailPanel = new JPanel(new BorderLayout());
         mainPanel.add(listScrollPane, BorderLayout.WEST);
-        getContentPane().setBackground(new Color(0,255,255));
+        getContentPane().setBackground(new Color(0, 255, 255));
         mainPanel.setPreferredSize(new Dimension(800, 600));
 
         mainPanel.add(detailPanel, BorderLayout.CENTER);
-        getContentPane().setBackground(new Color(0,255,255));
+        getContentPane().setBackground(new Color(0, 255, 255));
         userList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 String selectedUserStory = userList.getSelectedValue();
+                System.out.println("What is this?"+ selectedUserStory);
                 showUserStoryDetails(selectedUserStory);
             }
         });
@@ -66,6 +68,61 @@ public class ProductBacklog extends JFrame {
         userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "As a developer, I want to display previous game scores and sprint charts so that the user can have an idea what all values are expected and also to know about the history of the previous games.");
         pack();
     }
+    private void fetchUserStoriesFromAPI() {
+        String apiUrl = "http://localhost:8080/backlog";
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            connection.disconnect();
+
+            JSONArray userStoriesArray = new JSONArray(response.toString());
+
+            for (int i = 0; i < userStoriesArray.length(); i++) {
+                JSONObject userStory = userStoriesArray.getJSONObject(i);
+                String storyDescription = userStory.getString("storyDescription");
+                listModel.addElement(storyDescription);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // ... existing code ...
+
+    private void fetchPlayerNamesFromAPI() {
+        String apiUrl = "http://localhost:8080/player-names";
+        String response = sendGetRequestToBackend(apiUrl);
+
+        try {
+            // Parse the JSON response
+            JSONArray playerNamesArray = new JSONArray(response);
+
+            // Clear existing items
+            playerDropdown.removeAllItems();
+
+            // Add player names to the dropdown
+            for (int i = 0; i < playerNamesArray.length(); i++) {
+                String playerName = playerNamesArray.getString(i);
+                System.out.println("Name"+playerName);
+                playerDropdown.addItem(playerName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+// ... existing code ...
+
+
 
     private void showUserStoryDetails(String userStory) {
         detailPanel.removeAll();
@@ -81,7 +138,8 @@ public class ProductBacklog extends JFrame {
         // Panel for status and assign to
         JPanel statusAssignPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         statusDropdown = new JComboBox<>(new String[]{"New", "Ready", "In Progress", "Ready for Test", "Closed"});
-        playerDropdown = new JComboBox<>(new String[]{"Player 1", "Player 2", "Player 3", "Player 4", "Player 5"});
+        playerDropdown = new JComboBox<>();
+        fetchPlayerNamesFromAPI();
 
         userStoryPointsField = new JComboBox<>(new String[]{"1", "2", "3", "5"});
         userStoryPointsField.setSelectedIndex(0);
@@ -121,7 +179,7 @@ public class ProductBacklog extends JFrame {
 
         // Panel for the "Start Sprint Planning" button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        //Button to clear comments
+        // Button to clear comments
         JButton clearCommentsButton = new JButton("Clear Comments");
         JButton FetchUSButton = new JButton("More User Stories");
 
@@ -139,43 +197,15 @@ public class ProductBacklog extends JFrame {
             }
         });
         buttonPanel.add(startSprintButton);
-        getContentPane().setBackground(new Color(0,255,255));
+        getContentPane().setBackground(new Color(0, 255, 255));
 
         detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
         detailPanel.add(buttonPanel, BorderLayout.SOUTH);
         detailPanel.revalidate();
         detailPanel.repaint();
 
-        //Panel for "Fetch User Stories"
 
 
-        FetchUSButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Create and show the SelectUserStory popup
-                String apiUrl = "http://localhost:8080/statements"; // Update the API URL accordingly
-                String userStories = sendGetRequestToBackend(apiUrl);
-
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        SelectUserStory selectUserStory = new SelectUserStory(userStories);
-                        selectUserStory.addSelectionListener(new SelectionListener() {
-                            @Override
-                            public void onSelection(String selectedUserStory, String comments) {
-                                // Update the UI with the selected user story and comments
-                                // You can update the UI components as per your requirement
-                                userStoryPointsField.setSelectedIndex(1); // Example update
-                                commentsTextArea.setText(comments);
-
-                                // Add the selected user story to the listModel
-                                listModel.addElement(selectedUserStory);
-                                userList.setSelectedValue(selectedUserStory, true); // Select the newly added user story
-                            }
-                        });
-                        selectUserStory.setVisible(true);
-                    }
-                });
-            }
-        });
         buttonPanel.add(FetchUSButton);
 
         detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
@@ -183,6 +213,7 @@ public class ProductBacklog extends JFrame {
         detailPanel.revalidate();
         detailPanel.repaint();
     }
+
     private String sendGetRequestToBackend(String apiUrl) {
         try {
             URL url = new URL(apiUrl);
@@ -203,10 +234,29 @@ public class ProductBacklog extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
             return "";
-        }}
+        }
+    }
 
 
-    // New method to fetch user stories
+    private String getStoryDescription(String selectedUserStory, String userStories) {
+        JSONArray jsonArray = new JSONArray(userStories);
+        JSONObject jsonObject = new JSONObject();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+//            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            jsonObject = jsonArray.getJSONObject(i);
+            if (selectedUserStory.equals(String.valueOf(jsonObject.getInt("storyid")))) {
+                System.out.println("if" + jsonObject.getString("storyDescription"));
+
+                return jsonObject.getString("storyDescription");
+            }
+            System.out.println("getstorydescription" + jsonObject.getString("storyDescription"));
+
+
+        }
+
+        return jsonObject.getString("storyDescription");
+    }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {

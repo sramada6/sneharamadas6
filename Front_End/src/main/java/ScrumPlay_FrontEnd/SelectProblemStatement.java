@@ -107,7 +107,7 @@ public class SelectProblemStatement extends JFrame {
         return statements;
     }
 
-    private String getCommentsForStatement(String selectedStatement, ArrayList<Map<String, Object>> mapStComments) {
+    public String getCommentsForStatement(String selectedStatement, ArrayList<Map<String, Object>> mapStComments) {
         for (Map<String, Object> comment : mapStComments) {
             String statement = comment.get("statement").toString();
             if (selectedStatement.equals(statement)) {
