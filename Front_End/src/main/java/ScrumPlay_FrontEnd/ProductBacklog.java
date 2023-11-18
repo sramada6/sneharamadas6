@@ -258,14 +258,14 @@ public class ProductBacklog extends JFrame {
         return jsonObject.getString("storyDescription");
     }
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                ProductBacklog frame = new ProductBacklog();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        EventQueue.invokeLater(() -> {
+//            try {
+//                ProductBacklog frame = new ProductBacklog();
+//                frame.setVisible(true);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
 }

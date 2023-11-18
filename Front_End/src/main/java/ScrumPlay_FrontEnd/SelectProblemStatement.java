@@ -49,7 +49,7 @@ public class SelectProblemStatement extends JFrame {
         contentPane.add(problemStatementList);
 
         okButton = new JButton("Add to Sprint");
-        okButton.setBounds(150, 200, 100, 30);
+        okButton.setBounds(150, 200, 200, 30);
         contentPane.add(okButton);
 
         okButton.addActionListener(new ActionListener() {
