@@ -33,11 +33,11 @@ public class ProductBacklog extends JFrame {
         getContentPane().setBounds(100, 100, 908, 720);
 
         listModel = new DefaultListModel<>();
-        listModel.addElement("US#001/Create Landing Page");
-        listModel.addElement("US#002/Follow up for Scrum Intro");
-        listModel.addElement("US#003/Create Database");
-        listModel.addElement("US#004/Design game configuration page");
-        listModel.addElement("US#005/Display previous game scores and sprint history");
+//        listModel.addElement("US#001/Create Landing Page");
+//        listModel.addElement("US#002/Follow up for Scrum Intro");
+//        listModel.addElement("US#003/Create Database");
+//        listModel.addElement("US#004/Design game configuration page");
+//        listModel.addElement("US#005/Display previous game scores and sprint history");
 
         userList = new JList<>(listModel);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -57,15 +57,16 @@ public class ProductBacklog extends JFrame {
                 String selectedUserStory = userList.getSelectedValue();
                 System.out.println("What is this?"+ selectedUserStory);
                 showUserStoryDetails(selectedUserStory);
+
             }
         });
 
         userStoryDescriptions = new HashMap<>();
-        userStoryDescriptions.put("US#001/Create Landing Page", "As a developer, I want to design an informative page for the trainees which contains the basic details of scrum and the vocabulary used, such as sprint, sprint backlog, burndown charts and sprint velocity. The page displays a one-line definition of each term followed by a link to the full description.");
-        userStoryDescriptions.put("US#002/Follow up for Scrum Intro", "As a developer, I want to design a webpage which is a follow up for the landing page when the \"see more..\" button is clicked. This page would provide detailed information including a tutorial for the concepts such as sprint, sprint backlog, etc.");
-        userStoryDescriptions.put("US#003/Create Database", "As a developer, I want to design a database which can store all the information regarding ScrumPlay which includes the game configuration, problem statement, user stories, etc. This can be used to fetch details when required so that it can be displayed in the front-end of ScrumPlay.");
-        userStoryDescriptions.put("US#004/Design game configuration page", "As a developer, I want to create a set game configuration page where the user can set parameters such as team size, length of sprint and length of scrum call. The user can also decide the roles of the players, such as Product Owner, Scrum Master and developers.");
-        userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "As a developer, I want to display previous game scores and sprint charts so that the user can have an idea what all values are expected and also to know about the history of the previous games.");
+//        userStoryDescriptions.put("US#001/Create Landing Page", "As a developer, I want to design an informative page for the trainees which contains the basic details of scrum and the vocabulary used, such as sprint, sprint backlog, burndown charts and sprint velocity. The page displays a one-line definition of each term followed by a link to the full description.");
+//        userStoryDescriptions.put("US#002/Follow up for Scrum Intro", "As a developer, I want to design a webpage which is a follow up for the landing page when the \"see more..\" button is clicked. This page would provide detailed information including a tutorial for the concepts such as sprint, sprint backlog, etc.");
+//        userStoryDescriptions.put("US#003/Create Database", "As a developer, I want to design a database which can store all the information regarding ScrumPlay which includes the game configuration, problem statement, user stories, etc. This can be used to fetch details when required so that it can be displayed in the front-end of ScrumPlay.");
+//        userStoryDescriptions.put("US#004/Design game configuration page", "As a developer, I want to create a set game configuration page where the user can set parameters such as team size, length of sprint and length of scrum call. The user can also decide the roles of the players, such as Product Owner, Scrum Master and developers.");
+//        userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "As a developer, I want to display previous game scores and sprint charts so that the user can have an idea what all values are expected and also to know about the history of the previous games.");
         pack();
     }
     private void fetchUserStoriesFromAPI() {
@@ -89,8 +90,8 @@ public class ProductBacklog extends JFrame {
 
             for (int i = 0; i < userStoriesArray.length(); i++) {
                 JSONObject userStory = userStoriesArray.getJSONObject(i);
-                String storyDescription = userStory.getString("storyDescription");
-                listModel.addElement(storyDescription);
+                String storyTitle = userStory.getString("storyTitle");
+                listModel.addElement(storyTitle);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,6 +120,30 @@ public class ProductBacklog extends JFrame {
             e.printStackTrace();
         }
     }
+    private String getStoryDescriptionFromAPI(String selectedUserStory) {
+        String apiUrl = "http://localhost:8080/backlog";
+        String response = sendGetRequestToBackend(apiUrl);
+
+        try {
+            // Parse the JSON response
+            JSONArray userStoriesArray = new JSONArray(response);
+
+            for (int i = 0; i < userStoriesArray.length(); i++) {
+                JSONObject userStory = userStoriesArray.getJSONObject(i);
+                String storyTitle = userStory.getString("storyTitle");
+                String storyDescription = userStory.getString("storyDescription");
+
+                if (selectedUserStory.equals(storyTitle)) {
+                    return storyDescription;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
 
 // ... existing code ...
 
@@ -157,7 +182,11 @@ public class ProductBacklog extends JFrame {
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setWrapStyleWord(true);
         descriptionTextArea.setEditable(false);
-        descriptionTextArea.setText(userStoryDescriptions.get(userStory));
+
+        // Fetch and set the story description from the API
+        String storyDescription = getStoryDescriptionFromAPI(userStory);
+        descriptionTextArea.setText(storyDescription);
+
         JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
         descriptionPanel.add(new JLabel("User Story Description:"), BorderLayout.NORTH);
         descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
@@ -181,14 +210,14 @@ public class ProductBacklog extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         // Button to clear comments
         JButton clearCommentsButton = new JButton("Clear Comments");
-        JButton FetchUSButton = new JButton("More User Stories");
+        //JButton FetchUSButton = new JButton("More User Stories");
 
         clearCommentsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 commentsTextArea.setText("");
             }
         });
-        userStoryInfoPanel.add(clearCommentsButton);
+        buttonPanel.add(clearCommentsButton);
         JButton startSprintButton = new JButton("Start Sprint");
         startSprintButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -204,15 +233,14 @@ public class ProductBacklog extends JFrame {
         detailPanel.revalidate();
         detailPanel.repaint();
 
-
-
-        buttonPanel.add(FetchUSButton);
+        //buttonPanel.add(FetchUSButton);
 
         detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
         detailPanel.add(buttonPanel, BorderLayout.SOUTH);
         detailPanel.revalidate();
         detailPanel.repaint();
     }
+
 
     private String sendGetRequestToBackend(String apiUrl) {
         try {
@@ -258,14 +286,14 @@ public class ProductBacklog extends JFrame {
         return jsonObject.getString("storyDescription");
     }
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                ProductBacklog frame = new ProductBacklog();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        EventQueue.invokeLater(() -> {
+//            try {
+//                ProductBacklog frame = new ProductBacklog();
+//                frame.setVisible(true);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
 }
