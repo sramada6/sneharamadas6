@@ -24,18 +24,18 @@ public class ProblemStatement extends JFrame {
     JLabel lblNewLabel_1;
     JTextArea textArea;
 
-//    public static void main(String[] args) {
-//        EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                try {
-//                    ProblemStatement frame = new ProblemStatement();
-//                    frame.setVisible(true);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    ProblemStatement frame = new ProblemStatement();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
     public ProblemStatement() {
         setTitle("Problem Statement");

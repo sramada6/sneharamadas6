@@ -1,9 +1,6 @@
 package com.Bhalerao.ScrumPlay.model;
 
 import jakarta.persistence.*;
-//import javax.persistence.*;
-
-import com.Bhalerao.ScrumPlay.model.Player;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
