@@ -6,9 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,5 +24,5 @@ public class Scrum {
 
     @ManyToOne
     @JoinColumn(name = "sprint_id")
-    private Sprint sprint;
+    private com.Bhalerao.ScrumPlay.model.Sprint sprint;
 }
