@@ -3,15 +3,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import javax.swing.Timer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.web.client.RestTemplate;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.type.TypeReference;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+
 public class ScrumBoard extends JFrame {
     public Map<String, Map<String, String>> userData;
     public JComboBox<String> userDropdown;
@@ -19,10 +28,9 @@ public class ScrumBoard extends JFrame {
     public JTextArea updateArea;
 
     public ScrumBoard() {
-        // Initialize user data
         userData = new HashMap<>();
 
-        /*Map<String, String> user1Data = new HashMap<>();
+        Map<String, String> user1Data = new HashMap<>();
         user1Data.put("Implement User Authentication", "To Do");
         user1Data.put("Design Scrum Board UI", "In Progress");
         user1Data.put("Implement Task Management", "Done");
@@ -43,12 +51,14 @@ public class ScrumBoard extends JFrame {
         user5Data.put("Write User Documentation", "To Do");
         user5Data.put("Prepare Release Notes", "Done");
 
-        userData.put("JohnDoe", user1Data);
-        userData.put("JaneSmith", user2Data);
-        userData.put("RobertJohnson", user3Data);
-        userData.put("EmilyDavis", user4Data);
-        userData.put("MichaelBrown", user5Data);
-*/
+        String[] playerNames = fetchPlayerDataAndPopulateDropdown("http://localhost:8080/players");
+
+        userData.put(playerNames[0], user1Data);
+        userData.put(playerNames[1], user2Data);
+        userData.put(playerNames[2], user3Data);
+        userData.put(playerNames[3], user4Data);
+        userData.put(playerNames[4], user5Data);
+
         // Set up the main frame
         setTitle("Scrum Board");
         setSize(1200, 800);
@@ -56,7 +66,7 @@ public class ScrumBoard extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(0,255,255));// Set background color
 
-        userDropdown = new JComboBox<>(userData.keySet().toArray(new String[0]));
+        //userDropdown = new JComboBox<>(userData.keySet().toArray(new String[0]));
         userDropdown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -147,6 +157,88 @@ public class ScrumBoard extends JFrame {
 
         // Initial board update
         updateBoard();
+    }
+
+    private List fetchUserNamesFromBackend(String apiUrl) {
+        List<String> userNames = new ArrayList<>();
+
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            // Set up the request
+            connection.setRequestMethod("GET");
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+
+                }
+
+                JSONArray jsonArray = new JSONArray(response.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String playerName = jsonObject.getString("playerName");
+                    userNames.add(playerName);
+                }
+            }
+        } catch (IOException  e) {
+            e.printStackTrace();
+        }
+
+        return userNames;
+
+    }
+
+    private String[] fetchPlayerDataAndPopulateDropdown(String apiUrl) {
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
+
+        List<Map<String, Object>> playerData = parseJsonResponse(jsonResponse);
+
+        String[] playerNames = new String[0];
+
+        if (playerData != null) {
+            // Assuming you have a method to extract player names from the data
+            playerNames = extractPlayerNames(playerData);
+            userDropdown = new JComboBox<>(playerNames);
+
+            return playerNames;
+        } else {
+            // Handle the case where data parsing fails or is empty
+            JOptionPane.showMessageDialog(null, "Failed to fetch player data.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return playerNames;
+    }
+
+    private int getPlayerIdByUsername(String selectedUsername, List<Map<String, Object>> playerData) {
+        for (Map<String, Object> player : playerData) {
+            if (selectedUsername.equals(player.get("playerName"))) {
+                return (int) player.get("playerid");
+            }
+        }
+        return -1; // Player ID not found
+    }
+
+    private List<Map<String, Object>> parseJsonResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, new TypeReference<List<Map<String, Object>>>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String[] extractPlayerNames(List<Map<String, Object>> playerData) {
+        // Assuming 'playerName' is the key for player names in the JSON response
+        return playerData.stream()
+                .map(player -> player.get("playerName").toString())
+                .toArray(String[]::new);
     }
 
     public JPanel createBoardPanel() {
@@ -333,12 +425,13 @@ public class ScrumBoard extends JFrame {
         JOptionPane.showMessageDialog(this, "Scrum Call Ended!", "Scrum Ended", JOptionPane.INFORMATION_MESSAGE);
     }
 
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                new ScrumBoard().setVisible(true);
-//            }
-//        });
-//    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new ScrumBoard().setVisible(true);
+            }
+        });
+    }
 }

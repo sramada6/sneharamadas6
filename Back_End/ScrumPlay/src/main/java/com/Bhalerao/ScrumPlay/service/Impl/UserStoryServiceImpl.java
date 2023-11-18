@@ -7,7 +7,8 @@ import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
 import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.UserStoryRepository;
 import com.Bhalerao.ScrumPlay.service.UserStoryService;
-//import jakarta.persistence.EntityNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
