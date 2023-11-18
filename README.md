@@ -35,11 +35,13 @@ To install dependencies go to directory of [pom.xml](https://github.com/avashis9
 
 We need to start the server first, so run [ScrumPlayApplication.java](https://github.com/avashis9/ScrumPlay/tree/sprint-1/Back_End/ScrumPlay/src/main/java/com/Bhalerao/ScrumPlay) File. This should start a Server at localhost:8080.
 
-If [ScrumPlayApplication.java](https://github.com/avashis9/ScrumPlay/tree/sprint-1/Back_End/ScrumPlay/src/main/java/com/Bhalerao/ScrumPlay) file doesn't show a active Run button, Right-click on src Directory in the left project pane and select `Mark Directory as > Sources Root`.
+If [ScrumPlayApplication.java](https://github.com/avashis9/ScrumPlay/tree/sprint-1/Back_End/ScrumPlay/src/main/java/com/Bhalerao/ScrumPlay) file doesn't show an active Run button, Right-click on src Directory in the left project pane and select `Mark Directory as > Sources Root`.
 
 Then to run Front end, run the file [main.java](https://github.com/avashis9/ScrumPlay/tree/sprint-1/Front_End/src/ScrumPlay_FrontEnd).
 
 Scrumplay in sprint 1 should work as shown in this [video](https://drive.google.com/file/d/1eZcjeuM4vbri7CjEru6Uf8k25ZwzS1gl/view?usp=drive_link)
+
+Scrumplay in sprint 2 should work as shown in this [video](https://drive.google.com/drive/u/2/folders/1jqJFsyjVWlW3amp62euxnMEnoHehf_fU) 
 
 
 
