@@ -45,7 +45,17 @@ public class PlayerServiceImpl implements PlayerService {
         player.setPlayerid(player.getPlayerid());
         playerRepository.save(player);
     }
+    private int calculatePlayerScore(Player player) {
+        // Calculate playerScore based on user stories associated with the player
+        List<UserStoryDto> userStories = userStoryService.getAllStoriesAssignedToPlayer(player.getPlayerid());
 
+        // Assuming a simple calculation based on the difference between completionDate and startDate
+        int totalScore = userStories.stream()
+                .mapToInt(story -> calculateScoreForStory(story.getStartDate(), story.getCompletionDate()))
+                .sum();
+
+        return totalScore;
+    }
     @Override
     public void savePlayers(List<PlayerDto> playerDtos) {
         // Convert PlayerDto objects to Player entities (if needed) and save them
