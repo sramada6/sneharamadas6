@@ -44,15 +44,12 @@ public class SprintController {
     }
 
     @GetMapping("/sprint/timer/{id}")
-    public ResponseEntity<Map<String, Float>> getTimerById(@PathVariable Long id) {
+    public ResponseEntity<Float> getTimerById(@PathVariable Long id) {
         SprintDto s = sprintService.findSprintById(id);
         if (s == null) {
             return ResponseEntity.notFound().build();
         }
-
-        Map<String, Float> response = new HashMap<>();
-        response.put("scrumCallLength:", s.getScrumCallLength());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(s.getScrumCallLength(), HttpStatus.OK);
     }
 
     @PutMapping("/sprint/update-call-duration/{scrumId}")
