@@ -1,443 +1,24 @@
 package ScrumPlay_FrontEnd;
-//import javax.swing.*;
-//import java.awt.*;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//import java.io.IOException;
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.Map;
-//import java.util.List;
-//import javax.swing.Timer;
-//import java.io.BufferedReader;
-//import java.io.InputStreamReader;
-//import java.net.HttpURLConnection;
-//import java.net.URL;
-//
-//
-//import org.json.JSONArray;
-//import org.json.JSONObject;
-//import org.springframework.web.client.RestTemplate;
-//import org.testcontainers.shaded.com.fasterxml.jackson.core.type.TypeReference;
-//import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-//
-//public class ScrumBoard extends JFrame {
-//    public Map<String, Map<String, String>> userData;
-//    public JComboBox<String> userDropdown;
-//    public JPanel boardPanel;
-//    public JTextArea updateArea;
-//    private Map<String, String> playerNameToIdMap;
-//
-//    public ScrumBoard() {
-//
-//        String[] x = fetchPlayerDataAndPopulateDropdown("http://localhost:8080/players");
-//
-//
-//        // Set up the main frame
-//        setTitle("Scrum Board");
-//        setSize(1200, 800);
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        setLayout(new BorderLayout());
-//        getContentPane().setBackground(new Color(0,255,255));// Set background color
-//
-//        //userDropdown = new JComboBox<>(userData.keySet().toArray(new String[0]));
-//
-//        try {
-//            // Send a GET request to the backend API to fetch the players
-//            URL url = new URL("http://localhost:8080/players");
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestMethod("GET");
-//
-//            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            String inputLine;
-//            StringBuilder response = new StringBuilder();
-//
-//            while ((inputLine = in.readLine()) != null) {
-//                response.append(inputLine);
-//            }
-//            in.close();
-//            conn.disconnect();
-//
-//            JSONArray players = new JSONArray(response.toString());
-//
-//            for (int i = 0; i < players.length(); i++) {
-//                JSONObject player = players.getJSONObject(i);
-//                String item = "x";
-//                userDropdown.addItem(item);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        boardPanel = createBoardPanel();
-//        add(userDropdown, BorderLayout.NORTH);
-//        add(boardPanel, BorderLayout.CENTER);
-//
-//        JPanel updatePanel = createUpdatePanel();
-//        add(updatePanel, BorderLayout.SOUTH);
-//
-//        final int[] countdown = {10 * 60};
-//
-//        JLabel countdownLabel = new JLabel();
-//        countdownLabel.setHorizontalAlignment(JLabel.CENTER);
-//        Timer timer = new Timer(1000, new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                countdown[0]--; // Decrease the countdown value
-//
-//                int minutes = countdown[0] / 60;
-//                int seconds = countdown[0] % 60;
-//
-//                countdownLabel.setText(String.format("Countdown: %02d:%02d", minutes, seconds));
-//
-//                // If countdown reaches 0, stop the timer and show a message
-//                if (countdown[0] <= 0) {
-//                    ((Timer)e.getSource()).stop();
-//                    endScrumCall();
-//                }
-//            }
-//        });
-//
-//        JButton startScrumCallButton = new JButton("Start Scrum Call");
-//        startScrumCallButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                // Start the timer when the button is clicked
-//                timer.start();
-//            }
-//        });
-//
-//        JButton endScrumButton = new JButton("End Scrum Call");
-//        endScrumButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                timer.stop();
-//                endScrumCall();
-//            }
-//        });
-//
-//        JPanel bottomPanel = new JPanel();
-//        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
-//
-//        bottomPanel.add(countdownLabel);
-//        bottomPanel.add(startScrumCallButton);
-//        bottomPanel.add(endScrumButton);
-//
-//        add(bottomPanel, BorderLayout.PAGE_END);
-//
-//        // Initial board update
-//        updateBoard();
-//    }
-//
-//    private String[] fetchPlayerDataAndPopulateDropdown(String apiUrl) {
-//        RestTemplate restTemplate = new RestTemplate();
-//        String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
-//
-//        List<Map<String, Object>> playerData = parseJsonResponse(jsonResponse);
-//
-//        String[] playerNames = new String[0];
-//        playerNameToIdMap = new HashMap<>();
-//
-//        if (playerData != null) {
-//            playerNames = extractPlayerNames(playerData);
-//            userDropdown = new JComboBox<>(playerNames);
-//
-//            // Populate playerNameToIdMap
-//            for (Map<String, Object> player : playerData) {
-//                String playerName = player.get("playerName").toString();
-//                String playerId = player.get("playerid").toString();
-//                playerNameToIdMap.put(playerName, playerId);
-//            }
-//
-//            userDropdown.addActionListener(new ActionListener() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    // Fetch user story details for the selected player
-//                    String selectedPlayerName = (String) userDropdown.getSelectedItem();
-//                    String selectedPlayerId = playerNameToIdMap.get(selectedPlayerName);
-//                    fetchUserStoryDetails(selectedPlayerId);
-//
-//                    // Update the board
-//                    updateBoard();
-//                }
-//            });
-//
-//            return playerNames;
-//        } else {
-//            // Handle the case where data parsing fails or is empty
-//            JOptionPane.showMessageDialog(null, "Failed to fetch player data.", "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//
-//        return playerNames;
-//    }
-//
-//    private void fetchUserStoryDetails(String selectedPlayer) {
-//        // Assuming you have an API to fetch user story details based on the selected player
-//        String userStoryDetailsUrl = "http://localhost:8080/player-stories/" + selectedPlayer;
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//        String jsonResponse = restTemplate.getForObject(userStoryDetailsUrl, String.class);
-//
-//        // Parse the user story details and update userData map
-//        List<Map<String, Object>> userStoryData = parseUserStoryDetails(jsonResponse);
-//
-//        if (userStoryData != null) {
-//            Map<String, String> userStoryMap = new HashMap<>();
-//            for (Map<String, Object> userStory : userStoryData) {
-//                userStoryMap.put((String) userStory.get("userStoryName"), (String) userStory.get("status"));
-//                System.out.println(userStory.get("storyTitle"));
-//            }
-//
-//            userData.put(selectedPlayer, userStoryMap);
-//        } else {
-//            // Handle the case where data parsing fails or is empty
-//            JOptionPane.showMessageDialog(null, "Failed to fetch user story details.", "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-//
-//    private List<Map<String, Object>> parseUserStoryDetails(String jsonResponse) {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//
-//        try {
-//            List<Map<String, Object>> userStoryDetails = objectMapper.readValue(
-//                    jsonResponse,
-//                    new TypeReference<List<Map<String, Object>>>() {}
-//            );
-//
-//            return userStoryDetails;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//
-//    private List<Map<String, Object>> parseJsonResponse(String jsonResponse) {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            return objectMapper.readValue(jsonResponse, new TypeReference<List<Map<String, Object>>>() {});
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    private String[] extractPlayerNames(List<Map<String, Object>> playerData) {
-//        // Assuming 'playerName' is the key for player names in the JSON response
-//        return playerData.stream()
-//                .map(player -> player.get("playerName").toString())
-//                .toArray(String[]::new);
-//    }
-//
-//    public JPanel createBoardPanel() {
-//        JPanel boardPanel = new JPanel(new GridLayout(1, 3));
-//
-//        for (String lane : new String[]{"To Do", "In Progress", "Done"}) {
-//            JPanel lanePanel = new JPanel();
-//            lanePanel.setLayout(new BoxLayout(lanePanel, BoxLayout.Y_AXIS));
-//            lanePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK, 2), lane));
-//            lanePanel.setBackground(new Color(255, 255, 224)); // Set lane background color
-//
-//            boardPanel.add(lanePanel);
-//        }
-//
-//        return boardPanel;
-//    }
-//
-//    public void updateBoard() {
-//        String selectedUser = (String) userDropdown.getSelectedItem();
-//        if (selectedUser != null) {
-////            Map<String, String> userStories = userData.get(selectedUser);
-////            clearBoard();
-////
-////            for (Map.Entry<String, String> entry : userStories.entrySet()) {
-////                String userStory = entry.getKey();
-////                String status = entry.getValue();
-////
-////                JPanel cardPanel = createCardPanel(userStory, status);
-////                addToLanePanel(status, cardPanel);
-////            }
-//        }
-//    }
-//
-//    public JPanel createCardPanel(String userStory, String status) {
-//        JPanel cardPanel = new JPanel();
-//        cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
-//        cardPanel.setBorder(BorderFactory.createEtchedBorder());
-//        cardPanel.setBackground(Color.RED); // Set card background color
-//        cardPanel.setPreferredSize(new Dimension(800, 200)); // Set fixed size
-//
-//        JLabel userStoryLabel = new JLabel(userStory);
-//        userStoryLabel.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
-//        userStoryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        cardPanel.add(userStoryLabel);
-//
-//        cardPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-//
-//        JButton updateStatus = new JButton("Update Status");
-//        updateStatus.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        updateStatus.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                // Show daily status input dialog
-//                showStatusInputDialog(userStory);
-//            }
-//        });
-//
-//        JPanel flipPanel = new JPanel();
-//        flipPanel.setLayout(new BoxLayout(flipPanel, BoxLayout.Y_AXIS));
-//        flipPanel.setBorder(BorderFactory.createEtchedBorder());
-//        flipPanel.setBackground(Color.GREEN); // Set card background color
-//        flipPanel.setPreferredSize(new Dimension(800, 200));
-//        flipPanel.setVisible(false);
-//
-//        JLabel flippedUserStoryLabel = new JLabel(userStory);
-//        flippedUserStoryLabel.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
-//        flippedUserStoryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        flipPanel.add(flippedUserStoryLabel);
-//
-//        JLabel storyPoints = new JLabel("Story Points");
-//        storyPoints.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
-//        storyPoints.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        flipPanel.add(storyPoints);
-//
-//        JLabel description = new JLabel("Description");
-//        description.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
-//        description.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        flipPanel.add(description);
-//
-//        JLabel acceptanceCriteria = new JLabel("Acceptance Criteria");
-//        acceptanceCriteria.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
-//        acceptanceCriteria.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        flipPanel.add(acceptanceCriteria);
-//
-//        JLabel todayUpdate = new JLabel("Today's Update");
-//        todayUpdate.setFont(new Font("Arial", Font.BOLD, 12)); // Reduce font size
-//        todayUpdate.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        flipPanel.add(todayUpdate);
-//
-//        JButton provideUpdate = new JButton("Provide Update");
-//        provideUpdate.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        provideUpdate.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                // Show daily status input dialog
-//                cardPanel.setVisible(!cardPanel.isVisible());
-//                flipPanel.setVisible(!flipPanel.isVisible());
-//            }
-//        });
-//
-//        JButton backButton = new JButton("Back");
-//        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        backButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                // Show daily status input dialog
-//                cardPanel.setVisible(!cardPanel.isVisible());
-//                flipPanel.setVisible(!flipPanel.isVisible());
-//            }
-//        });
-//        flipPanel.add(backButton);
-//        cardPanel.add(updateStatus);
-//        cardPanel.add(provideUpdate);
-//
-//        JPanel container = new JPanel();
-//        container.add(cardPanel);
-//        container.add(flipPanel);
-//
-//        return container;
-//    }
-//
-//    public void addToLanePanel(String status, JPanel cardPanel) {
-//        Component[] lanePanels = boardPanel.getComponents();
-//        switch (status) {
-//            case "To Do":
-//                ((JPanel) lanePanels[0]).add(cardPanel);
-//                break;
-//            case "In Progress":
-//                ((JPanel) lanePanels[1]).add(cardPanel);
-//                break;
-//            case "Done":
-//                ((JPanel) lanePanels[2]).add(cardPanel);
-//                break;
-//        }
-//        boardPanel.revalidate();
-//        boardPanel.repaint();
-//    }
-//
-//    public void clearBoard() {
-//        Component[] lanePanels = boardPanel.getComponents();
-//        for (Component lanePanel : lanePanels) {
-//            ((JPanel) lanePanel).removeAll();
-//        }
-//        boardPanel.revalidate();
-//        boardPanel.repaint();
-//    }
-//
-//    public JPanel createUpdatePanel() {
-//        JPanel updatePanel = new JPanel();
-//        updatePanel.setLayout(new BorderLayout());
-//        updatePanel.setBackground(new Color(240, 240, 240)); // Set background color
-//
-//        // Update area
-//        updateArea = new JTextArea();
-//        updateArea.setEditable(false);
-//        JScrollPane scrollPane = new JScrollPane(updateArea);
-//        updatePanel.add(scrollPane, BorderLayout.CENTER);
-//
-//        return updatePanel;
-//    }
-//
-//    public String getUpdateForUserStory(String userStory) {
-//
-//        return "Update for " + userStory + ": Today's progress...";
-//    }
-//
-//    public void showStatusInputDialog(String userStory) {
-//        JTextArea statusInput = new JTextArea();
-//        statusInput.setLineWrap(true);
-//        statusInput.setWrapStyleWord(true);
-//
-//        JScrollPane scrollPane = new JScrollPane(statusInput);
-//
-//        int result = JOptionPane.showConfirmDialog(this, scrollPane, "Enter Daily Status for " + userStory,
-//                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//
-//        if (result == JOptionPane.OK_OPTION) {
-//            String dailyStatus = statusInput.getText();
-//            updateArea.setText("Daily Status for " + userStory + ":\n" + dailyStatus);
-//        }
-//    }
-//
-//    public void endScrumCall() {
-//        JOptionPane.showMessageDialog(this, "Scrum Call Ended!", "Scrum Ended", JOptionPane.INFORMATION_MESSAGE);
-//    }
-//
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                new ScrumBoard().setVisible(true);
-//            }
-//        });
-//    }
-//}
+
 
 import org.json.JSONObject;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.type.TypeReference;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-
 import javax.swing.*;
 import javax.swing.Timer;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 
@@ -445,7 +26,10 @@ public class ScrumBoard extends JFrame {
     private JPanel boardPanel;
     private JComboBox<String> userDropdown;
     private Map<String, List<StoryCard>> userStoriesMap;
-    private Map<String, String> playerNameToIdMap;
+    public static Map<String, String> playerNameToIdMap;
+
+    public int scrumNum = 1;
+    public int completedStoryPoints = 0;
 
     public ScrumBoard() {
         userStoriesMap = new HashMap<>();
@@ -465,6 +49,7 @@ public class ScrumBoard extends JFrame {
                 // Fetch user story details for the selected player
                 String selectedPlayerName = (String) userDropdown.getSelectedItem();
                 String selectedPlayerId = playerNameToIdMap.get(selectedPlayerName);
+                updateBackendWithStoryCardValues();
                 fetchUserStories(selectedPlayerId);
 
                 // Update the board
@@ -501,17 +86,29 @@ public class ScrumBoard extends JFrame {
         startScrumCallButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Start the timer when the button is clicked
+                updateBoard();
                 timer.start();
+                boardPanel.revalidate();
+                boardPanel.repaint();
+                for (Component lane : boardPanel.getComponents()) {
+                    if (lane instanceof JPanel) {
+                        lane.revalidate();
+                        lane.repaint();
+                        for (Component card : ((JPanel) lane).getComponents()) {
+                            if (card instanceof StoryCard) {
+                                    card.revalidate();
+                                    card.repaint();
+                            }
+                        }
+                    }
+                }
             }
         });
 
         JButton endScrumButton = new JButton("End Scrum Call");
-        endScrumButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timer.stop();
-                endScrumCall();
-            }
+        endScrumButton.addActionListener(e -> {
+            timer.stop();
+            endScrumCall();
         });
 
         JPanel bottomPanel = new JPanel();
@@ -538,6 +135,22 @@ public class ScrumBoard extends JFrame {
             countdown = new int[]{10 * 60};
         }
         return countdown;
+    }
+
+    private int fetchSprintLength() {
+        RestTemplate restTemplate = new RestTemplate();
+        String apiUrl = "http://localhost:8080/sprint/length/1";
+        String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
+        int sLength = 0;
+        if(jsonResponse != null) {
+            System.out.println("Setting sprint length as ....");
+            sLength = Integer.parseInt(jsonResponse);
+            System.out.println(sLength);
+        }else{
+            System.out.println("Unable to fetch Sprint Length");
+            sLength = 3;
+        }
+        return sLength;
     }
 
     private String[] fetchPlayerDataAndPopulateDropdown(String apiUrl) {
@@ -728,7 +341,8 @@ public class ScrumBoard extends JFrame {
 
             // Create a StoryCard for the current user story
             StoryCard storyCard = new StoryCard(storyid, title, description, status, assignedTo, storyPoints);
-
+            System.out.println("card created");
+            System.out.println(storyCard.getRootPane());
             // Add the StoryCard to the appropriate lane
             addToLanePanel(status, storyCard);
         }
@@ -767,29 +381,7 @@ public class ScrumBoard extends JFrame {
         return cardPanel;
     }
 
-    private void moveCardToLane(String cardTitle, JPanel newLane) {
-        // Find the card in the existing lanes and move it to the new lane
-        for (List<StoryCard> userStories : userStoriesMap.values()) {
-            for (StoryCard storyCard : userStories) {
-                if (storyCard.getTitle().equals(cardTitle)) {
-                    // Remove the card from the old lane
-                    for (Component oldLane : boardPanel.getComponents()) {
-                        if (Arrays.asList(((JPanel) oldLane).getComponents()).contains(storyCard)) {
-                            ((JPanel) oldLane).remove(storyCard);
-                            break;
-                        }
-                    }
 
-                    // Add the card to the new lane
-                    newLane.add(storyCard);
-                    break;
-                }
-            }
-        }
-
-        boardPanel.revalidate();
-        boardPanel.repaint();
-    }
 
     private void addToLanePanel(String status, StoryCard storyCard) {
         // Find the appropriate lane panel
@@ -826,21 +418,6 @@ public class ScrumBoard extends JFrame {
         fetchUserStories(selectedPlayerId);
     }
 
-    private JPanel getLanePanel(String status) {
-        Component[] lanePanels = boardPanel.getComponents();
-        for (Component lanePanel : lanePanels) {
-            if (lanePanel instanceof JPanel) {
-                Border border = ((JPanel) lanePanel).getBorder();
-                if (border instanceof TitledBorder) {
-                    String title = ((TitledBorder) border).getTitle();
-                    if (title.equals(status)) {
-                        return (JPanel) lanePanel;
-                    }
-                }
-            }
-        }
-        return null;
-    }
 
     private void clearBoard() {
         Component[] lanePanels = boardPanel.getComponents();
@@ -852,8 +429,160 @@ public class ScrumBoard extends JFrame {
     }
 
     public void endScrumCall() {
-        JOptionPane.showMessageDialog(this, "Scrum Call Ended!", "Scrum Ended", JOptionPane.INFORMATION_MESSAGE);
+        System.out.println("waiting for back end");
+        updateBackendWithStoryCardValues();
+        if(scrumNum < fetchSprintLength())
+        {
+            JOptionPane.showMessageDialog(this, "Scrum Call "+ scrumNum + " Ended!", "Scrum " + scrumNum +" Ended", JOptionPane.INFORMATION_MESSAGE);
+            scrumNum++;
+        }else{
+            updateBackendCompletedPointsInSprint();
+            JOptionPane.showMessageDialog(this, "Story Points completed: " + completedStoryPoints, "End of Sprint", JOptionPane.INFORMATION_MESSAGE);
+            //add code here to go to new page
+
+        }
     }
+
+    private void updateBackendCompletedPointsInSprint() {
+        try {
+            // Assuming completedStoryPoints is a variable holding the completed story points
+            int sprintId =1; // Replace with the actual method to get the sprint ID
+
+            for (Component lane : boardPanel.getComponents()) {
+                if (lane instanceof JPanel) {
+                    for (Component card : ((JPanel) lane).getComponents()) {
+                        if (card instanceof StoryCard) {
+                            System.out.println("got the updated cards");
+                            StoryCard storyCard = (StoryCard) card;
+                            String updatedStatus = storyCard.getStatusComboBox();
+                            if (updatedStatus.equals("Completed")){
+                                String updatedStoryPoints = storyCard.getStoryPointsComboBox();
+                                completedStoryPoints += Integer.parseInt(updatedStoryPoints);
+                            }
+
+                        }}}}
+
+            String apiUrl = "http://localhost:8080/sprint/story-points/" + sprintId + "?storyPointsCompleted=" + completedStoryPoints;
+
+            System.out.println("generatingPayload");
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put("endDate", LocalDateTime.now());
+
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            System.out.println(jsonPayload);
+
+            // Set the request method to PUT
+            connection.setRequestMethod("PUT");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Length", String.valueOf(jsonPayload.length()));
+
+            // Write JSON payload to the connection's output stream
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonPayload.toString().getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            int responseCode = connection.getResponseCode();
+            System.out.println("HTTP Response Code for sprint update: " + responseCode);
+
+            // Close the connection
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void updateBackendWithStoryCardValues() {
+        for (Component lane : boardPanel.getComponents()) {
+            if (lane instanceof JPanel) {
+                for (Component card : ((JPanel) lane).getComponents()) {
+                    if (card instanceof StoryCard) {
+                        System.out.println("got the updated cards");
+                        StoryCard storyCard = (StoryCard) card;
+
+                        // Extract updated values from the StoryCard
+                        String storyId = storyCard.getStoryId();
+                        String updatedStatus = storyCard.getStatusComboBox();
+                        String updatedAssignedTo = storyCard.getAssignedToComboBox();
+                        String updatedStoryPoints = storyCard.getStoryPointsComboBox();
+                        String updatedDescription = storyCard.getDescription();
+
+                        System.out.println("Saving your changes...");
+
+                        // Send a PUT request to the backend with the updated values
+                        sendPutRequest(storyId, updatedDescription, updatedStatus, updatedAssignedTo, updatedStoryPoints);
+                    }
+                }
+            }
+        }
+    }
+
+    private JSONObject prepareJsonData(String updatedDescription, String updatedStatus, String updatedAssignedTo, String updatedStoryPoints) {
+
+
+        JSONObject jsonData1 = new JSONObject();
+        jsonData1.put("storyDescription", updatedDescription);
+        jsonData1.put("status", updatedStatus);
+        if (updatedStatus.equals("In Progress"))
+        {
+            jsonData1.put("startDate", LocalDateTime.now());
+        }
+        if (updatedStatus.equals("Completed"))
+        {
+            jsonData1.put("completionDate", LocalDateTime.now());
+        }
+
+        jsonData1.put("storyPoints", updatedStoryPoints);
+        JSONObject jsonData2 = new JSONObject();
+        jsonData2.put("playerid", updatedAssignedTo);
+        jsonData1.put("assignedTo", jsonData2);
+
+        return jsonData1;
+    }
+
+    private void sendPutRequest(String storyId, String updatedDescription, String updatedStatus, String updatedAssignedTo, String updatedStoryPoints) {
+
+        try {
+            // Replace with your actual API endpoint
+            String apiUrl = "http://localhost:8080/backlog-modify/" + storyId;
+
+            JSONObject jsonPayload = prepareJsonData( updatedDescription,  updatedStatus,  updatedAssignedTo,  updatedStoryPoints);
+            System.out.println("jsonPayload");
+
+            // Create URL object
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            // Set the request method to PUT
+            connection.setRequestMethod("PUT");
+
+            // Enable input and output streams
+            connection.setDoOutput(true);
+
+            // Set content type and length
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Length", String.valueOf(jsonPayload.length()));
+
+            // Write JSON payload to the connection's output stream
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonPayload.toString().getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+            System.out.println("HTTP Response Code: " + responseCode);
+
+            // Close the connection
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {

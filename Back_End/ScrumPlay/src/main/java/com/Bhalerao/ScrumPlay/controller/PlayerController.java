@@ -73,6 +73,22 @@ public class PlayerController {
         try {
             List<Map<String, String>> playerDataList = (List<Map<String, String>>) requestData.get("players");
 
+            int teamSize = Integer.parseInt(requestData.get("teamSize").toString()) ;
+            int sprintLength = Integer.parseInt(requestData.get("sprintLength").toString());
+
+            float scrumCallLength = Float.parseFloat(requestData.get("scrumCallLength").toString());
+
+
+            SprintDto sprintDto = SprintDto.builder()
+                    .teamSize(teamSize)
+                    .sprintLength(sprintLength)
+                    .scrumCallLength(scrumCallLength)
+                    .storyPointsCompleted(0)
+                    .startDate(LocalDate.now())
+                    .endDate(LocalDate.now().plusDays(7))
+                    .build();
+            sprintService.saveSprint(sprintDto);
+
             List<PlayerDto> playerDtos = new ArrayList<>();
 
             // Iterate over the player data and create PlayerDto objects
@@ -84,23 +100,10 @@ public class PlayerController {
                         .playerName(playerName)
                         .playerRole(playerRole)
                         .build();
+
                 playerDtos.add(playerDto);
             }
             playerService.savePlayers(playerDtos);
-
-            int teamSize = Integer.parseInt(requestData.get("teamSize").toString()) ;
-            int sprintLength = Integer.parseInt(requestData.get("sprintLength").toString());
-
-            float scrumCallLength = Float.parseFloat(requestData.get("scrumCallLength").toString());
-
-
-            SprintDto sprintDto = SprintDto.builder()
-                    .teamSize(teamSize)
-                    .sprintLength(sprintLength)
-                    .scrumCallLength(scrumCallLength)
-                    .startDate(LocalDate.now())
-                    .build();
-            sprintService.saveSprint(sprintDto);
 
             return ResponseEntity.ok("Player and Sprint added successfully");
         } catch (Exception e) {

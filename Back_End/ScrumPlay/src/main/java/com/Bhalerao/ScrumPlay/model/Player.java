@@ -19,4 +19,8 @@ public class Player {
     private int playerid;
     private String playerName;
     private String playerRole;
+
+    @ManyToOne
+    @JoinColumn(name = "sprint_id")
+    private Sprint sprint;
 }

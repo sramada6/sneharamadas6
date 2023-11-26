@@ -52,6 +52,15 @@ public class SprintController {
         return new ResponseEntity<>(s.getScrumCallLength(), HttpStatus.OK);
     }
 
+    @GetMapping("/sprint/length/{id}")
+    public ResponseEntity<Integer> getLengthById(@PathVariable Long id) {
+        SprintDto s = sprintService.findSprintById(id);
+        if (s == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(s.getSprintLength(), HttpStatus.OK);
+    }
+
     @PutMapping("/sprint/update-call-duration/{scrumId}")
     public ResponseEntity<String> updateScrumCallDuration(
             @PathVariable Long scrumId,
@@ -63,5 +72,18 @@ public class SprintController {
         }  catch (Exception e) {
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+    }
+
+    @PutMapping("/sprint/story-points/{sprintId}")
+    public ResponseEntity<String> updateStoryPointsCompleted(
+            @PathVariable long sprintId,
+            @RequestParam int storyPointsCompleted) {
+        System.out.println("Story points completed Started...");
+        SprintDto existingSprint = sprintService.findSprintById(sprintId);
+        existingSprint.setStoryPointsCompleted(storyPointsCompleted);
+        sprintService.saveSprint(existingSprint);
+
+        System.out.println("Story points completed updated successfully");
+        return ResponseEntity.ok("Story points completed updated successfully");
     }
 }
