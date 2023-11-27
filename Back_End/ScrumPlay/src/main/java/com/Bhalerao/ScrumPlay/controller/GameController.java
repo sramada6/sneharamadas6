@@ -48,10 +48,16 @@ public class GameController {
         return new ResponseEntity<>(userStory, HttpStatus.OK);
     }
 
-    @GetMapping("/player-stories/{playerid}")
+    @GetMapping("/all-player-stories/{playerid}")
     public ResponseEntity<List<UserStoryDto>> getStoriesAssignedToPlayer(@PathVariable int playerid) {
         List<UserStoryDto> stories = userStoryService.getAllStoriesAssignedToPlayer(playerid);
         return ResponseEntity.ok(stories);
+    }
+
+    @GetMapping("/player-stories/{playerid}")
+    public ResponseEntity<List<Long>> getStoryIdsAssignedToPlayer(@PathVariable int playerid) {
+        List<Long> storyIds = userStoryService.getStoryIdsAssignedToPlayer(playerid);
+        return ResponseEntity.ok(storyIds);
     }
 
     @GetMapping("/problem-stories/{statementid}")

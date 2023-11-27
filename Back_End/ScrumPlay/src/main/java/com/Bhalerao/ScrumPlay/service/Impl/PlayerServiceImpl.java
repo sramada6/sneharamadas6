@@ -2,7 +2,6 @@ package com.Bhalerao.ScrumPlay.service.Impl;
 
 import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
 import com.Bhalerao.ScrumPlay.model.Player;
-import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.PlayerRepository;
 import com.Bhalerao.ScrumPlay.service.PlayerService;
 
@@ -28,6 +27,7 @@ public class PlayerServiceImpl implements PlayerService {
         List<Player> players = playerRepository.findAll();
         return players.stream().map((player) -> mapToPlayerDto(player)).collect(Collectors.toList());
     }
+
 
     private PlayerDto mapToPlayerDto(Player player) {
         PlayerDto pdto = PlayerDto.builder()
@@ -61,6 +61,8 @@ public class PlayerServiceImpl implements PlayerService {
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with ID: " + id));
         return mapToPlayerDto(p);
     }
+
+
 
     // You may need a method to convert PlayerDto to Player entity
     private Player convertToEntity(PlayerDto playerDto) {
