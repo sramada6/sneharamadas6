@@ -108,4 +108,17 @@ public class PlayerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding player and sprint");
         }
     }
+    @PostMapping("/end-sprint")
+    public ResponseEntity<String> endSprint() {
+        try {
+            // Calculate and update player scores
+            SavePlayerScores();
+
+            return ResponseEntity.ok("Sprint ended successfully");
+        } catch (Exception e) {
+            log.error("Error ending sprint", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error ending sprint");
+        }
+    }
+
 }

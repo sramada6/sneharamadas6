@@ -56,6 +56,30 @@ public class PlayerServiceImpl implements PlayerService {
 
         return totalScore;
     }
+
+    private int calculateScoreForStory(Date startDate, Date completionDate) {
+        // Convert Date to LocalDate
+        LocalDate localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localCompletionDate = completionDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // Calculate the difference between completionDate and startDate in days
+        long daysDifference = ChronoUnit.DAYS.between(localStartDate, localCompletionDate);
+
+        // Multiply the difference by 100 to get the score
+        return (int) (daysDifference * 100);
+    }
+
+    private void SavePlayerScores() {
+        List<PlayerDto> players = playerService.findAllPlayers();
+
+        for (PlayerDto player : players) {
+            int playerScore = calculatePlayerScore(player); // Your existing method for calculating player score
+            player.setPlayerScore(playerScore);
+
+            // Update the player score in the database
+            playerService.savePlayer(player);
+        }
+    }
     @Override
     public void savePlayers(List<PlayerDto> playerDtos) {
         // Convert PlayerDto objects to Player entities (if needed) and save them
