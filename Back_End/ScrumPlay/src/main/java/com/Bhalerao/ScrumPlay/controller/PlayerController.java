@@ -108,17 +108,35 @@ public class PlayerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding player and sprint");
         }
     }
-    @PostMapping("/end-sprint")
-    public ResponseEntity<String> endSprint() {
+    @GetMapping("/display-score")
+    public ResponseEntity<List<Map<String, Object>>> calculateAndDisplayPlayerScores() {
         try {
-            // Calculate and update player scores
-            SavePlayerScores();
+            List<PlayerDto> players = playerService.findAllPlayers();
 
-            return ResponseEntity.ok("Sprint ended successfully");
+            // Create a list to store simplified data for front-end
+            List<Map<String, Object>> playerScores = new ArrayList<>();
+
+            for (PlayerDto player : players) {
+                int playerScore = calculatePlayerScore(player);
+
+
+                // Update the player's score in the database
+                playerService.updatePlayerScore(player.getPlayerId(), playerScore);
+
+                // Create a map for simplified data and add it to the list
+                Map<String, Object> playerScoreMap = new HashMap<>();
+                playerScoreMap.put("playerName", player.getPlayerName());
+                playerScoreMap.put("playerScore", playerScore);
+
+                playerScores.add(playerScoreMap);
+            }
+
+            return ResponseEntity.ok(playerScores);
         } catch (Exception e) {
-            log.error("Error ending sprint", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error ending sprint");
+            log.error("Error calculating and displaying player scores", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
         }
     }
+
 
 }

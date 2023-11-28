@@ -49,8 +49,13 @@ public class PlayerServiceImpl implements PlayerService {
         // Calculate playerScore based on user stories associated with the player
         List<UserStoryDto> userStories = userStoryService.getAllStoriesAssignedToPlayer(player.getPlayerid());
 
+        // Filter user stories with status "Done"
+        List<UserStoryDto> doneUserStories = userStories.stream()
+                .filter(story -> "Done".equals(story.getStatus()))
+                .collect(Collectors.toList());
+
         // Assuming a simple calculation based on the difference between completionDate and startDate
-        int totalScore = userStories.stream()
+        int totalScore = doneUserStories.stream()
                 .mapToInt(story -> calculateScoreForStory(story.getStartDate(), story.getCompletionDate()))
                 .sum();
 
@@ -69,17 +74,20 @@ public class PlayerServiceImpl implements PlayerService {
         return (int) (daysDifference * 100);
     }
 
-    private void SavePlayerScores() {
-        List<PlayerDto> players = playerService.findAllPlayers();
 
-        for (PlayerDto player : players) {
-            int playerScore = calculatePlayerScore(player); // Your existing method for calculating player score
-            player.setPlayerScore(playerScore);
 
-            // Update the player score in the database
-            playerService.savePlayer(player);
+    @Override
+    public void updatePlayerScore(int playerId, int newScore) {
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with ID: " + playerId));
+
+            player.setPlayerScore(newScore);
+            playerRepository.save(player); // This line updates the database
         }
+
+
     }
+
     @Override
     public void savePlayers(List<PlayerDto> playerDtos) {
         // Convert PlayerDto objects to Player entities (if needed) and save them
