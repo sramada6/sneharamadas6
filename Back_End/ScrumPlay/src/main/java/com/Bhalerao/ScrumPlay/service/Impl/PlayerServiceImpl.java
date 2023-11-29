@@ -1,27 +1,33 @@
 package com.Bhalerao.ScrumPlay.service.Impl;
 
 import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
+import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
 import com.Bhalerao.ScrumPlay.model.Player;
-import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.PlayerRepository;
 import com.Bhalerao.ScrumPlay.service.PlayerService;
 
+import com.Bhalerao.ScrumPlay.service.UserStoryService;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 //import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private PlayerRepository playerRepository;
-
+    private final UserStoryService userStoryService;
     @Autowired
-    public PlayerServiceImpl(PlayerRepository playerRepository){
+    public PlayerServiceImpl(PlayerRepository playerRepository, UserStoryService userStoryService){
         this.playerRepository = playerRepository;
+        this.userStoryService = userStoryService;
     }
     @Override
     public List<PlayerDto> findAllPlayers() {
@@ -45,7 +51,7 @@ public class PlayerServiceImpl implements PlayerService {
         player.setPlayerid(player.getPlayerid());
         playerRepository.save(player);
     }
-    private int calculatePlayerScore(Player player) {
+    public int calculatePlayerScore(PlayerDto player) {
         // Calculate playerScore based on user stories associated with the player
         List<UserStoryDto> userStories = userStoryService.getAllStoriesAssignedToPlayer(player.getPlayerid());
 
@@ -61,6 +67,8 @@ public class PlayerServiceImpl implements PlayerService {
 
         return totalScore;
     }
+
+
 
     private int calculateScoreForStory(Date startDate, Date completionDate) {
         // Convert Date to LocalDate
@@ -78,7 +86,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void updatePlayerScore(int playerId, int newScore) {
-        Player player = playerRepository.findById(playerId)
+        Player player = playerRepository.findById((long) playerId)
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with ID: " + playerId));
 
             player.setPlayerScore(newScore);
@@ -86,7 +94,7 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
 
-    }
+
 
     @Override
     public void savePlayers(List<PlayerDto> playerDtos) {

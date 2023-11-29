@@ -2,6 +2,7 @@ package com.Bhalerao.ScrumPlay.controller;
 
 import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
 import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
+import com.Bhalerao.ScrumPlay.model.Player;
 import lombok.Builder;
 
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
@@ -20,10 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -117,11 +115,11 @@ public class PlayerController {
             List<Map<String, Object>> playerScores = new ArrayList<>();
 
             for (PlayerDto player : players) {
-                int playerScore = calculatePlayerScore(player);
+                int playerScore = playerService.calculatePlayerScore(player);
 
 
                 // Update the player's score in the database
-                playerService.updatePlayerScore(player.getPlayerId(), playerScore);
+                playerService.updatePlayerScore(player.getPlayerid(), playerScore);
 
                 // Create a map for simplified data and add it to the list
                 Map<String, Object> playerScoreMap = new HashMap<>();
