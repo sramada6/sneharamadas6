@@ -12,6 +12,8 @@ import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -351,6 +353,7 @@ public class ScrumBoard extends JFrame {
     // Modified method to create a card panel with dynamic content
     public JPanel createCardPanel(String dtoryid, String title, String description,  String status,  String storyPoints) {
         JPanel cardPanel = new JPanel();
+        CardLayout cardLayout = new CardLayout();
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
         cardPanel.setBorder(BorderFactory.createEtchedBorder());
         cardPanel.setBackground(Color.CYAN); // Set card background color
@@ -375,6 +378,23 @@ public class ScrumBoard extends JFrame {
         pointsLabel.setFont(new Font("Arial", Font.BOLD, 12));
         pointsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         cardPanel.add(pointsLabel);
+
+        JPanel frontPanel = new JPanel();
+        frontPanel.setBackground(Color.CYAN);
+        frontPanel.add(new JLabel(title));
+
+        JPanel backPanel = new JPanel();
+        backPanel.setBackground(Color.MAGENTA);
+        backPanel.add(new JLabel(description));
+
+        cardPanel.add(frontPanel, "Front");
+        cardPanel.add(backPanel, "Back");
+
+        cardPanel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.next(cardPanel);
+            }
+        });
 
         // Other fields...
         System.out.println(cardPanel);
