@@ -8,11 +8,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class ProductBacklog extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -69,33 +72,36 @@ public class ProductBacklog extends JFrame {
 //        userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "As a developer, I want to display previous game scores and sprint charts so that the user can have an idea what all values are expected and also to know about the history of the previous games.");
         pack();
     }
-    private void fetchUserStoriesFromAPI() {
-        String apiUrl = "http://localhost:8080/backlog";
-        try {
-            URL url = new URL(apiUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+    private JSONArray fetchUserStoriesFromAPI() {
+        if (listModel.isEmpty()) {  // Check if the list is empty before fetching
+            String apiUrl = "http://localhost:8080/backlog";
+            try {
+                URL url = new URL(apiUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                connection.disconnect();
+
+                JSONArray userStoriesArray = new JSONArray(response.toString());
+
+                for (int i = 0; i < userStoriesArray.length(); i++) {
+                    JSONObject userStory = userStoriesArray.getJSONObject(i);
+                    String storyTitle = userStory.getString("storyTitle");
+                    listModel.addElement(storyTitle);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            in.close();
-            connection.disconnect();
-
-            JSONArray userStoriesArray = new JSONArray(response.toString());
-
-            for (int i = 0; i < userStoriesArray.length(); i++) {
-                JSONObject userStory = userStoriesArray.getJSONObject(i);
-                String storyTitle = userStory.getString("storyTitle");
-                listModel.addElement(storyTitle);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        return new JSONArray();
     }
     // ... existing code ...
 
@@ -235,12 +241,117 @@ public class ProductBacklog extends JFrame {
 
         //buttonPanel.add(FetchUSButton);
 
-        detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
-        detailPanel.add(buttonPanel, BorderLayout.SOUTH);
-        detailPanel.revalidate();
-        detailPanel.repaint();
+        playerDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected player name
+                String selectedPlayer = (String) playerDropdown.getSelectedItem();
+                // Update the database with the selected player name
+                updateDatabaseWithPlayer(selectedPlayer, userStory);
+            }
+        });
+
+        userStoryPointsField = new JComboBox<>(new String[]{"1", "2", "3", "5"});
+        userStoryPointsField.setSelectedIndex(0);
+
+        // Add an ActionListener to userStoryPointsField
+        userStoryPointsField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected user story points
+                String selectedPoints = (String) userStoryPointsField.getSelectedItem();
+                // Update the database with the selected user story points
+                updateDatabaseWithPoints(selectedPoints, userStory);
+            }
+        });
     }
 
+    private void updateDatabaseWithPlayer(String selectedPlayer, String userStory) {
+        // Get the userStoryID based on the userStory title from the API
+        String userStoryID = getUserStoryIDFromAPI(userStory);
+
+        // Construct the API endpoint
+        String apiUrl = "http://localhost:8080/backlog-modify/" + userStoryID;
+
+        // Construct the request parameters (assuming a POST request)
+        Map<String, String> params = new HashMap<>();
+        params.put("playerName", selectedPlayer);
+
+        // Send the POST request to update the database
+        sendPutRequestToBackend(apiUrl, params);
+
+    }
+
+    // Method to update the database with the selected user story points
+    private void updateDatabaseWithPoints(String selectedPoints, String userStory) {
+        // Get the userStoryID based on the userStory title from the API
+        String userStoryID = getUserStoryIDFromAPI(userStory);
+
+        // Construct the API endpoint
+        String apiUrl = "http://localhost:8080/backlog-modify/" + userStoryID;
+
+        // Construct the request parameters (assuming a POST request)
+        Map<String, String> params = new HashMap<>();
+        params.put("storyPoints", selectedPoints);
+
+        // Send the POST request to update the database
+        sendPutRequestToBackend(apiUrl, params);
+    }
+    private String getUserStoryIDFromAPI(String userStoryTitle) {
+        // Fetch user stories from the API
+        JSONArray userStoriesArray = fetchUserStoriesFromAPI();
+
+        // Iterate through user stories to find the ID
+        for (int i = 0; i < userStoriesArray.length(); i++) {
+            JSONObject userStory = userStoriesArray.getJSONObject(i);
+            String storyTitle = userStory.getString("storyTitle");
+            String storyID = userStory.getString("storyID");
+
+            if (userStoryTitle.equals(storyTitle)) {
+                return storyID;
+            }
+        }
+
+        return ""; // Return empty string if not found (handle this case appropriately in your application)
+    }
+
+// ... existing code ...
+
+    // Method to send a POST request to the backend
+    private void sendPutRequestToBackend(String apiUrl, Map<String, String> params) {
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setDoOutput(true);
+
+            // Construct the request parameters
+            StringBuilder postData = new StringBuilder();
+            for (Map.Entry<String, String> param : params.entrySet()) {
+                if (postData.length() != 0) postData.append('&');
+                postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                postData.append('=');
+                postData.append(URLEncoder.encode(param.getValue(), "UTF-8"));
+            }
+
+            // Write the parameters to the connection
+            try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+                wr.write(postData.toString().getBytes("UTF-8"));
+            }
+
+            // Check the response code to ensure the request was successful
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Handle successful response (if needed)
+            } else {
+                // Handle error response (if needed)
+            }
+
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private String sendGetRequestToBackend(String apiUrl) {
         try {
