@@ -3,6 +3,7 @@ package com.Bhalerao.ScrumPlay.controller;
 
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
 
+import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
 import com.Bhalerao.ScrumPlay.service.ScrumService;
 import com.Bhalerao.ScrumPlay.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.stream.Collectors;
 
 
 import java.util.HashMap;
@@ -67,4 +69,14 @@ public class SprintController {
             return ResponseEntity.status(500).body("Internal Server Error");
         }
     }
+
+    @GetMapping("/sprint-data/{sprintId}")
+    public ResponseEntity<SprintDto> getSprintData(@PathVariable long sprintId) {
+        SprintDto sprintDto = sprintService.findSprintById(sprintId);
+        List<UserStoryDto> userStories = sprintService.findUserStoriesBySprintId(sprintId);
+        sprintDto.setUserStories(userStories);
+
+        return new ResponseEntity<>(sprintDto, HttpStatus.OK);
+    }
+
 }

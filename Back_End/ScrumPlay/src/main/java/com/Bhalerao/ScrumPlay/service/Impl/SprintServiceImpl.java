@@ -2,7 +2,9 @@ package com.Bhalerao.ScrumPlay.service.Impl;
 
 
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
+import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
 import com.Bhalerao.ScrumPlay.model.Sprint;
+import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.SprintRepository;
 import com.Bhalerao.ScrumPlay.service.SprintService;
 import jakarta.persistence.EntityNotFoundException;
@@ -55,5 +57,29 @@ public class SprintServiceImpl implements SprintService {
                 .startDate(sprint.getStartDate())
                 .endDate(sprint.getEndDate()).build();
         return sdto;
+    }
+    @Override
+    public List<UserStoryDto> findUserStoriesBySprintId(long sprintId) {
+        Sprint sprint = sprintRepository.findById(sprintId)
+                .orElseThrow(() -> new EntityNotFoundException("Sprint not found with ID: " + sprintId));
+
+        return sprint.getUserStories().stream()
+                .map(this::mapToUserStoryDto)
+                .collect(Collectors.toList());
+    }
+    private UserStoryDto mapToUserStoryDto(UserStory userStory) {
+        return UserStoryDto.builder()
+                .storyid(userStory.getStoryid())
+                .storyDescription(userStory.getStoryDescription())
+                .storyTitle(userStory.getStoryTitle())
+                .storyPoints(userStory.getStoryPoints())
+                .status(userStory.getStatus())
+                .assignedTo(userStory.getAssignedTo())
+                .problemStatement(userStory.getProblemStatement())
+                .creationDate(userStory.getCreationDate())
+                .startDate(userStory.getStartDate())
+                .completionDate(userStory.getCompletionDate())
+                .workRemaining(userStory.getWorkRemaining())
+                .build();
     }
 }

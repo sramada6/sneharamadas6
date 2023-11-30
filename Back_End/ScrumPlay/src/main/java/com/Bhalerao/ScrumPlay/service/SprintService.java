@@ -3,6 +3,7 @@ package com.Bhalerao.ScrumPlay.service;
 
 import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
+import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface SprintService {
     void saveSprint(SprintDto sprintDto);
 
     SprintDto findSprintById(long id);
+    List<UserStoryDto> findUserStoriesBySprintId(long sprintId);
 }

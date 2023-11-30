@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.util.List;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -26,4 +26,7 @@ public class Sprint {
     private float scrumCallLength;
     private LocalDate startDate;
     private LocalDate endDate;
+
+    @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL)
+    private List<UserStory> userStories;
 }
