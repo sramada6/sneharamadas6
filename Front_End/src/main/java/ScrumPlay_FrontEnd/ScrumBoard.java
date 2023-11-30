@@ -602,8 +602,28 @@ public class ScrumBoard extends JFrame {
             e.printStackTrace();
         }
     }
+        public <RotateTransition> void flip() {
+            Object Duration;
+            RotateTransition flipAnimation = new RotateTransition(Duration.seconds(0.5), this);
+            flipAnimation.setAxis(Rotate.Y_AXIS);
 
+            if (isFlipped) {
+                flipAnimation.setFromAngle(180);
+                flipAnimation.setToAngle(0);
+                frontSide.setVisible(true);
+                backSide.setVisible(false);
+            } else {
+                flipAnimation.setFromAngle(0);
+                flipAnimation.setToAngle(180);
+                frontSide.setVisible(false);
+                backSide.setVisible(true);
+            }
 
+            isFlipped = !isFlipped;
+            flipAnimation.play();
+        }
+    }
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
