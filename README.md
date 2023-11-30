@@ -22,6 +22,8 @@ We have merged the Sprint 3 final code to master, but to run, pull the code from
 To run the code via command line:
 
 Start the backend (server) first. Head to the back end foler and run  `mvn clean install` (assuming you have maven installed)
+then run ` mvn spring-boot:run`
+
 After that head into the Front_End folder and run  `mvn exec:java -Dexec.mainClass="ScrumPlay_FrontEnd.main"`
 
 
