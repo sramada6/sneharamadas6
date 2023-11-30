@@ -1,6 +1,8 @@
 package ScrumPlay_FrontEnd;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.net.URI;
@@ -15,8 +17,8 @@ public class ShowScoresPage extends JFrame {
     private DefaultTableModel tableModel;
 
     public ShowScoresPage(ScoreDisplay scoreDisplay) {
-        setTitle("Scores");
-        setSize(300, 200);
+        setTitle("Player Scores");
+        setSize(600, 400); // Set the preferred size of the JFrame
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         String[] columnNames = {"Player", "Score"};
@@ -24,10 +26,19 @@ public class ShowScoresPage extends JFrame {
         tableModel = new DefaultTableModel(data, columnNames);
 
         JTable scoresTable = new JTable(tableModel);
+        scoresTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14)); // Customize header font
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        scoresTable.setDefaultRenderer(Object.class, centerRenderer);
 
         setLayout(new BorderLayout());
 
+        TitledBorder titledBorder = BorderFactory.createTitledBorder("Player Scores");
+        titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 16)); // Customize border title font
         JScrollPane scrollPane = new JScrollPane(scoresTable);
+        scrollPane.setBorder(titledBorder);
+
         add(scrollPane, BorderLayout.CENTER);
 
         updateScoresFromRestEndpoint("http://localhost:8080/display-score");
