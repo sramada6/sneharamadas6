@@ -33,8 +33,8 @@ public class SprintChartPage extends JFrame {
         setVisible(true);
     }
 
-    private static CombinedData fetchCombinedDataFromBackend() throws IOException {
-        String apiUrl = "http://localhost:8080/api/sprint-data/1"; // Replace 1 with the actual sprint ID
+    private static CombinedData fetchCombinedDataFromBackend(long sprintId) throws IOException {
+        String apiUrl = "http://localhost:8080/api/sprint-data/" + sprintId;
         URL url = new URL(apiUrl);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -52,7 +52,8 @@ public class SprintChartPage extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                CombinedData combinedData = fetchCombinedDataFromBackend();
+                long sprintId = 1; // Replace with the actual sprint ID
+                CombinedData combinedData = fetchCombinedDataFromBackend(sprintId);
                 if (combinedData != null) {
                     new SprintChartPage(combinedData);
                 }

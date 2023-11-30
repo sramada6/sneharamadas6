@@ -3,10 +3,8 @@ package com.Bhalerao.ScrumPlay.model;
 import jakarta.persistence.*;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.util.List;
 import java.time.LocalDate;
 import java.util.Date;
@@ -27,6 +25,11 @@ public class Sprint {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    @Getter
     @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL)
     private List<UserStory> userStories;
+
+    public void setUserStories(List<UserStory> userStories) {
+        this.userStories = userStories;
+    }
 }

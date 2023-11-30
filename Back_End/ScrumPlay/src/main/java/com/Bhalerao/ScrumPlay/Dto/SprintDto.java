@@ -17,5 +17,4 @@ public class SprintDto {
     private float scrumCallLength;
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<UserStoryDto> userStories;
 }

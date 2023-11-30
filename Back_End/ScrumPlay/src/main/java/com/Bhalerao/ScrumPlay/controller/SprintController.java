@@ -70,13 +70,11 @@ public class SprintController {
         }
     }
 
-    @GetMapping("/sprint-data/{sprintId}")
-    public ResponseEntity<SprintDto> getSprintData(@PathVariable long sprintId) {
-        SprintDto sprintDto = sprintService.findSprintById(sprintId);
-        List<UserStoryDto> userStories = sprintService.findUserStoriesBySprintId(sprintId);
-        sprintDto.setUserStories(userStories);
-
-        return new ResponseEntity<>(sprintDto, HttpStatus.OK);
+    @GetMapping("/sprint/{id}/user-stories")
+    public ResponseEntity<List<UserStoryDto>> getUserStoriesBySprintId(@PathVariable Long id) {
+        List<UserStoryDto> userStories = sprintService.findUserStoriesBySprintId(id);
+        return new ResponseEntity<>(userStories, HttpStatus.OK);
     }
+
 
 }

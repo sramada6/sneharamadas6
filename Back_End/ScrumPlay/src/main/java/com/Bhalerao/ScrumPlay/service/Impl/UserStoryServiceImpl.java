@@ -3,7 +3,9 @@ package com.Bhalerao.ScrumPlay.service.Impl;
 
 
 
+import com.Bhalerao.ScrumPlay.Dto.SprintDto;
 import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
+import com.Bhalerao.ScrumPlay.model.Sprint;
 import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.UserStoryRepository;
 import com.Bhalerao.ScrumPlay.service.UserStoryService;
@@ -93,6 +95,23 @@ public class UserStoryServiceImpl implements UserStoryService {
                 .map(this::mapToStoryDto)
                 .collect(Collectors.toList());
     }
+    public SprintDto getSprintDataFromUserStory(long userStoryId) {
+        UserStory userStory = userStoryRepository.findById(userStoryId)
+                .orElseThrow(() -> new EntityNotFoundException("User Story not found with ID: " + userStoryId));
+
+        return mapToSprintDto(userStory.getSprint());
+    }
+
+    private SprintDto mapToSprintDto(Sprint sprint) {
+        return SprintDto.builder()
+                .sprintid(sprint.getSprintid())
+                .teamSize(sprint.getTeamSize())
+                .sprintLength(sprint.getSprintLength())
+                .scrumCallLength(sprint.getScrumCallLength())
+                .startDate(sprint.getStartDate())
+                .endDate(sprint.getEndDate())
+                .build();
+    }
 
     private UserStoryDto mapToStoryDto(UserStory story) {
         UserStoryDto usdto = UserStoryDto.builder()
@@ -106,6 +125,7 @@ public class UserStoryServiceImpl implements UserStoryService {
                 .startDate(story.getStartDate())
                 .completionDate(story.getCompletionDate())
                 .workRemaining(story.getWorkRemaining()).storyTitle(story.getStoryTitle())
+                .sprint((story.getSprint()) != null ? story.getSprint() : null)
                 .build();
         return usdto;
     }
