@@ -96,8 +96,8 @@ public class ScrumBoard extends JFrame {
                         lane.repaint();
                         for (Component card : ((JPanel) lane).getComponents()) {
                             if (card instanceof StoryCard) {
-                                    card.revalidate();
-                                    card.repaint();
+                                card.revalidate();
+                                card.repaint();
                             }
                         }
                     }
@@ -205,7 +205,7 @@ public class ScrumBoard extends JFrame {
 
         try {
             System.out.println("fetching user story ids...");
-             storyidList = mapper.readValue(jsonResponse, new TypeReference<List<Long>>(){});
+            storyidList = mapper.readValue(jsonResponse, new TypeReference<List<Long>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -341,12 +341,20 @@ public class ScrumBoard extends JFrame {
             String storyPoints = userStory.get("storyPoints").toString();
 
             // Create a StoryCard for the current user story
-            StoryCard storyCard = new StoryCard(storyid, title, description, status, assignedTo, storyPoints);
+            flippedStoryCard flippedstoryCard = new flippedStoryCard(storyid, title, description, status, assignedTo, storyPoints, this, null);
+            StoryCard storyCard = new StoryCard(storyid, title, description, status, assignedTo, storyPoints, this, flippedstoryCard);
+            flippedstoryCard.setCorrespondingStoryCard(storyCard);
             System.out.println("card created");
             System.out.println(storyCard.getRootPane());
+
             // Add the StoryCard to the appropriate lane
-            addToLanePanel(status, storyCard);
+            addToLanePanel(status, storyCard, flippedstoryCard);
+            }
         }
+
+    public void flipCard(StoryCard storyCard, flippedStoryCard flippedstoryCard) {
+        storyCard.setVisible(!storyCard.isVisible());
+        flippedstoryCard.setVisible(!flippedstoryCard.isVisible());
     }
 
     // Modified method to create a card panel with dynamic content
@@ -384,14 +392,13 @@ public class ScrumBoard extends JFrame {
 
 
 
-    private void addToLanePanel(String status, StoryCard storyCard) {
+    private void addToLanePanel(String status, StoryCard storyCard, flippedStoryCard flippedstoryCard) {
         // Find the appropriate lane panel
         JPanel lanePanel = (JPanel) boardPanel.getComponent(getLaneIndex(status));
 
         // Add the StoryCard to the lane panel
         lanePanel.add(storyCard);
-
-
+        lanePanel.add(flippedstoryCard);
     }
 
     private int getLaneIndex(String status) {
@@ -494,7 +501,6 @@ public class ScrumBoard extends JFrame {
             e.printStackTrace();
         }
     }
-
 
     private void updateBackendWithStoryCardValues() {
         for (Component lane : boardPanel.getComponents()) {
