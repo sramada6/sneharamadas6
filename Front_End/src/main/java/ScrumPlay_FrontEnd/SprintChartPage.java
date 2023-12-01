@@ -35,12 +35,10 @@ public class SprintChartPage extends JFrame {
 
     public static void main(String[] args) {
         try {
-            // Replace with your actual Sprint ID
             long sprintId = 1;
 
             List<Map<String, Object>> combinedDataList = fetchCombinedDataFromBackend(sprintId);
 
-            // Create CombinedData object
             CombinedData combinedData = createCombinedData(combinedDataList);
 
             SwingUtilities.invokeLater(() -> {
@@ -60,22 +58,19 @@ public class SprintChartPage extends JFrame {
         CombinedData combinedData = new CombinedData();
         SprintData sprintData = new SprintData();
 
-        // Calculate total story points
         int totalStoryPoints = combinedDataList.stream()
                 .mapToInt(data -> (int) data.get("storyPoints"))
                 .sum();
 
-        // Initial Y-axis value
         int totalWorkRemaining = totalStoryPoints;
 
         for (Map<String, Object> data : combinedDataList) {
             String startDateStr = (String) data.get("startDate");
             Date startDate = parseDate(startDateStr);
 
-            // Daily work remaining for a user story
             int workRemaining = (int) data.get("workRemaining");
 
-            // Adjust Y-axis value based on work remaining
+
             totalWorkRemaining -= workRemaining;
 
             SprintChartData sprintChartData = new SprintChartData(startDate, totalWorkRemaining);
@@ -178,22 +173,22 @@ public class SprintChartPage extends JFrame {
 
         SprintChartPanel(CombinedData combinedData) {
             this.combinedData = combinedData;
-            // Initialize and configure the button
+
             JButton myButton = new JButton("Show Score");
             myButton.addActionListener(e -> handleButtonClick()); // Add your button click logic here
 
-            // Set the layout manager of the panel to null so that we can manually position the button
+
             setLayout(null);
             add(myButton);
 
-            // Add a component listener to adjust the button position after the panel is resized
+
             addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
                     int panelWidth = getWidth();
                     int panelHeight = getHeight();
 
-                    // Adjust the button position based on the panel size to the upper right corner
+
                     myButton.setBounds(panelWidth - 100, 0, 100, 30);
                 }
             });
@@ -217,7 +212,6 @@ public class SprintChartPage extends JFrame {
             g.drawString("Work", 10, height / 2);
             g.drawLine(50, 50, 50, height - 50);
 
-            // Paint sprint data
             paintSprint(g, width, height, numDays);
         }
 
