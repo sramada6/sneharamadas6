@@ -30,7 +30,7 @@ public class flippedStoryCard extends JPanel {
 
     private JTextArea descriptionArea;
 
-    JButton backButton = new JButton("Back");
+    //JButton backButton = new JButton("Back");
     ScrumBoard scrumBoard;
     StoryCard correspondingStoryCard;
 
@@ -94,14 +94,14 @@ public class flippedStoryCard extends JPanel {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addMouseListener(new StoryCardMouseListener());
 
-        backButton.addActionListener(new ActionListener() {
+/*        backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (scrumBoard != null) {
                     scrumBoard.flipCard(correspondingStoryCard, flippedStoryCard.this);
                 }
             }
         });
-        add(backButton);
+        add(backButton);*/
     }
 
     public void setCorrespondingStoryCard(StoryCard correspondingStoryCard) {
