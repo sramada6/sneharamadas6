@@ -111,12 +111,23 @@ public class ScrumBoard extends JFrame {
             endScrumCall();
         });
 
+        JButton Chart = new JButton("Generate Sprint Chart");
+        Chart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open SprintChartPage here
+                SprintChartPage.Func();
+                //sprintChartPage.setVisible(true);
+            }
+        });
+
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
 
         bottomPanel.add(countdownLabel);
         bottomPanel.add(startScrumCallButton);
         bottomPanel.add(endScrumButton);
+        bottomPanel.add(Chart);
 
         add(bottomPanel, BorderLayout.PAGE_END);
 
@@ -470,7 +481,7 @@ public class ScrumBoard extends JFrame {
 
                         }}}}
 
-            String apiUrl = "http://localhost:8080/sprint/story-points/" + sprintId + "?storyPointsCompleted=z" + completedStoryPoints;
+            String apiUrl = "http://localhost:8080/sprint/story-points/" + sprintId + "?storyPointsCompleted=" + completedStoryPoints;
 
             System.out.println("generatingPayload");
             JSONObject jsonPayload = new JSONObject();
@@ -591,12 +602,12 @@ public class ScrumBoard extends JFrame {
     }
 
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ScrumBoard().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new ScrumBoard().setVisible(true);
+//            }
+//        });
+//    }
 }

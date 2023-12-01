@@ -3,7 +3,9 @@ package com.Bhalerao.ScrumPlay.service.Impl;
 
 
 
+import com.Bhalerao.ScrumPlay.Dto.SprintDto;
 import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
+import com.Bhalerao.ScrumPlay.model.Sprint;
 import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.UserStoryRepository;
 import com.Bhalerao.ScrumPlay.service.UserStoryService;
@@ -95,6 +97,28 @@ public class UserStoryServiceImpl implements UserStoryService {
     }
 
     @Override
+    public List<UserStoryDto> getBySprintSprintid(Long id) {
+        List<UserStory> stories = userStoryRepository.findBySprintSprintid(id);
+
+        // Map the entities to DTOs
+        return stories.stream()
+                .map(this::mapToStoryDto)
+                .collect(Collectors.toList());
+    }
+
+
+    private SprintDto mapToSprintDto(Sprint sprint) {
+        return SprintDto.builder()
+                .sprintid(sprint.getSprintid())
+                .teamSize(sprint.getTeamSize())
+                .sprintLength(sprint.getSprintLength())
+                .scrumCallLength(sprint.getScrumCallLength())
+                .startDate(sprint.getStartDate())
+                .endDate(sprint.getEndDate())
+                .build();
+    }
+
+    @Override
     public List<Long> getStoryIdsAssignedToPlayer(int playerId) {
         List<UserStoryDto> stories = userStoryRepository.findAllByassignedToPlayerid(playerId);
         return stories.stream()
@@ -114,6 +138,7 @@ public class UserStoryServiceImpl implements UserStoryService {
                 .startDate(story.getStartDate())
                 .completionDate(story.getCompletionDate())
                 .workRemaining(story.getWorkRemaining()).storyTitle(story.getStoryTitle())
+                .sprint((story.getSprint()) != null ? story.getSprint() : null)
                 .build();
         return usdto;
     }
