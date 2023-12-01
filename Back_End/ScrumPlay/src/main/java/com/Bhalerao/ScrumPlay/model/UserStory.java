@@ -19,7 +19,7 @@ import java.util.List;
 public class UserStory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int storyid;
+    private Long storyid;
 
     private int storyPoints = 0;
     private String status = "ready";

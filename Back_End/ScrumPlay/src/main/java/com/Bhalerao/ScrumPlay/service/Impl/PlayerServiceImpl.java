@@ -1,33 +1,40 @@
 package com.Bhalerao.ScrumPlay.service.Impl;
 
 import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
+import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
 import com.Bhalerao.ScrumPlay.model.Player;
-import com.Bhalerao.ScrumPlay.model.UserStory;
 import com.Bhalerao.ScrumPlay.repository.PlayerRepository;
 import com.Bhalerao.ScrumPlay.service.PlayerService;
 
+import com.Bhalerao.ScrumPlay.service.UserStoryService;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 //import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private PlayerRepository playerRepository;
-
+    private final UserStoryService userStoryService;
     @Autowired
-    public PlayerServiceImpl(PlayerRepository playerRepository){
+    public PlayerServiceImpl(PlayerRepository playerRepository, UserStoryService userStoryService){
         this.playerRepository = playerRepository;
+        this.userStoryService = userStoryService;
     }
     @Override
     public List<PlayerDto> findAllPlayers() {
         List<Player> players = playerRepository.findAll();
         return players.stream().map((player) -> mapToPlayerDto(player)).collect(Collectors.toList());
     }
+
 
     private PlayerDto mapToPlayerDto(Player player) {
         PlayerDto pdto = PlayerDto.builder()
@@ -45,6 +52,50 @@ public class PlayerServiceImpl implements PlayerService {
         player.setPlayerid(player.getPlayerid());
         playerRepository.save(player);
     }
+    public int calculatePlayerScore(PlayerDto player) {
+        // Calculate playerScore based on user stories associated with the player
+        List<UserStoryDto> userStories = userStoryService.getAllStoriesAssignedToPlayer(player.getPlayerid());
+
+        // Filter user stories with status "Done"
+        List<UserStoryDto> doneUserStories = userStories.stream()
+                .filter(story -> "Completed".equals(story.getStatus()))
+                .collect(Collectors.toList());
+
+        // Assuming a simple calculation based on the difference between completionDate and startDate
+        int totalScore = doneUserStories.stream()
+                .mapToInt(story -> calculateScoreForStory(story.getStartDate(), story.getCompletionDate()))
+                .sum();
+
+        return totalScore;
+    }
+
+
+
+    private int calculateScoreForStory(Date startDate, Date completionDate) {
+        // Convert Date to LocalDate
+        LocalDate localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localCompletionDate = completionDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // Calculate the difference between completionDate and startDate in days
+        long daysDifference = ChronoUnit.DAYS.between(localStartDate, localCompletionDate);
+
+        // Multiply the difference by 100 to get the score
+        return (int) (daysDifference * 100);
+    }
+
+
+
+    @Override
+    public void updatePlayerScore(int playerId, int newScore) {
+        Player player = playerRepository.findById((long) playerId)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with ID: " + playerId));
+
+            player.setPlayerScore(newScore);
+            playerRepository.save(player); // This line updates the database
+        }
+
+
+
 
     @Override
     public void savePlayers(List<PlayerDto> playerDtos) {
@@ -61,6 +112,8 @@ public class PlayerServiceImpl implements PlayerService {
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with ID: " + id));
         return mapToPlayerDto(p);
     }
+
+
 
     // You may need a method to convert PlayerDto to Player entity
     private Player convertToEntity(PlayerDto playerDto) {

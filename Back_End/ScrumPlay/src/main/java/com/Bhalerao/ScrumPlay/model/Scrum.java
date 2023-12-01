@@ -24,5 +24,5 @@ public class Scrum {
 
     @ManyToOne
     @JoinColumn(name = "sprint_id")
-    private com.Bhalerao.ScrumPlay.model.Sprint sprint;
+    private Sprint sprint;
 }

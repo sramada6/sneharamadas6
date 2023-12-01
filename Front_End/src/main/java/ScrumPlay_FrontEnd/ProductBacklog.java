@@ -2,17 +2,28 @@ package ScrumPlay_FrontEnd;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.web.client.RestTemplate;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.type.TypeReference;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import static java.lang.String.valueOf;
+
+//import static ScrumPlay_FrontEnd.ScrumBoard.playerNameToIdMap;
+
 
 public class ProductBacklog extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -24,6 +35,7 @@ public class ProductBacklog extends JFrame {
     private JComboBox<String> playerDropdown;
     private JComboBox<String> statusDropdown;
     private JTextArea commentsTextArea;
+    public static Map<String, String> playerNameToIdMap;
 
     public ProductBacklog() {
         setTitle("Product Backlog");
@@ -69,33 +81,36 @@ public class ProductBacklog extends JFrame {
 //        userStoryDescriptions.put("US#005/Display previous game scores and sprint history", "As a developer, I want to display previous game scores and sprint charts so that the user can have an idea what all values are expected and also to know about the history of the previous games.");
         pack();
     }
-    private void fetchUserStoriesFromAPI() {
-        String apiUrl = "http://localhost:8080/backlog";
-        try {
-            URL url = new URL(apiUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+    private JSONArray fetchUserStoriesFromAPI() {
+        if (listModel.isEmpty()) {  // Check if the list is empty before fetching
+            String apiUrl = "http://localhost:8080/backlog";
+            try {
+                URL url = new URL(apiUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                connection.disconnect();
+
+                JSONArray userStoriesArray = new JSONArray(response.toString());
+
+                for (int i = 0; i < userStoriesArray.length(); i++) {
+                    JSONObject userStory = userStoriesArray.getJSONObject(i);
+                    String storyTitle = userStory.getString("storyTitle");
+                    listModel.addElement(storyTitle);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            in.close();
-            connection.disconnect();
-
-            JSONArray userStoriesArray = new JSONArray(response.toString());
-
-            for (int i = 0; i < userStoriesArray.length(); i++) {
-                JSONObject userStory = userStoriesArray.getJSONObject(i);
-                String storyTitle = userStory.getString("storyTitle");
-                listModel.addElement(storyTitle);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        return new JSONArray();
     }
     // ... existing code ...
 
@@ -162,7 +177,7 @@ public class ProductBacklog extends JFrame {
 
         // Panel for status and assign to
         JPanel statusAssignPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        statusDropdown = new JComboBox<>(new String[]{"New", "Ready", "In Progress", "Ready for Test", "Closed"});
+        statusDropdown = new JComboBox<>(new String[]{"Ready", "In Progress", "Completed"});
         playerDropdown = new JComboBox<>();
         fetchPlayerNamesFromAPI();
 
@@ -219,13 +234,19 @@ public class ProductBacklog extends JFrame {
         });
         buttonPanel.add(clearCommentsButton);
         JButton startSprintButton = new JButton("Start Sprint");
+//        startSprintButton.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                ScrumBoard ScrumBoardFrame = new ScrumBoard();
+//                ScrumBoardFrame.setVisible(true);
+//            }
+//        });
+        buttonPanel.add(startSprintButton);
         startSprintButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ScrumBoard ScrumBoardFrame = new ScrumBoard();
                 ScrumBoardFrame.setVisible(true);
             }
         });
-        buttonPanel.add(startSprintButton);
         getContentPane().setBackground(new Color(0, 255, 255));
 
         detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
@@ -235,12 +256,316 @@ public class ProductBacklog extends JFrame {
 
         //buttonPanel.add(FetchUSButton);
 
-        detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
-        detailPanel.add(buttonPanel, BorderLayout.SOUTH);
-        detailPanel.revalidate();
-        detailPanel.repaint();
+        playerDropdown.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Fetch user story details for the selected player
+                setPlayerNameToIdMap("http://localhost:8080/players");
+                String selectedPlayerName = (String) playerDropdown.getSelectedItem();
+                int selectedPlayerId = Integer.parseInt(playerNameToIdMap.get(selectedPlayerName));
+                String selectedUserStory = userList.getSelectedValue();
+                System.out.println("The selected story is"+selectedUserStory);
+                int userStoryID = getUserStoryID("http://localhost:8080/backlog", selectedUserStory);
+                System.out.println("User Story ID: " + userStoryID);
+                updateDatabaseWithPlayer(selectedPlayerId, userStoryID);
+                System.out.println("Player id clicked here");
+
+                // Update the board or perform any other necessary actions
+            }
+        });
+
+        statusDropdown.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedStatus = (String) statusDropdown.getSelectedItem();
+                String selectedUserStory = userList.getSelectedValue();
+                System.out.println("The selected story is"+selectedUserStory);
+                int userStoryID = getUserStoryID("http://localhost:8080/backlog", selectedUserStory);
+                System.out.println("User Story ID: " + userStoryID);
+                updateDatabaseWithStatus(selectedStatus, userStoryID);
+                System.out.println("Status clicked here");
+
+                // Update the board or perform any other necessary actions
+            }
+        });
+
+        // Add an ActionListener to userStoryPointsField
+        userStoryPointsField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected user story points
+                System.out.println("check before getting values");
+                int selectedPoints = Integer.parseInt((String) Objects.requireNonNull(userStoryPointsField.getSelectedItem()));
+                System.out.println("Selected story points" + selectedPoints);
+                String selectedUserStory = userList.getSelectedValue();
+                int userStoryID = getUserStoryID("http://localhost:8080/backlog", selectedUserStory);
+
+                // Update the database with the selected user story points
+                updateDatabaseWithPoints(selectedPoints, userStoryID);
+                System.out.println("Updating user story points");
+            }
+        });
     }
 
+    private int getUserStoryID(String apiUrl, String userStoryTitle) {
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
+
+        List<Map<String, Object>> userStoriesData = parseJsonResponse(jsonResponse);
+        System.out.println("user stories are:"+userStoriesData);
+        if (userStoriesData != null) {
+            for (Map<String, Object> userStory : userStoriesData) {
+                String storyTitle = userStory.get("storyTitle").toString();
+                int storyID = (int) userStory.get("storyid");
+
+                if (userStoryTitle.equals(storyTitle)) {
+                    System.out.println("user stories ID:"+storyID);
+                    return storyID;
+                }
+            }
+        } else {
+            // Handle the case where data parsing fails or is empty
+            JOptionPane.showMessageDialog(null, "Failed to fetch user stories data.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return 0;
+    }
+    private String[] setPlayerNameToIdMap(String apiUrl) {
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
+
+        List<Map<String, Object>> playerData = parseJsonResponse(jsonResponse);
+
+        String[] playerNames = new String[0];
+        playerNameToIdMap = new HashMap<>();
+
+        if (playerData != null) {
+
+            // Populate playerNameToIdMap
+            for (Map<String, Object> player : playerData) {
+                String playerName = player.get("playerName").toString();
+                String playerId = player.get("playerid").toString();
+                playerNameToIdMap.put(playerName, playerId);
+            }
+            return playerNames;
+        } else {
+            // Handle the case where data parsing fails or is empty
+            JOptionPane.showMessageDialog(null, "Failed to fetch player data.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return playerNames;
+    }
+    private List<Map<String, Object>> parseJsonResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, new TypeReference<List<Map<String, Object>>>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void updateDatabaseWithPlayer(int selectedPlayerID, int userStoryid) {
+        // Construct the API endpoint
+        String apiUrl = "http://localhost:8080/backlog-modify/" + userStoryid;
+        System.out.println(playerNameToIdMap);
+
+        // Construct the request parameters as a Map
+        Map<String, Object> params = new HashMap<>();
+
+        // Set the "storyid" directly
+        params.put("storyid", userStoryid);
+
+        // Create the "assignedTo" object
+        Map<String, Integer> assignedTo = new HashMap<>();
+        assignedTo.put("playerid", selectedPlayerID);
+
+        // Set the "assignedTo" object in the main params map
+        params.put("assignedTo", assignedTo);
+
+        System.out.println("Player id updated here");
+        System.out.println(params);
+        // Send the PUT request to update the database
+        sendPutRequestToBackendForPlayerNames(apiUrl, params);
+
+    }
+
+    private void updateDatabaseWithStatus(String status, int userStoryid) {
+        // Construct the API endpoint
+        String apiUrl = "http://localhost:8080/backlog-modify/" + userStoryid;
+//        System.out.println(playerNameToIdMap);
+
+        // Construct the request parameters as a Map
+        Map<String, Object> params = new HashMap<>();
+
+        // Set the "storyid" directly
+        params.put("storyid", userStoryid);
+
+        // Create the "assignedTo" object
+        params.put("status", status);
+
+        // Set the "assignedTo" object in the main params map
+
+
+        System.out.println("status  updated here");
+        System.out.println(params);
+        // Send the PUT request to update the database
+        sendPutRequestToBackendForStatus(apiUrl, params);
+
+    }
+
+    // Method to update the database with the selected user story points
+    private void updateDatabaseWithPoints(int selectedPoints, int userStoryID) {
+        // Get the userStoryID based on the userStory title from the API
+//        String userStoryID = getUserStoryIDFromAPI(userStory);
+
+        // Construct the API endpoint
+        String apiUrl = "http://localhost:8080/backlog-modify/" + userStoryID;
+        System.out.println(apiUrl);
+
+        // Construct the request parameters as a Map
+        Map<String, Integer> params = new HashMap<>();
+        params.put("storyid", userStoryID);
+        params.put("storyPoints", selectedPoints);
+
+        // Send the PUT request to update the database
+        sendPutRequestToBackend(apiUrl, params);
+    }
+
+    private String getUserStoryIDFromAPI(String userStoryTitle) {
+        // Fetch user stories from the API
+        JSONArray userStoriesArray = fetchUserStoriesFromAPI();
+
+        // Iterate through user stories to find the ID
+        for (int i = 0; i < userStoriesArray.length(); i++) {
+            JSONObject userStory = userStoriesArray.getJSONObject(i);
+            String storyTitle = userStory.getString("storyTitle");
+            String storyID = userStory.getString("storyID");
+
+            if (userStoryTitle.equals(storyTitle)) {
+                return storyID;
+            }
+        }
+
+        return ""; // Return empty string if not found (handle this case appropriately in your application)
+    }
+
+// ... existing code ...
+
+    // Method to send a POST request to the backend
+    private void sendPutRequestToBackend(String apiUrl, Map<String, Integer> params) {
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setDoOutput(true);
+
+            // Create a JSONObject from the params map
+            JSONObject requestBody = new JSONObject(params);
+            System.out.println(requestBody);
+
+
+            // Set the request method to PUT
+            connection.setRequestMethod("PUT");
+
+            // Enable input and output streams
+            connection.setDoOutput(true);
+
+            // Set content type and length
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Length", String.valueOf(requestBody.length()));
+
+            // Write JSON payload to the connection's output stream
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = requestBody.toString().getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+            System.out.println("HTTP Response Code: " + responseCode);
+
+            // Close the connection
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }}
+    private void sendPutRequestToBackendForPlayerNames(String apiUrl, Map<String, Object> params) {
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setDoOutput(true);
+
+            // Create a JSONObject from the params map
+            JSONObject requestBody = new JSONObject(params);
+            System.out.println(requestBody);
+
+
+            // Set the request method to PUT
+            connection.setRequestMethod("PUT");
+
+            // Enable input and output streams
+            connection.setDoOutput(true);
+
+            // Set content type and length
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Length", String.valueOf(requestBody.length()));
+
+            // Write JSON payload to the connection's output stream
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = requestBody.toString().getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+            System.out.println("HTTP Response Code: " + responseCode);
+
+            // Close the connection
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }}
+    private void sendPutRequestToBackendForStatus(String apiUrl, Map<String, Object> params) {
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setDoOutput(true);
+
+            // Create a JSONObject from the params map
+            JSONObject requestBody = new JSONObject(params);
+            System.out.println(requestBody);
+
+
+            // Set the request method to PUT
+            connection.setRequestMethod("PUT");
+
+            // Enable input and output streams
+            connection.setDoOutput(true);
+
+            // Set content type and length
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Length", String.valueOf(requestBody.length()));
+
+            // Write JSON payload to the connection's output stream
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = requestBody.toString().getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+            System.out.println("HTTP Response Code: " + responseCode);
+
+            // Close the connection
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }}
 
     private String sendGetRequestToBackend(String apiUrl) {
         try {
@@ -273,7 +598,7 @@ public class ProductBacklog extends JFrame {
         for (int i = 0; i < jsonArray.length(); i++) {
 //            JSONObject jsonObject = jsonArray.getJSONObject(i);
             jsonObject = jsonArray.getJSONObject(i);
-            if (selectedUserStory.equals(String.valueOf(jsonObject.getInt("storyid")))) {
+            if (selectedUserStory.equals(valueOf(jsonObject.getInt("storyid")))) {
                 System.out.println("if" + jsonObject.getString("storyDescription"));
 
                 return jsonObject.getString("storyDescription");
@@ -286,14 +611,14 @@ public class ProductBacklog extends JFrame {
         return jsonObject.getString("storyDescription");
     }
 
-//    public static void main(String[] args) {
-//        EventQueue.invokeLater(() -> {
-//            try {
-//                ProductBacklog frame = new ProductBacklog();
-//                frame.setVisible(true);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-//    }
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                ProductBacklog frame = new ProductBacklog();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 }

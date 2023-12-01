@@ -118,6 +118,14 @@ public class UserStoryServiceImpl implements UserStoryService {
                 .build();
     }
 
+    @Override
+    public List<Long> getStoryIdsAssignedToPlayer(int playerId) {
+        List<UserStoryDto> stories = userStoryRepository.findAllByassignedToPlayerid(playerId);
+        return stories.stream()
+                .map(UserStoryDto::getId)
+                .collect(Collectors.toList());
+    }
+
     private UserStoryDto mapToStoryDto(UserStory story) {
         UserStoryDto usdto = UserStoryDto.builder()
                 .storyid(story.getStoryid())

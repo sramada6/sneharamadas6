@@ -15,7 +15,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 public class UserStoryDto {
-    private int storyid;
+    private Long storyid;
     private String storyDescription;
     private String storyTitle;
     private int storyPoints;
@@ -26,5 +26,10 @@ public class UserStoryDto {
     private Date startDate;
     private Date completionDate;
     private int workRemaining;
+
+
+    public Long getId() {
+        return storyid;
+    }
     private Sprint sprint;
 }

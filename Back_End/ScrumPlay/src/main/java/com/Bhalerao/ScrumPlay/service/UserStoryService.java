@@ -20,5 +20,6 @@ public interface UserStoryService {
 
     List<UserStoryDto> getStoriesBystatementid(int statementid);
     List<UserStoryDto> getBySprintSprintid(Long id);
+    List<Long> getStoryIdsAssignedToPlayer(int playerId);
 }
 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +40,7 @@ public class SprintServiceImpl implements SprintService {
         sprint.setSprintid(sprintDto.getSprintid());
         sprint.setStartDate(sprintDto.getStartDate());
         sprint.setEndDate(sprintDto.getEndDate());
+        sprint.setStoryPointsCompleted(sprintDto.getStoryPointsCompleted());
         sprintRepository.save(sprint);
     }
 
@@ -51,6 +53,9 @@ public class SprintServiceImpl implements SprintService {
 
 
 
+
+
+
     private SprintDto mapToSprintDto(Sprint sprint) {
         SprintDto sdto = SprintDto.builder()
                 .sprintid(sprint.getSprintid())
@@ -58,6 +63,7 @@ public class SprintServiceImpl implements SprintService {
                 .sprintLength(sprint.getSprintLength())
                 .scrumCallLength(sprint.getScrumCallLength())
                 .startDate(sprint.getStartDate())
+                .storyPointsCompleted(sprint.getStoryPointsCompleted())
                 .endDate(sprint.getEndDate()).build();
         return sdto;
     }
