@@ -20,4 +20,8 @@ public class Player {
     private String playerName;
     private String playerRole;
     private int playerScore;
+
+    @ManyToOne
+    @JoinColumn(name = "sprint_id")
+    private Sprint sprint;
 }

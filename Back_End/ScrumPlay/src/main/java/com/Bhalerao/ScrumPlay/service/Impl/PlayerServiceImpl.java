@@ -35,6 +35,7 @@ public class PlayerServiceImpl implements PlayerService {
         return players.stream().map((player) -> mapToPlayerDto(player)).collect(Collectors.toList());
     }
 
+
     private PlayerDto mapToPlayerDto(Player player) {
         PlayerDto pdto = PlayerDto.builder()
                 .playerid(player.getPlayerid())
@@ -57,7 +58,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         // Filter user stories with status "Done"
         List<UserStoryDto> doneUserStories = userStories.stream()
-                .filter(story -> "Done".equals(story.getStatus()))
+                .filter(story -> "Completed".equals(story.getStatus()))
                 .collect(Collectors.toList());
 
         // Assuming a simple calculation based on the difference between completionDate and startDate
@@ -111,6 +112,8 @@ public class PlayerServiceImpl implements PlayerService {
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with ID: " + id));
         return mapToPlayerDto(p);
     }
+
+
 
     // You may need a method to convert PlayerDto to Player entity
     private Player convertToEntity(PlayerDto playerDto) {
