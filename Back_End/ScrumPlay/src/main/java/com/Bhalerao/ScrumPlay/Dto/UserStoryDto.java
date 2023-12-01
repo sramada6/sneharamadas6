@@ -1,8 +1,7 @@
 package com.Bhalerao.ScrumPlay.Dto;
 
 
-import com.Bhalerao.ScrumPlay.model.Player;
-import com.Bhalerao.ScrumPlay.model.ProblemStatement;
+import com.Bhalerao.ScrumPlay.model.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,4 +31,5 @@ public class UserStoryDto {
     public Long getId() {
         return storyid;
     }
+    private Sprint sprint;
 }

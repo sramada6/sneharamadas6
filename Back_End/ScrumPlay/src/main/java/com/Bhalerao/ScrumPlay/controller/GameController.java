@@ -66,6 +66,12 @@ public class GameController {
         return ResponseEntity.ok(userStories);
     }
 
+    @GetMapping("/sprint/user-stories/{id}")
+    public ResponseEntity<List<UserStoryDto>> getUserStoriesBySprintId(@PathVariable Long id) {
+        List<UserStoryDto> userStories = userStoryService.getBySprintSprintid(id);
+        return new ResponseEntity<>(userStories, HttpStatus.OK);
+    }
+
 
     @PutMapping("/backlog-modify/{userStoryId}")
     public ResponseEntity<UserStoryDto> modifyUserStory(@PathVariable int userStoryId, @RequestBody UserStoryDto updatedStoryDto) {

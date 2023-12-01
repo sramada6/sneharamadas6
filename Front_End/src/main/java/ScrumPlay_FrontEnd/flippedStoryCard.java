@@ -7,16 +7,16 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
 
-public class StoryCard extends JPanel {
+public class flippedStoryCard extends JPanel {
     private final String title;
     private final String description;
     private final String status;
@@ -30,13 +30,11 @@ public class StoryCard extends JPanel {
 
     private JTextArea descriptionArea;
 
-    JButton provideUpdateButton = new JButton("Provide Update");
-
+    //JButton backButton = new JButton("Back");
     ScrumBoard scrumBoard;
+    StoryCard correspondingStoryCard;
 
-    flippedStoryCard correspondingFlippedCard;
-
-    public StoryCard(String storyid, String title, String description, String status, String assignedTo, String storyPoints, ScrumBoard scrumBoard, flippedStoryCard correspondingFlippedCard) {
+    public flippedStoryCard(String storyid, String title, String description, String status, String assignedTo, String storyPoints, ScrumBoard scrumBoard, StoryCard correspondingStoryCard) {
         this.title = title;
         this.storyid = storyid;
         this.description = description;
@@ -44,11 +42,12 @@ public class StoryCard extends JPanel {
         this.assignedTo = assignedTo;
         this.storyPoints = storyPoints;
         this.scrumBoard = scrumBoard;
-        this.correspondingFlippedCard = correspondingFlippedCard;
+        this.correspondingStoryCard = correspondingStoryCard;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.GREEN);
         setPreferredSize(new Dimension(350, 150));
-        setBackground(Color.RED);
+        setVisible(false);
 
         // Create a JLabel to display the title
         JLabel idLabel = new JLabel("#" + storyid);
@@ -56,7 +55,6 @@ public class StoryCard extends JPanel {
 
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 12));
-
 
         add(idLabel,BorderLayout.LINE_START);
         // Add the title label to the StoryCard
@@ -96,14 +94,18 @@ public class StoryCard extends JPanel {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addMouseListener(new StoryCardMouseListener());
 
-        provideUpdateButton.addActionListener(new ActionListener() {
+/*        backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (scrumBoard != null) {
-                    scrumBoard.flipCard(StoryCard.this, correspondingFlippedCard);
+                    scrumBoard.flipCard(correspondingStoryCard, flippedStoryCard.this);
                 }
             }
         });
-        add(provideUpdateButton);
+        add(backButton);*/
+    }
+
+    public void setCorrespondingStoryCard(StoryCard correspondingStoryCard) {
+        this.correspondingStoryCard = correspondingStoryCard;
     }
 
     public String getStoryId() {
@@ -123,6 +125,7 @@ public class StoryCard extends JPanel {
     public String getStoryPointsComboBox() {
         return storyPointsComboBox.getSelectedItem().toString();
     }
+
 
     private class StoryCardMouseListener extends MouseAdapter {
         @Override
@@ -216,4 +219,5 @@ public class StoryCard extends JPanel {
         return playerId + "#" + playerName;
     }
 }
+
 
