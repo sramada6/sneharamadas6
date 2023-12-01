@@ -1,6 +1,7 @@
 package com.Bhalerao.ScrumPlay.Dto;
 
 
+import com.Bhalerao.ScrumPlay.model.Sprint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
