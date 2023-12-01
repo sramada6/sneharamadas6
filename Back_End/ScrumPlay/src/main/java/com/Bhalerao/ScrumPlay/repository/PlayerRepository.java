@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PlayerRepository extends JpaRepository<Player, Long> {
-    List<UserStory> findBysprintSprintid(int sprintid);
+//    List<UserStory> findBysprintSprintid(int sprintid);
 }

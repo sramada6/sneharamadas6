@@ -11,7 +11,11 @@ public interface PlayerService {
 
     void savePlayer(PlayerDto playerDTO);
 
+    void updatePlayerScore(int playerId, int newScore);
+
     void savePlayers(List<PlayerDto> playerDtos);
 
     PlayerDto findPlayerById(long id);
+
+    int calculatePlayerScore(PlayerDto player);
 }

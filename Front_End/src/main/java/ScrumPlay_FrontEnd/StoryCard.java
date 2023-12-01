@@ -217,4 +217,3 @@ public class StoryCard extends JPanel {
     }
 }
 
-
