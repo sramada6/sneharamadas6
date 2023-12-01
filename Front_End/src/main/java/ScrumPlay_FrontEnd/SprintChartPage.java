@@ -23,7 +23,7 @@ public class SprintChartPage extends JFrame {
         this.combinedData = combinedData;
 
         setTitle("Sprint Burn Down Chart");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         SprintChartPanel sprintChartPanel = new SprintChartPanel(combinedData);
         add(sprintChartPanel);
@@ -33,7 +33,7 @@ public class SprintChartPage extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
+    public static void Func() {
         try {
             long sprintId = 1;
 
@@ -67,7 +67,7 @@ public class SprintChartPage extends JFrame {
         for (Map<String, Object> data : combinedDataList) {
             String startDateStr = (String) data.get("startDate");
             Date startDate = parseDate(startDateStr);
-
+            //String CompletedPoints = (String) data.get("storyPointsCompleted");
             int workRemaining = (int) data.get("workRemaining");
 
 
@@ -113,6 +113,7 @@ public class SprintChartPage extends JFrame {
                         Map<String, Object> combinedData = new HashMap<>();
                         combinedData.put("startDate", element.path("startDate").asText());
                         combinedData.put("workRemaining", element.path("workRemaining").asInt());
+                        //combinedData.put("CompletedPoints", element.path("CompletedPoints").asInt());
                         combinedData.put("storyPoints", element.path("storyPoints").asInt());
                         combinedDataList.add(combinedData);
                     });
