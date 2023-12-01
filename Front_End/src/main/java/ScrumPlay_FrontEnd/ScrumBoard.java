@@ -12,8 +12,6 @@ import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -98,8 +96,8 @@ public class ScrumBoard extends JFrame {
                         lane.repaint();
                         for (Component card : ((JPanel) lane).getComponents()) {
                             if (card instanceof StoryCard) {
-                                    card.revalidate();
-                                    card.repaint();
+                                card.revalidate();
+                                card.repaint();
                             }
                         }
                     }
@@ -130,6 +128,7 @@ public class ScrumBoard extends JFrame {
         RestTemplate restTemplate = new RestTemplate();
         String apiUrl = "http://localhost:8080/sprint/timer/1";
         String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
+        System.out.println(jsonResponse);
         int[] countdown = new int[0];
         if(jsonResponse != null) {
             countdown = new int[]{(int)Double.parseDouble(jsonResponse) * 60};
@@ -206,7 +205,7 @@ public class ScrumBoard extends JFrame {
 
         try {
             System.out.println("fetching user story ids...");
-             storyidList = mapper.readValue(jsonResponse, new TypeReference<List<Long>>(){});
+            storyidList = mapper.readValue(jsonResponse, new TypeReference<List<Long>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -342,18 +341,25 @@ public class ScrumBoard extends JFrame {
             String storyPoints = userStory.get("storyPoints").toString();
 
             // Create a StoryCard for the current user story
-            StoryCard storyCard = new StoryCard(storyid, title, description, status, assignedTo, storyPoints);
+            flippedStoryCard flippedstoryCard = new flippedStoryCard(storyid, title, description, status, assignedTo, storyPoints, this, null);
+            StoryCard storyCard = new StoryCard(storyid, title, description, status, assignedTo, storyPoints, this, flippedstoryCard);
+            flippedstoryCard.setCorrespondingStoryCard(storyCard);
             System.out.println("card created");
             System.out.println(storyCard.getRootPane());
+
             // Add the StoryCard to the appropriate lane
-            addToLanePanel(status, storyCard);
+            addToLanePanel(status, storyCard, flippedstoryCard);
+            }
         }
+
+    public void flipCard(StoryCard storyCard, flippedStoryCard flippedstoryCard) {
+        storyCard.setVisible(!storyCard.isVisible());
+        flippedstoryCard.setVisible(!flippedstoryCard.isVisible());
     }
 
     // Modified method to create a card panel with dynamic content
     public JPanel createCardPanel(String dtoryid, String title, String description,  String status,  String storyPoints) {
         JPanel cardPanel = new JPanel();
-        CardLayout cardLayout = new CardLayout();
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
         cardPanel.setBorder(BorderFactory.createEtchedBorder());
         cardPanel.setBackground(Color.CYAN); // Set card background color
@@ -379,23 +385,6 @@ public class ScrumBoard extends JFrame {
         pointsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         cardPanel.add(pointsLabel);
 
-        JPanel frontPanel = new JPanel();
-        frontPanel.setBackground(Color.CYAN);
-        frontPanel.add(new JLabel(title));
-
-        JPanel backPanel = new JPanel();
-        backPanel.setBackground(Color.MAGENTA);
-        backPanel.add(new JLabel(description));
-
-        cardPanel.add(frontPanel, "Front");
-        cardPanel.add(backPanel, "Back");
-
-        cardPanel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                cardLayout.next(cardPanel);
-            }
-        });
-
         // Other fields...
         System.out.println(cardPanel);
         return cardPanel;
@@ -403,14 +392,13 @@ public class ScrumBoard extends JFrame {
 
 
 
-    private void addToLanePanel(String status, StoryCard storyCard) {
+    private void addToLanePanel(String status, StoryCard storyCard, flippedStoryCard flippedstoryCard) {
         // Find the appropriate lane panel
         JPanel lanePanel = (JPanel) boardPanel.getComponent(getLaneIndex(status));
 
         // Add the StoryCard to the lane panel
         lanePanel.add(storyCard);
-
-
+        lanePanel.add(flippedstoryCard);
     }
 
     private int getLaneIndex(String status) {
@@ -482,7 +470,7 @@ public class ScrumBoard extends JFrame {
 
                         }}}}
 
-            String apiUrl = "http://localhost:8080/sprint/story-points/" + sprintId + "?storyPointsCompleted=" + completedStoryPoints;
+            String apiUrl = "http://localhost:8080/sprint/story-points/" + sprintId + "?storyPointsCompleted=z" + completedStoryPoints;
 
             System.out.println("generatingPayload");
             JSONObject jsonPayload = new JSONObject();
@@ -513,7 +501,6 @@ public class ScrumBoard extends JFrame {
             e.printStackTrace();
         }
     }
-
 
     private void updateBackendWithStoryCardValues() {
         for (Component lane : boardPanel.getComponents()) {
@@ -602,28 +589,8 @@ public class ScrumBoard extends JFrame {
             e.printStackTrace();
         }
     }
-        public <RotateTransition> void flip() {
-            Object Duration;
-            RotateTransition flipAnimation = new RotateTransition(Duration.seconds(0.5), this);
-            flipAnimation.setAxis(Rotate.Y_AXIS);
 
-            if (isFlipped) {
-                flipAnimation.setFromAngle(180);
-                flipAnimation.setToAngle(0);
-                frontSide.setVisible(true);
-                backSide.setVisible(false);
-            } else {
-                flipAnimation.setFromAngle(0);
-                flipAnimation.setToAngle(180);
-                frontSide.setVisible(false);
-                backSide.setVisible(true);
-            }
 
-            isFlipped = !isFlipped;
-            flipAnimation.play();
-        }
-    }
-    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
