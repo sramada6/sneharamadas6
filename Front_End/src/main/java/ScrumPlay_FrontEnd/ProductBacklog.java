@@ -241,6 +241,12 @@ public class ProductBacklog extends JFrame {
 //            }
 //        });
         buttonPanel.add(startSprintButton);
+        startSprintButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ScrumBoard ScrumBoardFrame = new ScrumBoard();
+                ScrumBoardFrame.setVisible(true);
+            }
+        });
         getContentPane().setBackground(new Color(0, 255, 255));
 
         detailPanel.add(userStoryInfoPanel, BorderLayout.CENTER);
@@ -302,6 +308,7 @@ public class ProductBacklog extends JFrame {
             }
         });
     }
+
     private int getUserStoryID(String apiUrl, String userStoryTitle) {
         RestTemplate restTemplate = new RestTemplate();
         String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
