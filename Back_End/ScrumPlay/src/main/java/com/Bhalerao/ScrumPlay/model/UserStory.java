@@ -1,5 +1,6 @@
 package com.Bhalerao.ScrumPlay.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,7 @@ public class UserStory {
     private int storyid;
 
     private int storyPoints = 0;
-    private String status = "new";
+    private String status = "ready";
     private String storyDescription;
 
     @ManyToOne
@@ -46,5 +47,6 @@ public class UserStory {
 
     @ManyToOne
     @JoinColumn(name = "sprintid")
+    @JsonIgnoreProperties("userStories")
     private Sprint sprint;
 }

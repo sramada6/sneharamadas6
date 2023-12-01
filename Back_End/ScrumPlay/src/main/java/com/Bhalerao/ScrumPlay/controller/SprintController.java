@@ -70,11 +70,4 @@ public class SprintController {
         }
     }
 
-    @GetMapping("/sprint/{id}/user-stories")
-    public ResponseEntity<List<UserStoryDto>> getUserStoriesBySprintId(@PathVariable Long id) {
-        List<UserStoryDto> userStories = sprintService.findUserStoriesBySprintId(id);
-        return new ResponseEntity<>(userStories, HttpStatus.OK);
-    }
-
-
 }

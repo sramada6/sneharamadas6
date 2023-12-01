@@ -1,11 +1,18 @@
 package ScrumPlay_FrontEnd;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.List;
 
 public class SprintChartPage extends JFrame {
@@ -15,102 +22,185 @@ public class SprintChartPage extends JFrame {
     public SprintChartPage(CombinedData combinedData) {
         this.combinedData = combinedData;
 
-        setTitle("Sprint Chart");
+        setTitle("Sprint Burn Down Chart");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         SprintChartPanel sprintChartPanel = new SprintChartPanel(combinedData);
         add(sprintChartPanel);
-
-        JButton gameScoreButton = new JButton("Game Score");
-        gameScoreButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Game Score Button Clicked!");
-        });
-
-        add(gameScoreButton, BorderLayout.SOUTH);
 
         setSize(800, 600);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
-    private static CombinedData fetchCombinedDataFromBackend(long sprintId) throws IOException {
-        String apiUrl = "http://localhost:8080/api/sprint-data/" + sprintId;
+    public static void main(String[] args) {
+        try {
+            // Replace with your actual Sprint ID
+            long sprintId = 1;
+
+            List<Map<String, Object>> combinedDataList = fetchCombinedDataFromBackend(sprintId);
+
+            // Create CombinedData object
+            CombinedData combinedData = createCombinedData(combinedDataList);
+
+            SwingUtilities.invokeLater(() -> {
+                SprintChartPage sprintChartPage = new SprintChartPage(combinedData);
+                sprintChartPage.setSize(800, 600);
+                sprintChartPage.setLocationRelativeTo(null);
+                sprintChartPage.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                sprintChartPage.setVisible(true);
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static CombinedData createCombinedData(List<Map<String, Object>> combinedDataList) {
+        CombinedData combinedData = new CombinedData();
+        SprintData sprintData = new SprintData();
+
+        // Calculate total story points
+        int totalStoryPoints = combinedDataList.stream()
+                .mapToInt(data -> (int) data.get("storyPoints"))
+                .sum();
+
+        // Initial Y-axis value
+        int totalWorkRemaining = totalStoryPoints;
+
+        for (Map<String, Object> data : combinedDataList) {
+            String startDateStr = (String) data.get("startDate");
+            Date startDate = parseDate(startDateStr);
+
+            // Daily work remaining for a user story
+            int workRemaining = (int) data.get("workRemaining");
+
+            // Adjust Y-axis value based on work remaining
+            totalWorkRemaining -= workRemaining;
+
+            SprintChartData sprintChartData = new SprintChartData(startDate, totalWorkRemaining);
+            sprintData.getSprintChartDataList().add(sprintChartData);
+        }
+
+        combinedData.setSprint(sprintData);
+        return combinedData;
+    }
+
+    private static Date parseDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty() || dateStr.equalsIgnoreCase("null")) {
+            return null;
+        }
+
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing date: " + dateStr, e);
+        }
+    }
+
+    private static List<Map<String, Object>> fetchCombinedDataFromBackend(long sprintId) throws IOException {
+        String apiUrl = "http://localhost:8080/sprint/user-stories/" + Long.toString(sprintId);
         URL url = new URL(apiUrl);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(connection.getInputStream(), CombinedData.class);
-        } else {
-            System.out.println("Failed to fetch data. HTTP error code: " + connection.getResponseCode());
-            return null;
-        }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
             try {
-                long sprintId = 1; // Replace with the actual sprint ID
-                CombinedData combinedData = fetchCombinedDataFromBackend(sprintId);
-                if (combinedData != null) {
-                    new SprintChartPage(combinedData);
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(connection.getInputStream());
+
+                List<Map<String, Object>> combinedDataList = new ArrayList<>();
+
+                if (jsonNode.isArray()) {
+                    ArrayNode arrayNode = (ArrayNode) jsonNode;
+                    arrayNode.forEach(element -> {
+                        Map<String, Object> combinedData = new HashMap<>();
+                        combinedData.put("startDate", element.path("startDate").asText());
+                        combinedData.put("workRemaining", element.path("workRemaining").asInt());
+                        combinedData.put("storyPoints", element.path("storyPoints").asInt());
+                        combinedDataList.add(combinedData);
+                    });
                 }
-            } catch (IOException e) {
+
+                return combinedDataList;
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        } else {
+            System.out.println("Failed to fetch data. HTTP error code: " + connection.getResponseCode());
+        }
+
+        return Collections.emptyList();
     }
 
     public static class CombinedData {
         private SprintData sprint;
-        private List<UserStoryData> userStories;
 
         public SprintData getSprint() {
             return sprint;
         }
 
-        public List<UserStoryData> getUserStories() {
-            return userStories;
+        public void setSprint(SprintData sprint) {
+            this.sprint = sprint;
         }
     }
 
     public static class SprintData {
-        private List<SprintChartData> sprintChartDataList;
+        private List<SprintChartData> sprintChartDataList = new ArrayList<>();
 
         public List<SprintChartData> getSprintChartDataList() {
             return sprintChartDataList;
         }
     }
 
-    public static class UserStoryData {
-        private int day;
-        private int workRemaining;
-
-        public int getDay() {
-            return day;
-        }
-
-        public int getWorkRemaining() {
-            return workRemaining;
-        }
-    }
-
     public static class SprintChartData {
+        private Date startDate;
         private int workRemaining;
+
+        public SprintChartData(Date startDate, int workRemaining) {
+            this.startDate = startDate;
+            this.workRemaining = workRemaining;
+        }
+
+        public Date getStartDate() {
+            return startDate;
+        }
 
         public int getWorkRemaining() {
             return workRemaining;
         }
     }
 
-    class SprintChartPanel extends JPanel {
+    static class SprintChartPanel extends JPanel {
 
         private CombinedData combinedData;
 
         SprintChartPanel(CombinedData combinedData) {
             this.combinedData = combinedData;
+            // Initialize and configure the button
+            JButton myButton = new JButton("Show Score");
+            myButton.addActionListener(e -> handleButtonClick()); // Add your button click logic here
+
+            // Set the layout manager of the panel to null so that we can manually position the button
+            setLayout(null);
+            add(myButton);
+
+            // Add a component listener to adjust the button position after the panel is resized
+            addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    int panelWidth = getWidth();
+                    int panelHeight = getHeight();
+
+                    // Adjust the button position based on the panel size to the upper right corner
+                    myButton.setBounds(panelWidth - 100, 0, 100, 30);
+                }
+            });
+        }
+        private void handleButtonClick() {
+            // Add your logic here for what should happen when the button is clicked
+            JOptionPane.showMessageDialog(this, "Button clicked!");
         }
 
         @Override
@@ -124,14 +214,11 @@ public class SprintChartPage extends JFrame {
             g.drawString("Days", width / 2 - 10, height - 20);
             g.drawLine(50, height - 50, width - 50, height - 50);
 
-            g.drawString("Remaining Work", 10, height / 2);
+            g.drawString("Work", 10, height / 2);
             g.drawLine(50, 50, 50, height - 50);
 
             // Paint sprint data
             paintSprint(g, width, height, numDays);
-
-            // Paint user story data
-            paintUserStories(g, width, height, numDays);
         }
 
         private void paintSprint(Graphics g, int width, int height, int numDays) {
@@ -152,30 +239,11 @@ public class SprintChartPage extends JFrame {
             }
         }
 
-        private void paintUserStories(Graphics g, int width, int height, int numDays) {
-            List<UserStoryData> userStories = combinedData.getUserStories();
-
-            for (UserStoryData userStory : userStories) {
-                int x = 50 + (userStory.getDay() * (width - 100) / (numDays - 1));
-                int y = height - 50 - (userStory.getWorkRemaining() * (height - 100) / getMaxValue());
-
-                g.setColor(Color.BLUE);
-                g.fillRect(x - 5, y - 5, 10, 10);
-            }
-        }
-
         private int getMaxValue() {
-            int maxSprintValue = combinedData.getSprint().getSprintChartDataList().stream()
+            return combinedData.getSprint().getSprintChartDataList().stream()
                     .mapToInt(SprintChartData::getWorkRemaining)
                     .max()
                     .orElse(1);
-
-            int maxUserStoryValue = combinedData.getUserStories().stream()
-                    .mapToInt(UserStoryData::getWorkRemaining)
-                    .max()
-                    .orElse(1);
-
-            return Math.max(maxSprintValue, maxUserStoryValue);
         }
     }
 }

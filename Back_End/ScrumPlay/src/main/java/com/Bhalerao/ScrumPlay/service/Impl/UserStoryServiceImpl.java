@@ -95,12 +95,17 @@ public class UserStoryServiceImpl implements UserStoryService {
                 .map(this::mapToStoryDto)
                 .collect(Collectors.toList());
     }
-    public SprintDto getSprintDataFromUserStory(long userStoryId) {
-        UserStory userStory = userStoryRepository.findById(userStoryId)
-                .orElseThrow(() -> new EntityNotFoundException("User Story not found with ID: " + userStoryId));
 
-        return mapToSprintDto(userStory.getSprint());
+    @Override
+    public List<UserStoryDto> getBySprintSprintid(Long id) {
+        List<UserStory> stories = userStoryRepository.findBySprintSprintid(id);
+
+        // Map the entities to DTOs
+        return stories.stream()
+                .map(this::mapToStoryDto)
+                .collect(Collectors.toList());
     }
+
 
     private SprintDto mapToSprintDto(Sprint sprint) {
         return SprintDto.builder()

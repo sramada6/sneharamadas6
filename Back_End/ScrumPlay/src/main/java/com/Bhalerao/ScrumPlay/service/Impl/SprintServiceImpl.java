@@ -49,16 +49,7 @@ public class SprintServiceImpl implements SprintService {
         return mapToSprintDto(s);
     }
 
-    @Override
-    public List<UserStoryDto> findUserStoriesBySprintId(long sprintId) {
-        Sprint sprint = sprintRepository.findById(sprintId)
-                .orElseThrow(() -> new EntityNotFoundException("Sprint not found with ID: " + sprintId));
 
-        // Assuming you have a method in Sprint entity to get user stories, adjust accordingly
-        return sprint.getUserStories().stream()
-                .map(this::mapToStoryDto)
-                .collect(Collectors.toList());
-    }
 
     private SprintDto mapToSprintDto(Sprint sprint) {
         SprintDto sdto = SprintDto.builder()
