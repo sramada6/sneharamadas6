@@ -16,7 +16,7 @@ Sprint 1 has been completed, and the final sprint 1 code resides in [sprint-1](h
 
 We have merged the Sprint 2 final code to master, but to run, pull the code from [sprint-2](https://github.com/avashis9/ScrumPlay/tree/sprint-2) branch.
 
-We have merged the Sprint 3 final code to master, but to run, pull the code from [sprint-3](https://github.com/avashis9/ScrumPlay/tree/sprint-3) branch.
+We have merged the Sprint 3 final code to master branch.
 
 
 Create a schema before starting front end called ScrumPlay in mysql workbench.
