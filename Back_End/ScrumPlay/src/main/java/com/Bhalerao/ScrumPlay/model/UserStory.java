@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -25,13 +27,13 @@ public class UserStory {
     private String status = "ready";
     private String storyDescription;
 
-    @ManyToOne
-    @JoinColumn(name = "assigned_player_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "assigned_player_id", nullable = true)
     private Player assignedTo;
     private String storyTitle;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "problem_id")
     private ProblemStatement problemStatement;
     @Temporal(TemporalType.TIMESTAMP)
