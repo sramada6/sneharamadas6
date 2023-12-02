@@ -48,16 +48,28 @@ public class GameController {
         return new ResponseEntity<>(userStory, HttpStatus.OK);
     }
 
-    @GetMapping("/player-stories/{playerid}")
+    @GetMapping("/all-player-stories/{playerid}")
     public ResponseEntity<List<UserStoryDto>> getStoriesAssignedToPlayer(@PathVariable int playerid) {
         List<UserStoryDto> stories = userStoryService.getAllStoriesAssignedToPlayer(playerid);
         return ResponseEntity.ok(stories);
+    }
+
+    @GetMapping("/player-stories/{playerid}")
+    public ResponseEntity<List<Long>> getStoryIdsAssignedToPlayer(@PathVariable int playerid) {
+        List<Long> storyIds = userStoryService.getStoryIdsAssignedToPlayer(playerid);
+        return ResponseEntity.ok(storyIds);
     }
 
     @GetMapping("/problem-stories/{statementid}")
     public ResponseEntity<List<UserStoryDto>> getUserStoriesByProblemId(@PathVariable int statementid) {
         List<UserStoryDto> userStories = userStoryService.getStoriesBystatementid(statementid);
         return ResponseEntity.ok(userStories);
+    }
+
+    @GetMapping("/sprint/user-stories/{id}")
+    public ResponseEntity<List<UserStoryDto>> getUserStoriesBySprintId(@PathVariable Long id) {
+        List<UserStoryDto> userStories = userStoryService.getBySprintSprintid(id);
+        return new ResponseEntity<>(userStories, HttpStatus.OK);
     }
 
 

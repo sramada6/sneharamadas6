@@ -1,12 +1,16 @@
 package com.Bhalerao.ScrumPlay.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,19 +21,19 @@ import java.util.Date;
 public class UserStory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int storyid;
+    private Long storyid;
 
     private int storyPoints = 0;
-    private String status = "new";
+    private String status = "ready";
     private String storyDescription;
 
-    @ManyToOne
-    @JoinColumn(name = "assigned_player_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "assigned_player_id", nullable = true)
     private Player assignedTo;
     private String storyTitle;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "problem_id")
     private ProblemStatement problemStatement;
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,4 +47,8 @@ public class UserStory {
 
     private int workRemaining;
 
+    @ManyToOne
+    @JoinColumn(name = "sprintid")
+    @JsonIgnoreProperties("userStories")
+    private Sprint sprint;
 }

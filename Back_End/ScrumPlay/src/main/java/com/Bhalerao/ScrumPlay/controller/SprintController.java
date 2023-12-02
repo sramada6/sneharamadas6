@@ -3,6 +3,7 @@ package com.Bhalerao.ScrumPlay.controller;
 
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
 
+import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
 import com.Bhalerao.ScrumPlay.service.ScrumService;
 import com.Bhalerao.ScrumPlay.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.stream.Collectors;
 
 
 import java.util.HashMap;
@@ -44,15 +46,21 @@ public class SprintController {
     }
 
     @GetMapping("/sprint/timer/{id}")
-    public ResponseEntity<Map<String, Float>> getTimerById(@PathVariable Long id) {
+    public ResponseEntity<Float> getTimerById(@PathVariable Long id) {
         SprintDto s = sprintService.findSprintById(id);
         if (s == null) {
             return ResponseEntity.notFound().build();
         }
+        return new ResponseEntity<>(s.getScrumCallLength(), HttpStatus.OK);
+    }
 
-        Map<String, Float> response = new HashMap<>();
-        response.put("scrumCallLength:", s.getScrumCallLength());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    @GetMapping("/sprint/length/{id}")
+    public ResponseEntity<Integer> getLengthById(@PathVariable Long id) {
+        SprintDto s = sprintService.findSprintById(id);
+        if (s == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(s.getSprintLength(), HttpStatus.OK);
     }
 
     @PutMapping("/sprint/update-call-duration/{scrumId}")
@@ -67,4 +75,18 @@ public class SprintController {
             return ResponseEntity.status(500).body("Internal Server Error");
         }
     }
+
+    @PutMapping("/sprint/story-points/{sprintId}")
+    public ResponseEntity<String> updateStoryPointsCompleted(
+            @PathVariable long sprintId,
+            @RequestParam int storyPointsCompleted) {
+        System.out.println("Story points completed Started...");
+        SprintDto existingSprint = sprintService.findSprintById(sprintId);
+        existingSprint.setStoryPointsCompleted(storyPointsCompleted);
+        sprintService.saveSprint(existingSprint);
+
+        System.out.println("Story points completed updated successfully");
+        return ResponseEntity.ok("Story points completed updated successfully");
+    }
+
 }

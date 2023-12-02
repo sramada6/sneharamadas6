@@ -3,11 +3,9 @@ package com.Bhalerao.ScrumPlay.model;
 import jakarta.persistence.*;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.List;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -23,7 +21,9 @@ public class Sprint {
     private int sprintid;
     private int teamSize;
     private int sprintLength;
+    private int storyPointsCompleted;
     private float scrumCallLength;
     private LocalDate startDate;
     private LocalDate endDate;
+
 }

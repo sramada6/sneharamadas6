@@ -2,6 +2,7 @@ package com.Bhalerao.ScrumPlay.controller;
 
 import com.Bhalerao.ScrumPlay.Dto.PlayerDto;
 import com.Bhalerao.ScrumPlay.Dto.UserStoryDto;
+import com.Bhalerao.ScrumPlay.model.Player;
 import lombok.Builder;
 
 import com.Bhalerao.ScrumPlay.Dto.SprintDto;
@@ -20,10 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -73,6 +71,22 @@ public class PlayerController {
         try {
             List<Map<String, String>> playerDataList = (List<Map<String, String>>) requestData.get("players");
 
+            int teamSize = Integer.parseInt(requestData.get("teamSize").toString()) ;
+            int sprintLength = Integer.parseInt(requestData.get("sprintLength").toString());
+
+            float scrumCallLength = Float.parseFloat(requestData.get("scrumCallLength").toString());
+
+
+            SprintDto sprintDto = SprintDto.builder()
+                    .teamSize(teamSize)
+                    .sprintLength(sprintLength)
+                    .scrumCallLength(scrumCallLength)
+                    .storyPointsCompleted(0)
+                    .startDate(LocalDate.now())
+                    .endDate(LocalDate.now().plusDays(7))
+                    .build();
+            sprintService.saveSprint(sprintDto);
+
             List<PlayerDto> playerDtos = new ArrayList<>();
 
             // Iterate over the player data and create PlayerDto objects
@@ -84,23 +98,10 @@ public class PlayerController {
                         .playerName(playerName)
                         .playerRole(playerRole)
                         .build();
+
                 playerDtos.add(playerDto);
             }
             playerService.savePlayers(playerDtos);
-
-            int teamSize = Integer.parseInt(requestData.get("teamSize").toString()) ;
-            int sprintLength = Integer.parseInt(requestData.get("sprintLength").toString());
-
-            float scrumCallLength = Float.parseFloat(requestData.get("scrumCallLength").toString());
-
-
-            SprintDto sprintDto = SprintDto.builder()
-                    .teamSize(teamSize)
-                    .sprintLength(sprintLength)
-                    .scrumCallLength(scrumCallLength)
-                    .startDate(LocalDate.now())
-                    .build();
-            sprintService.saveSprint(sprintDto);
 
             return ResponseEntity.ok("Player and Sprint added successfully");
         } catch (Exception e) {
@@ -108,4 +109,35 @@ public class PlayerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding player and sprint");
         }
     }
+    @GetMapping("/display-score")
+    public ResponseEntity<List<Map<String, Object>>> calculateAndDisplayPlayerScores() {
+        try {
+            List<PlayerDto> players = playerService.findAllPlayers();
+
+            // Create a list to store simplified data for front-end
+            List<Map<String, Object>> playerScores = new ArrayList<>();
+
+            for (PlayerDto player : players) {
+                int playerScore = playerService.calculatePlayerScore(player);
+
+
+                // Update the player's score in the database
+                playerService.updatePlayerScore(player.getPlayerid(), playerScore);
+
+                // Create a map for simplified data and add it to the list
+                Map<String, Object> playerScoreMap = new HashMap<>();
+                playerScoreMap.put("playerName", player.getPlayerName());
+                playerScoreMap.put("playerScore", playerScore);
+
+                playerScores.add(playerScoreMap);
+            }
+
+            return ResponseEntity.ok(playerScores);
+        } catch (Exception e) {
+            log.error("Error calculating and displaying player scores", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
+        }
+    }
+
+
 }
