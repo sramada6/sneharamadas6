@@ -139,7 +139,6 @@ public class ScrumBoard extends JFrame {
         RestTemplate restTemplate = new RestTemplate();
         String apiUrl = "http://localhost:8080/sprint/timer/1";
         String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
-        System.out.println(jsonResponse);
         int[] countdown = new int[0];
         if(jsonResponse != null) {
             countdown = new int[]{(int)Double.parseDouble(jsonResponse) * 60};
