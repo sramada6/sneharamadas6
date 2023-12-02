@@ -196,7 +196,8 @@ public class SprintChartPage extends JFrame {
         }
         private void handleButtonClick() {
             // Add your logic here for what should happen when the button is clicked
-            JOptionPane.showMessageDialog(this, "Button clicked!");
+            ShowScoresPage showScoresPage = new ShowScoresPage();
+            showScoresPage.setVisible(true);
         }
 
         @Override

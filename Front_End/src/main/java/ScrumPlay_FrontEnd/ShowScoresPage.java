@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ShowScoresPage extends JFrame {
     private DefaultTableModel tableModel;
 
-    public ShowScoresPage(ScoreDisplay scoreDisplay) {
+    public ShowScoresPage( ) {
         setTitle("Player Scores");
         setSize(600, 400); // Set the preferred size of the JFrame
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -73,10 +73,10 @@ public class ShowScoresPage extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ScoreDisplay scoreDisplay = new ScoreDisplay();
-            scoreDisplay.setVisible(true);
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            ScoreDisplay scoreDisplay = new ScoreDisplay();
+//            scoreDisplay.setVisible(true);
+//        });
+//    }
 }
