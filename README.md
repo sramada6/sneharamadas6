@@ -19,6 +19,9 @@ We have merged the Sprint 2 final code to master, but to run, pull the code from
 We have merged the Sprint 3 final code to master, but to run, pull the code from [sprint-3](https://github.com/avashis9/ScrumPlay/tree/sprint-3) branch.
 
 
+Create a schema before starting front end called ScrumPlay in mysql workbench.
+
+The final code is now merged in master.
 To run the code via command line:
 
 Start the backend (server) first. Head to the back end foler and run  `mvn clean install` (assuming you have maven installed)
