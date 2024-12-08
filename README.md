@@ -58,10 +58,11 @@ I thrive in **team-oriented environments**, enjoy taking on **leadership roles**
 
 #### **IntelliHealth**
 - Engineered a **health analysis platform** using **AWS**, **JSP**, **OWL ontology**, and **Spring Boot** to deliver **personalized COVID-19** and **cardiovascular disease** insights.
-- Implemented **SPARQL queries** for dynamic health data retrieval, providing **real-time statistical analysis** to users, enhancing decision-making and insights into individual health metrics.
+- [IntelliHealth on GitHub](https://github.com/sneharamadas/sneharamadas6/tree/intellihealth)
 
-#### **ScrumPlay**
+#### **ScrumPlay** 
 - Designed a **Scrum simulation tool** using **Spring Boot MVC** and Java Swing to teach Agile methodologies.
+- [ScrumPlay on GitHub](https://github.com/sneharamadas/scrumplay)
 
 #### **MASK IT**
 - Built a **Computer Vision system** using **YOLOv3** to monitor real-time face mask compliance during the COVID-19 pandemic.
