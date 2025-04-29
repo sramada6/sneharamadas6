@@ -56,6 +56,10 @@ I thrive in **team-oriented environments**, enjoy taking on **leadership roles**
 
 ### 🌟 **Highlighted Projects**
 
+#### **SkillSync AI**
+- Developed a **full-stack GenAI** application using **MERN stack** that intelligently tailors resumes to job descriptions by leveraging Cohere’s **LLM** for semantic analysis, keyword matching using cosine similarity and content enhancement.
+-	Integrated **MongoDB** Atlas for persistent storage of enhanced resumes, enabling version tracking, metadata tagging, and generation of downloadable files aligned to specific job roles.
+  
 #### **IntelliHealth**
 - Engineered a **health analysis platform** using **AWS**, **JSP**, **OWL ontology**, and **Spring Boot** to deliver **personalized COVID-19** and **cardiovascular disease** insights.
 - Implemented **SPARQL queries** for dynamic health data retrieval, providing **real-time statistical analysis** to users, enhancing decision-making and insights into individual health metrics.
@@ -65,6 +69,7 @@ I thrive in **team-oriented environments**, enjoy taking on **leadership roles**
 
 #### **MASK IT**
 - Built a **Computer Vision system** using **YOLOv3** to monitor real-time face mask compliance during the COVID-19 pandemic.
+
 
 ---
 
